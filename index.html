@@ -143,27 +143,40 @@ img { display: block; }
 .fit { list-style: none; margin: 0; padding: 0; }
 
 /* 가족 일정 */
-.pg { display: grid; grid-template-columns: 30px repeat(var(--n), minmax(0, 1fr)); gap: 6px 6px; align-items: stretch; padding: 4px 3px 3px; }
+.pg { display: grid; grid-template-columns: 30px repeat(var(--n), minmax(0, 1fr)); gap: 5px 6px; align-items: stretch; padding: 4px 3px 3px; }
 .pg .slot .e.two { font-size: 24px; letter-spacing: -2px; }
 .pg .who { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
-.pg .who img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: var(--sky-soft); box-shadow: 0 0 0 3px var(--mc); }
+.pg .who img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background: var(--sky-soft); box-shadow: 0 0 0 3px var(--mc); }
 .pg .who b { font-size: 13px; color: var(--mc); line-height: 1.1; white-space: nowrap; }
 .pg .half { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 24px; line-height: 1; border-radius: 12px; }
 .pg .half small { font-size: 10px; color: var(--faint); margin-top: 3px; font-weight: 600; }
 .pg .half.now { background: #FFF1B8; }
 .pg .half.now small { color: #8A6A00; }
 .pg .slot {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; padding: 7px 3px 5px; border-radius: 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; padding: 4px 3px 3px; border-radius: 14px;
   background: color-mix(in srgb, var(--mc) 13%, white); border: 2px solid transparent;
 }
 .pg .slot.now { border-color: var(--mc); background: color-mix(in srgb, var(--mc) 22%, white); }
-.pg .slot .e { font-size: 34px; line-height: 1.05; }
+.pg .slot .e { font-size: 28px; line-height: 1.05; }
 .pg .slot .t { font-size: 11px; line-height: 1.2; color: var(--muted); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px; }
 .pg .slot.home { background: transparent; border: 2px dashed var(--line); }
-.pg .slot.home .e { opacity: .45; font-size: 28px; }
+.pg .slot.home .e { opacity: .45; font-size: 24px; }
 .pg .slot.home.now { border-color: color-mix(in srgb, var(--mc) 60%, white); }
 .plan-off { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
 .plan-off span { font-size: 14px; font-weight: 600; padding: 3px 10px; border-radius: 99px; background: #FFF1B8; color: #8A6A00; }
+.ttb { display: flex; align-items: stretch; gap: 4px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.ttb .tt-who { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 30px; }
+.ttb .tt-who img { width: 26px; height: 26px; border-radius: 50%; box-shadow: 0 0 0 2px #B89000; }
+.ttb .tt-who small { font-size: 9px; font-weight: 700; color: #B89000; margin-top: 2px; }
+.ttb .per { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; padding: 3px 1px; border-radius: 10px; background: #FFF6D6; border: 2px solid transparent; }
+.ttb .per .n { font-size: 10px; font-weight: 700; color: #B89000; line-height: 1; }
+.ttb .per .e { font-size: 20px; line-height: 1.15; }
+.ttb .per .t { font-size: 10px; color: var(--muted); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ttb .per.opt { opacity: .5; border-style: dashed; border-color: #E5D08A; }
+.ttb .per.past { opacity: .4; }
+.ttb .per.now { border-color: #B89000; background: #FFE98A; }
+.ttb .end { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 4px; font-size: 12px; font-weight: 700; color: var(--deep); }
+.ttb .end .e { font-size: 18px; }
 .plan-day { display: inline-block; font: 400 15px/1 var(--font-display); padding: 4px 10px; border-radius: 99px; background: var(--sky-soft); color: var(--deep); }
 .plan-day.tomorrow { background: #EDE4FF; color: #6A4BC4; }
 
@@ -233,7 +246,7 @@ img { display: block; }
 
 /* 가로 화면 고정: 3×2 카드가 화면 하나에 딱 맞음. 세로로 들면 "가로로 돌려 주세요" */
 #app { height: 100vh; }
-#grid { flex: 1; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1.15fr) minmax(0, 1fr);
+#grid { flex: 1; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1.75fr) minmax(0, 1fr);
   grid-template-areas: "plan cal todo" "kids cal todo"; }
 #card-plan { grid-area: plan; } #card-cal { grid-area: cal; } #card-todo { grid-area: todo; } #card-kids { grid-area: kids; }
 #rotate { display: none; }
@@ -790,6 +803,40 @@ img { display: block; }
   const moreEl = () => h('div', { class: 'more' });
 
   // 가족 일정: 낮에는 오늘, 저녁 5시부터는 내일
+  /* 다빈 시간표 (1d 반, 학교 시간표 사진에서 옮김). 바뀌면 여기만 고치면 됨.
+     GU = 기본 수업, WG = 만들기(Werken/Gestalten), FöD = 독일어 보충, D-Plus = 독일어 플러스(괄호 = 일부만), Rel = 종교/윤리 */
+  const TT_TIMES = [['8:00', '8:45'], ['8:45', '9:30'], ['9:50', '10:35'], ['10:35', '11:20'], ['11:35', '12:20'], ['12:20', '13:05']];
+  const DAVIN_TT = {
+    mon: ['GU', 'GU', 'Sport', 'FöD/GU', 'GU', ''], tue: ['GU', 'GU', 'WG', 'GU', 'GU', 'Sport'], wed: ['GU', 'GU', 'GU', 'GU', '', ''],
+    thu: ['GU', 'GU', 'GU', 'GU', '(D-Plus)', ''], fri: ['Rel', 'Rel', 'GU', 'GU', 'GU', ''],
+  };
+  const SUBJ = {
+    GU: ['📖', '수업', 'GU'], Sport: ['🤸', '체육', 'Sport'], WG: ['✂️', '만들기', 'WG'], 'FöD/GU': ['🔤', '독일어', 'FöD/GU'],
+    '(D-Plus)': ['🔤', '독일어+', 'D-Plus'], Rel: ['🙏', '종교·윤리', 'Reli/Ethik'],
+  };
+  const hm = (t) => { const [a, b] = t.split(':').map(Number); return a * 60 + b; };
+  function davinTimetable(k, isToday) {
+    const demoDay = DEMO && new URLSearchParams(location.search).get('ttday'); // 미리보기: &ttday=mon
+    if (!demoDay && entryFor('davin', k).am !== '@school') return null; // 학교 안 가는 날(주말·방학·공휴일·바꾼 날)은 안 보여 줌
+    const day = DAVIN_TT[demoDay || DOWK[fromKey(k).getDay()]];
+    if (!day) return null;
+    const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+    const pers = [];
+    let end = '';
+    day.forEach((sub, i) => {
+      if (!sub) return;
+      const opt = sub.startsWith('('), [ic, ko, de] = SUBJ[sub] || ['📖', sub, sub];
+      if (!opt) end = TT_TIMES[i][1];
+      const [s0, e0] = TT_TIMES[i].map(hm);
+      const cls = 'per' + (opt ? ' opt' : '') + (isToday && nowMin >= e0 ? ' past' : '') + (isToday && nowMin >= s0 && nowMin < e0 ? ' now' : '');
+      pers.push(h('div', { class: cls, title: `${TT_TIMES[i][0]}–${TT_TIMES[i][1]} ${lang === 'de' ? de : ko}` },
+        h('span', { class: 'n', text: String(i + 1) }), h('span', { class: 'e', text: ic }), h('span', { class: 't', text: lang === 'de' ? de : ko })));
+    });
+    return h('div', { class: 'ttb' },
+      h('div', { class: 'tt-who' }, h('img', { src: avatarOf('davin'), alt: '' }), h('small', { text: '1d' })),
+      ...pers, h('div', { class: 'end' }, h('span', { class: 'e', text: '🏠' }), end));
+  }
+
   function planCard() {
     const now = new Date();
     const evening = now.getHours() >= 17;
@@ -813,7 +860,7 @@ img { display: block; }
       }
     }
     const c = card('plan', '🗓️', 'var(--c-plan)', evening ? L().planTomorrow : L().planToday, L().dateShort(d), APPS.family,
-      off.length ? h('div', { class: 'plan-off' }, ...off.map((x) => h('span', { text: x }))) : null, grid);
+      off.length ? h('div', { class: 'plan-off' }, ...off.map((x) => h('span', { text: x }))) : null, grid, davinTimetable(k, !evening));
     return c;
   }
 
@@ -1050,7 +1097,7 @@ img { display: block; }
         t7: { id: 't7', text: '크리스마스 카드 쓰기', who: 'both', due: '', done: false, at: now - 8e4 },
         t8: { id: 't8', text: 'Steuererklärung Unterlagen sammeln', who: 'dad', due: '', done: false, at: now - 7e4 },
       },
-      routine: { [k(0)]: { family: { am: '수영장', pm: '할머니 영상통화', with: { am: ['dad', 'davin', 'arin'] } }, mom: { am: '', pm: '치과' }, dad: { am: '', pm: '@work' }, davin: { am: '', pm: '@tkd' }, arin: { am: '', pm: '' } } },
+      routine: { [k(0)]: { family: { am: '수영장', pm: '할머니 영상통화', with: { am: ['dad', 'davin', 'arin'] } }, mom: { am: '', pm: '치과' }, dad: { am: '', pm: '@work' }, davin: { am: '@school', pm: '@tkd' }, arin: { am: '', pm: '' } } },
       routineBase: {}, vacations: {},
       meals: {
         [k(0)]: { lunch: [{ text: 'Brezen' }, { text: 'Weißwurst' }], dinner: [{ text: '된장찌개' }, { text: '계란말이' }, { text: '어린이 김밥', kid: true }] },
