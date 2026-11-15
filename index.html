@@ -767,7 +767,7 @@ body.theme-bento { background: #FFF8EF; }
 
   // 옷 입은 아이 그림 (직접 그린 SVG, 160×250)
   function kidSVG(o) {
-    const SK = '#FFD9B8', HAIR = '#3B2A20', JEANS = '#4A6FA5';
+    const SK = '#FFD9B8', HAIR = '#8A5430', JEANS = '#4A6FA5'; // 우리 아이들처럼 갈색 머리
     const TOP = { tshirt: '#FF8A65', long: '#4CBE8C', hoodie: '#9B7BE0', jacket: '#2F7FC1', puffer: '#E85D75', raincoat: '#FFC928' }[o.top];
     const P = [];
     // 모자 뒤쪽 (후드)
@@ -824,7 +824,7 @@ body.theme-bento { background: #FFF8EF; }
 
   // 여자아이 (공주 느낌): 긴 머리 + 티아라/리본, 드레스·튤 치마, 메리제인 구두, 분홍 우산(왼손). 날씨에 맞는 옷은 남자아이와 같은 기준
   function girlSVG(o) {
-    const SK = '#FFD9B8', HAIR = '#4A2E22';
+    const SK = '#FFD9B8', HAIR = '#9A5E34'; // 갈색 머리
     const TOP = { tshirt: '#FF8AB3', long: '#C59BFF', hoodie: '#F7A8C8', jacket: '#B57EDC', puffer: '#FF6FA5', raincoat: '#FF9EC4' }[o.top];
     const dress = o.top === 'tshirt' || o.top === 'long'; // 원피스 (위아래 같은 색)
     const SKIRT = dress ? TOP : '#FFC4DD';
