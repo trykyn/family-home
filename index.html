@@ -520,6 +520,7 @@ body.theme-bento { background: #FFF8EF; }
 <div id="rotate"><div class="ic">📱</div><p>패드를 가로로 돌려 주세요</p><small>Bitte das iPad quer halten</small></div>
 
 <script src="firebase-config.js"></script>
+<script src="../our-family/stickers-shared.js"></script>
 <script>
 (() => {
   'use strict';
@@ -575,7 +576,7 @@ body.theme-bento { background: #FFF8EF; }
       todo: '챙길 할 일', noTodos: '급한 할 일이 없어요 🎉', more: (n) => `+ ${n}개 더`, doneMsg: '완료로 표시했어요', undo: '되돌리기',
       lunchTitle: '오늘 점심', dinnerTitle: '오늘 저녁', kidTag: '아이', noMeal: '아직 정하지 않았어요', eatSoon: '🧊 빨리 먹기',
       expToday: '오늘', expGone: '지남', expIn: (n) => `${n}일`,
-      kids: '칭찬 스티커', noReward: '보상 미정', giveBtn: '⭐ 칭찬 스티커 주기', giveWhy: '무엇을 잘했나요?', tapBox: '상자를 톡톡톡 눌러 봐!', giveStick: '⭐ 붙이기', back: '← 스티커판으로', doneAll: (n) => `🎉 큰 스티커 ${n}장 다 모았어요!`, newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
+      kids: '칭찬 스티커', noReward: '보상 미정', giveBtn: '⭐ 칭찬 스티커 주기', giveWhy: '무엇을 잘했나요?', tapBox: '상자를 톡톡톡 눌러 봐!', giveStick: '⭐ 붙이기', back: '← 스티커판으로', doneAll: (n) => `🎉 큰 스티커 ${n}장 다 모았어요!`, newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
       packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', wakeOff: '끄기', wakeAll: '하루 종일', wakeTime: '시간 정하기', wakeFrom: '시작 시간', wakeTo: '끝 시간', wakeFromTo: '부터', wakeUntil: '까지', wakeNowOn: '지금 화면을 켜 두고 있어요', wakeNowOff: '지금은 켜 두지 않아요 (패드 자동 잠금대로 꺼져요)', wakeNote: '정한 시간이 지나면 패드 설정의 ‘자동 잠금’ 시간이 지난 뒤 화면이 꺼져요. 그래서 패드 자동 잠금은 ‘안 함’ 말고 2~5분으로 해 두세요. 꺼진 화면은 웹 화면이 스스로 켤 수 없어서, 아침에는 화면을 한 번 눌러 깨워 주세요.', lang: 'DE',
       signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
@@ -592,7 +593,7 @@ body.theme-bento { background: #FFF8EF; }
       todo: 'Wichtige Aufgaben', noTodos: 'Nichts Dringendes 🎉', more: (n) => `+ ${n} weitere`, doneMsg: 'Als erledigt markiert', undo: 'Rückgängig',
       lunchTitle: 'Heute Mittag', dinnerTitle: 'Heute Abend', kidTag: 'Kinder', noMeal: 'Noch nichts geplant', eatSoon: '🧊 Bald essen',
       expToday: 'heute', expGone: 'abgelaufen', expIn: (n) => `${n} T.`,
-      kids: 'Sticker', noReward: 'Belohnung offen', giveBtn: '⭐ Sticker geben', giveWhy: 'Wofür?', tapBox: 'Tipp dreimal aufs Geschenk!', giveStick: '⭐ Aufkleben', back: '← Zurück zum Stickerbogen', doneAll: (n) => `🎉 Alle ${n} großen Sticker!`, newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
+      kids: 'Sticker', noReward: 'Belohnung offen', giveBtn: '⭐ Sticker geben', giveWhy: 'Wofür?', tapBox: 'Tipp dreimal aufs Geschenk!', giveStick: '⭐ Aufkleben', back: '← Zurück zum Stickerbogen', doneAll: (n) => `🎉 Alle ${n} großen Sticker!`, newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
       packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', wakeOff: 'Aus', wakeAll: 'Immer', wakeTime: 'Zeiten', wakeFrom: 'Von', wakeTo: 'Bis', wakeFromTo: 'bis', wakeUntil: '', wakeNowOn: 'Der Bildschirm bleibt gerade an', wakeNowOff: 'Gerade nicht (das iPad sperrt sich wie eingestellt)', wakeNote: 'Außerhalb der Zeit geht der Bildschirm nach der „Automatischen Sperre“ des iPads aus – stell sie dafür auf 2–5 Minuten statt „Nie“. Ein ausgeschalteter Bildschirm kann sich nicht selbst einschalten; morgens einmal antippen.', lang: '한',
       signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
@@ -790,6 +791,7 @@ body.theme-bento { background: #FFF8EF; }
   const kidOf = (k) => (famData().kids || {})[k] || {};
   const kidCfg = (k) => ({ small: k === 'arin' ? 7 : 10, big: 4, reward: '', start: 0, ...(kidOf(k).cfg || {}) });
   function kidProgress(k) {
+    if (window.FamilyStickers) return window.FamilyStickers.progressOf(kidOf(k), k);
     const c = kidCfg(k);
     const all = Object.values(kidOf(k).stickers || {}).filter((s) => s && (s.at || 0) >= (c.start || 0));
     const bigs = Math.min(Math.floor(all.length / c.small), c.big);
@@ -1421,101 +1423,14 @@ body.theme-bento { background: #FFF8EF; }
 
   /* ───────── ⭐ 칭찬 스티커판 (우리가족 앱과 같은 자료: kids.{k}.stickers.{id} = { at, d, why, by }) ─────────
      그림은 우리가족 앱과 똑같이: 다빈 = 동글동글 속성 몬스터, 아린 = 반짝이 하트 요정. 잠금(kids.lock)이 켜져 있으면 엄마·아빠 비밀번호 */
-  const MONSTERS = [
-    { c: '#FF8A3D', b: '#FFD9B8', top: 'flame' }, { c: '#3DA5FF', b: '#C8E8FF', top: 'drop' },
-    { c: '#4CBF5A', b: '#CFF2C9', top: 'leaf' }, { c: '#FFC928', b: '#FFF2BF', top: 'bolt' },
-    { c: '#9C7BFF', b: '#E4DAFF', top: 'horns' }, { c: '#FF6B9A', b: '#FFD6E3', top: 'star' },
-    { c: '#2EC4B6', b: '#C6F3EE', top: 'bubble' }, { c: '#B0805A', b: '#EBD8C6', top: 'rock' },
-  ];
-  const MON_TOP = {
-    flame: '<path d="M50 4c9 11 15 16 11 27 6-2 8-9 8-9 5 11-2 21-19 21S27 43 31 31c0 0 3 7 9 7-5-11 4-20 10-34z" fill="#FF5A1F"/><path d="M50 22c4 6 6 9 4 14-3 4-9 3-10-2 0-4 3-7 6-12z" fill="#FFD23F"/>',
-    drop: '<path d="M50 3c9 13 14 20 14 28a14 14 0 0 1-28 0c0-8 5-15 14-28z" fill="#1E7FD9"/><ellipse cx="45" cy="26" rx="3" ry="5" fill="#fff" opacity=".7"/>',
-    leaf: '<path d="M52 32c-3-15 8-26 26-29-2 18-11 29-26 29z" fill="#2E9D3F"/><path d="M53 31c5-9 12-16 21-23" stroke="#1E6F2B" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
-    bolt: '<path d="M57 2 37 31h13l-7 19 22-31H52z" fill="#FF9F1C" stroke="#8A5200" stroke-width="2" stroke-linejoin="round"/>',
-    horns: '<path d="M31 33 21 7l20 18zM69 33l10-26-20 18z" fill="#6A4BD6" stroke="#4A2FB0" stroke-width="1.5" stroke-linejoin="round"/>',
-    star: '<path d="m50 3 5.5 11.5 12.5 1.5-9.3 8.6 2.5 12.4L50 30.7 38.8 37l2.5-12.4L32 16l12.5-1.5z" fill="#FFD23F" stroke="#E09A00" stroke-width="2" stroke-linejoin="round"/>',
-    bubble: '<circle cx="36" cy="18" r="8" fill="#B5F0E9" stroke="#2EC4B6" stroke-width="2.4"/><circle cx="56" cy="9" r="6" fill="#B5F0E9" stroke="#2EC4B6" stroke-width="2.4"/><circle cx="67" cy="23" r="4.5" fill="#B5F0E9" stroke="#2EC4B6" stroke-width="2.4"/>',
-    rock: '<path d="M30 34 37 16l10 7 9-13 12 24z" fill="#7D5A3C" stroke="#5C3F28" stroke-width="2" stroke-linejoin="round"/>',
-  };
-  function monsterSVG(i) {
-    const m = MONSTERS[((i % MONSTERS.length) + MONSTERS.length) % MONSTERS.length];
-    return `<svg viewBox="0 0 100 100" aria-hidden="true">${MON_TOP[m.top]}
-      <ellipse cx="29" cy="90" rx="11" ry="6" fill="${m.c}"/><ellipse cx="71" cy="90" rx="11" ry="6" fill="${m.c}"/>
-      <circle cx="50" cy="60" r="32" fill="${m.c}"/><ellipse cx="50" cy="71" rx="20" ry="15" fill="${m.b}"/>
-      <ellipse cx="38" cy="54" rx="7.5" ry="8.5" fill="#fff"/><ellipse cx="62" cy="54" rx="7.5" ry="8.5" fill="#fff"/>
-      <circle cx="39.5" cy="55.5" r="4.4" fill="#1B1B1B"/><circle cx="63.5" cy="55.5" r="4.4" fill="#1B1B1B"/>
-      <circle cx="41.2" cy="53.6" r="1.6" fill="#fff"/><circle cx="65.2" cy="53.6" r="1.6" fill="#fff"/>
-      <path d="M43 66q7 7.5 14 0" stroke="#1B1B1B" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-      <ellipse cx="29" cy="64" rx="5.5" ry="3.2" fill="#FF6F86" opacity=".5"/><ellipse cx="71" cy="64" rx="5.5" ry="3.2" fill="#FF6F86" opacity=".5"/>
-    </svg>`;
-  }
-  const FAIRIES = [
-    { c: '#FF7EB6', top: 'crown' }, { c: '#B79CFF', top: 'ribbon' }, { c: '#6FD3BE', top: 'flower' }, { c: '#FFB066', top: 'star' },
-    { c: '#7CC4FF', top: 'moon' }, { c: '#FFC93C', top: 'rainbow' }, { c: '#FF8FA0', top: 'heart' }, { c: '#C79BF2', top: 'gem' },
-  ];
-  const FAI_TOP = {
-    crown: '<path d="M33 30 37 11l8 10 5-14 5 14 8-10 4 19z" fill="#FFD23F" stroke="#E09A00" stroke-width="2" stroke-linejoin="round"/><circle cx="50" cy="22" r="2.6" fill="#FF5FA2"/>',
-    ribbon: '<path d="M50 24 30 12v22zM50 24l20-12v22z" fill="#FF5FA2" stroke="#D93A80" stroke-width="1.5" stroke-linejoin="round"/><circle cx="50" cy="24" r="5.5" fill="#E8408A"/>',
-    flower: '<g fill="#FFF3A6" stroke="#F5C400" stroke-width="1.2"><circle cx="50" cy="8" r="6"/><circle cx="60" cy="16" r="6"/><circle cx="56" cy="28" r="6"/><circle cx="44" cy="28" r="6"/><circle cx="40" cy="16" r="6"/></g><circle cx="50" cy="19" r="5" fill="#FF8A3D"/>',
-    star: '<path d="m50 4 5.5 11.5 12.5 1.5-9.3 8.6 2.5 12.4L50 31.7 38.8 38l2.5-12.4L32 17l12.5-1.5z" fill="#FFE066" stroke="#F0B400" stroke-width="2" stroke-linejoin="round"/>',
-    moon: '<path d="M60 4a15 15 0 1 0 7 26 13 13 0 1 1-7-26z" fill="#FFE066" stroke="#F0B400" stroke-width="1.5"/>',
-    rainbow: '<path d="M24 32a26 26 0 0 1 52 0" stroke="#FF6B6B" stroke-width="5" fill="none"/><path d="M30 32a20 20 0 0 1 40 0" stroke="#FFD23F" stroke-width="5" fill="none"/><path d="M36 32a14 14 0 0 1 28 0" stroke="#5BC0EB" stroke-width="5" fill="none"/>',
-    heart: '<path d="M50 30C38 21 36 12 42 8c4-2 7 0 8 3 1-3 4-5 8-3 6 4 4 13-8 22z" fill="#FF3E7F"/>',
-    gem: '<path d="M38 18 44 8h12l6 10-12 14z" fill="#8FE3FF" stroke="#3BA9D9" stroke-width="2" stroke-linejoin="round"/><path d="M38 18h24M44 8l6 10 6-10" stroke="#3BA9D9" stroke-width="1.4" fill="none"/>',
-  };
-  function fairySVG(i) {
-    const f = FAIRIES[((i % FAIRIES.length) + FAIRIES.length) % FAIRIES.length];
-    return `<svg viewBox="0 0 100 100" aria-hidden="true">
-      <ellipse cx="17" cy="52" rx="13" ry="18" fill="#fff" opacity=".85" stroke="${f.c}" stroke-width="2"/><ellipse cx="83" cy="52" rx="13" ry="18" fill="#fff" opacity=".85" stroke="${f.c}" stroke-width="2"/>
-      ${FAI_TOP[f.top]}
-      <path d="M50 95C17 73 9 55 17 40c8-14 27-12 33 1 6-13 25-15 33-1 8 15 0 33-33 55z" fill="${f.c}"/>
-      <ellipse cx="40" cy="58" rx="6.5" ry="8" fill="#fff"/><ellipse cx="60" cy="58" rx="6.5" ry="8" fill="#fff"/>
-      <circle cx="40.5" cy="59.5" r="4.4" fill="#3B1B3B"/><circle cx="60.5" cy="59.5" r="4.4" fill="#3B1B3B"/>
-      <circle cx="42.2" cy="57.4" r="1.7" fill="#fff"/><circle cx="62.2" cy="57.4" r="1.7" fill="#fff"/><circle cx="39" cy="61.5" r=".9" fill="#fff"/><circle cx="59" cy="61.5" r=".9" fill="#fff"/>
-      <path d="M45 69q5 5 10 0" stroke="#3B1B3B" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-      <ellipse cx="31" cy="67" rx="5" ry="3" fill="#FF3E7F" opacity=".35"/><ellipse cx="69" cy="67" rx="5" ry="3" fill="#FF3E7F" opacity=".35"/>
-      <path d="M84 20l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#FFD23F"/>
-    </svg>`;
-  }
-  const stickerSVG = (kid, d) => (kid === 'arin' ? fairySVG(d) : monsterSVG(d));
-  const giftSVG = (kid) => {
-    const [a, b] = kid === 'arin' ? ['#FF9ED2', '#C79BF2'] : ['#FFE45C', '#FF9F1C'];
-    return `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="14" y="40" width="72" height="52" rx="8" fill="${a}"/><rect x="8" y="28" width="84" height="18" rx="6" fill="${b}"/>
-      <rect x="44" y="28" width="12" height="64" fill="#fff" opacity=".85"/><path d="M50 28C38 10 22 14 28 24c3 5 14 4 22 4zM50 28c12-18 28-14 22-4-3 5-14 4-22 4z" fill="#fff" stroke="${b}" stroke-width="3" stroke-linejoin="round"/>
-      <circle cx="30" cy="62" r="3" fill="#fff" opacity=".7"/><circle cx="70" cy="74" r="3" fill="#fff" opacity=".7"/></svg>`;
-  };
-  function bigSVG(kid, d) {
-    const inner = stickerSVG(kid, d).replace('<svg viewBox="0 0 100 100" aria-hidden="true">', '<svg x="19" y="13" width="62" height="62" viewBox="0 0 100 100">');
-    const rb = kid === 'arin' ? '#FF5FA2' : '#3DA5FF';
-    return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M32 72 22 99l13-5 8 9 7-30zM68 72l10 27-13-5-8 9-7-30z" fill="${rb}"/>
-      <circle cx="50" cy="45" r="43" fill="#FFC928" stroke="#E09A00" stroke-width="4"/><circle cx="50" cy="45" r="35" fill="#FFF0A8"/>${inner}
-      <path d="M17 34a35 35 0 0 1 20-22" stroke="#fff" stroke-width="5" opacity=".7" fill="none" stroke-linecap="round"/></svg>`;
-  }
-  const WHY = {
-    brush: ['🪥', '양치', 'Zähne putzen'], tidy: ['🧸', '정리', 'Aufräumen'], homework: ['📚', '숙제', 'Hausaufgaben'], help: ['🤝', '도와줬어요', 'Geholfen'],
-    eat: ['🥦', '골고루 먹기', 'Gut gegessen'], kind: ['💖', '착한 행동', 'Lieb gewesen'], sleep: ['😴', '일찍 자기', 'Früh ins Bett'], brave: ['🦁', '용감했어요', 'Mutig gewesen'],
-  };
-  // 소리 (우리가족 앱과 같은 짧은 효과음)
-  let actx = null;
-  function tone(notes) {
-    try {
-      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
-      if (actx.state === 'suspended') actx.resume();
-      const t0 = actx.currentTime;
-      for (const [f, t, d, type] of notes) {
-        const o = actx.createOscillator(), g = actx.createGain();
-        o.type = type || 'sine'; o.frequency.setValueAtTime(f, t0 + t);
-        g.gain.setValueAtTime(0.0001, t0 + t); g.gain.exponentialRampToValueAtTime(0.22, t0 + t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t0 + t + d);
-        o.connect(g).connect(actx.destination); o.start(t0 + t); o.stop(t0 + t + d + 0.03);
-      }
-    } catch {}
-  }
-  const SND = {
-    tap: (n) => tone([[440 * Math.pow(1.26, n), 0, 0.14, 'triangle']]),
-    tada: () => tone([[523, 0, 0.16], [659, 0.12, 0.16], [784, 0.24, 0.16], [1047, 0.36, 0.45]]),
-    boing: () => tone([[260, 0, 0.12, 'triangle'], [420, 0.07, 0.18, 'triangle']]),
-    stick: () => tone([[880, 0, 0.08], [1320, 0.06, 0.16]]),
-  };
+  // 스티커 그림 · 칭찬 이유 · 소리 · 개수 규칙은 우리가족 앱과 함께 쓰는 공통 파일(../our-family/stickers-shared.js)에서 가져옴.
+  // 그 파일을 고치면 두 앱에 한 번에 적용됨. 못 불러왔으면(처음 켤 때 인터넷이 없는 등) 스티커판만 쉬고 나머지는 그대로
+  const FS = window.FamilyStickers || null;
+  const stickerSVG = (k, d) => (FS ? FS.stickerSVG(k, d) : '');
+  const giftSVG = (k) => (FS ? FS.giftSVG(k) : '');
+  const bigSVG = (k, d) => (FS ? FS.bigSVG(k, d) : '');
+  const WHY = FS ? FS.WHY : {};
+  const SND = FS ? FS.SND : { tap() {}, tada() {}, boing() {}, stick() {} };
   const kidsData = () => famData().kids || {};
   function kidsWrite(path, value) {
     if (DEMO) {
@@ -1556,14 +1471,13 @@ body.theme-bento { background: #FFF8EF; }
     box.hidden = false;
   }
   let stk = null; // { k, mode: 'board' | 'give', why, d, taps, pop }
-  function openStickers(k) { stk = { k, mode: 'board', why: '', d: 0, taps: 0, pop: null }; drawStickers(); $('#stk').hidden = false; }
+  function openStickers(k) { if (!FS) { toast(L().stkOffline); return; } stk = { k, mode: 'board', why: '', d: 0, taps: 0, pop: null }; drawStickers(); $('#stk').hidden = false; }
   function closeStickers() { stk = null; $('#stk').hidden = true; $('#stk-card').replaceChildren(); }
   const wig = (el) => { el.classList.remove('wig'); void el.offsetWidth; el.classList.add('wig'); };
   function drawStickers() {
     if (!stk) return;
     const k = stk.k, P = kidProgress(k), c = P.c;
-    const all = Object.entries(kidOf(k).stickers || {}).map(([id, x]) => ({ id, ...x })).filter((x) => (x.at || 0) >= (c.start || 0)).sort((a, b) => (a.at || 0) - (b.at || 0));
-    const smallNow = P.gift ? [] : all.slice(P.bigs * c.small);
+    const all = P.all || [], smallNow = P.smallNow || [];
     const reward = kidText(c.reward, c.rsrc, c.rtr), bigReward = kidText(c.bigReward, c.bsrc, c.btr);
     const tabs = h('div', { class: 'stk-tabs' }, ...['davin', 'arin'].map((x) => h('button', { type: 'button', 'aria-pressed': String(x === k), style: `--mc:${WHO[x]}`,
       onclick: () => { stk = { k: x, mode: 'board', why: '', d: 0, taps: 0, pop: null }; drawStickers(); } }, h('img', { src: avatarOf(x), alt: '' }), L().who[x])));
