@@ -1937,8 +1937,9 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       const meals = Object.fromEntries(Object.entries(d.meals || {}).filter(([k]) => k >= from && k <= to));
       const kids = {};
       const mFrom = window.FamilyStickers ? window.FamilyStickers.weekKeys(todayKey())[0] : keyOf(addDays(new Date(), -6));
-      for (const k of ['davin', 'arin']) if (d.kids && d.kids[k]) kids[k] = { cfg: d.kids[k].cfg || {}, stickers: d.kids[k].stickers || {}, money: d.kids[k].money || null,
-        missions: d.kids[k].missions || null, golds: d.kids[k].golds || {}, timetable: d.kids[k].timetable || null, mdone: Object.fromEntries(Object.entries(d.kids[k].mdone || {}).filter(([day]) => day >= mFrom)) };
+      // 네 명 모두 (엄마·아빠도 주간 미션 · 🥚 포켓몬 방). poke = 포켓몬 방 자료 — 빠지면 알을 골라도 다시 '알 고르기'가 됨
+      for (const k of ['davin', 'arin', 'mom', 'dad']) if (d.kids && d.kids[k]) kids[k] = { cfg: d.kids[k].cfg || {}, stickers: d.kids[k].stickers || {}, money: d.kids[k].money || null,
+        missions: d.kids[k].missions || null, golds: d.kids[k].golds || {}, timetable: d.kids[k].timetable || null, poke: d.kids[k].poke || null, mdone: Object.fromEntries(Object.entries(d.kids[k].mdone || {}).filter(([day]) => day >= mFrom)) };
       if (d.kids && d.kids.lock) kids.lock = d.kids.lock;
       fam = {
         todos: d.todos || {}, routine: d.routine || {}, routineBase: d.routineBase || {}, vacations: d.vacations || {}, meals, kids,
