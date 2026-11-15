@@ -756,7 +756,8 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   if (!T[lang]) lang = 'ko';
   const L = () => T[lang];
   const WHO = { family: '#2A9690', mom: '#D2557F', dad: '#2F7FC1', davin: '#B89000', arin: '#8E52CC', both: '#2A9690' };
-  const MEMBERS = ['family', 'mom', 'dad', 'davin', 'arin'];
+  // '가족' 줄은 없앰 (우리가족 앱과 같이). 예전 가족 일정은 우리가족 앱이 사람별로 옮김 — 옮기기 전에는 아래 planCard 가 함께하는 사람 칸에 보여 줌
+  const MEMBERS = ['mom', 'dad', 'davin', 'arin'];
   const avatarOf = (m) => `avatar-${m}.png`; // 가족 = 우리가족 앱의 가족 그림
 
   /* ───────── 상태 ───────── */
@@ -787,12 +788,13 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   const ACT = {
     work: ['일', 'Arbeit'], school: ['학교', 'Schule'], kinder: ['유치원', 'Kindergarten'], swim: ['수영', 'Schwimmen'],
     schoolSport: ['학교 운동', 'Schulsport'], tkd: ['태권도', 'Taekwondo'], music: ['음악', 'Musik'],
+    sick: ['아파요', 'Krank'],
   };
   const W = (am, pm) => ({ am: am ? `@${am}` : '', pm: pm ? `@${pm}` : '' });
-  const ACT_IC = { work: '💼', school: '🏫', kinder: '🧸', swim: '🏊', schoolSport: '⚽', tkd: '🥋', music: '🎵' };
+  const ACT_IC = { work: '💼', school: '🏫', kinder: '🧸', swim: '🏊', schoolSport: '⚽', tkd: '🥋', music: '🎵', sick: '🤒' };
   // 직접 쓴 일정은 낱말을 보고 그림을 고름 (한국어·독일어). 못 찾으면 📌
   const WORD_IC = [
-    [/생일|파티|geburtstag|party|feier/i, '🎂'], [/치과|zahnarzt/i, '🦷'], [/병원|의사|소아과|검진|arzt|klinik|praxis|impf/i, '🏥'],
+    [/생일|파티|geburtstag|party|feier/i, '🎂'], [/아파|아픔|감기|열나|krank|fieber|erkält/i, '🤒'], [/치과|zahnarzt/i, '🦷'], [/병원|의사|소아과|검진|arzt|klinik|praxis|impf/i, '🏥'],
     [/수영|schwimm/i, '🏊'], [/축구|fußball|fussball/i, '⚽'], [/태권도|taekwondo/i, '🥋'], [/발레|ballett/i, '🩰'], [/체조|turnen/i, '🤸'],
     [/피아노|klavier/i, '🎹'], [/기타|gitarre/i, '🎸'], [/바이올린|geige/i, '🎻'], [/음악|노래|musik|chor|singen/i, '🎵'],
     [/미술|그림|malen|kunst|basteln/i, '🎨'], [/도서관|책|bibliothek|bücherei|lesen/i, '📚'], [/놀이터|spielplatz/i, '🛝'],
@@ -1678,7 +1680,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     if (!FS) return null;
     const W = FS.weekState(kidOf(k), k, todayKey()), G = FS.goldState(kidOf(k), k);
     const labels = FS.WEEK_LABEL[lang] || FS.WEEK_LABEL.ko;
-    return h('span', { class: 'wk-mini' }, ...W.days.map((x) => h('i', { class: x.status, html: x.got ? stickerSVG(k, x.d) : `<em>${labels[x.i]}</em>` })));
+    return h('span', { class: 'wk-mini' }, ...W.days.map((x) => h('i', { class: x.status, html: x.got ? stickerSVG(k, x.d) : `<em>${x.sick ? '🤒' : labels[x.i]}</em>` })));
   }
   function goldMini(k) {
     if (!FS) return null;
@@ -1796,7 +1798,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       const week = h('div', { class: 'wk-board' }, ...W.days.map((x) => {
         const el = h('button', { type: 'button', class: `wk-slot ${x.status}` + (x.id && x.id === stk.pop ? ' pop' : ''),
           onclick: () => { if (x.got) { if (stk.del) return delDay(k, x); wig(el); SND.boing(); } else parentOnly(() => toggleOff(k, x)); } },
-          x.got ? h('span', { class: 'pic', html: stickerSVG(k, x.d) }) : h('span', { class: 'pic', text: x.off ? '🏖️' : x.status === 'missed' ? '·' : x.status === 'today' ? '⭐' : '' }),
+          x.got ? h('span', { class: 'pic', html: stickerSVG(k, x.d) }) : h('span', { class: 'pic', text: x.sick ? '🤒' : x.off ? '🏖️' : x.status === 'missed' ? '·' : x.status === 'today' ? '⭐' : '' }),
           h('span', { class: 'day', text: labels[x.i] }));
         return el;
       }));
@@ -1857,7 +1859,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   // 쉬는 날 표시/해제 (아프거나 여행 간 날) — 표시해서 이번 주가 다 차면 황금 스티커도
   function toggleOff(k, x) {
     const today = todayKey();
-    if (x.off) { kidsWrite([k, 'mdone', x.key, 'off'], null); setMdone(k, x.key, 'off', null); drawStickers(); renderGrid(); toast(L().offUndone); return; }
+    if (x.off) { kidsWrite([k, 'mdone', x.key, 'off'], null); setMdone(k, x.key, 'off', null); if (x.sick) { kidsWrite([k, 'mdone', x.key, 'sick'], null); setMdone(k, x.key, 'sick', null); } drawStickers(); renderGrid(); toast(L().offUndone); return; }
     if (FS.weekCompletesWithOff(kidOf(k), k, today, x.key)) {
       const wk = FS.weekKeys(today)[0], g = { at: Date.now(), d: Math.floor(Math.random() * 8) };
       kidsWrite([k, 'golds', wk], g);
@@ -2139,7 +2141,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
         t7: { id: 't7', text: '크리스마스 카드 쓰기', who: 'both', due: '', pri: 1, done: false, at: now - 8e4 },
         t8: { id: 't8', text: 'Steuererklärung Unterlagen sammeln', who: 'dad', due: '', done: false, at: now - 7e4 },
       },
-      routine: { [k(0)]: { family: { am: '수영장', pm: '할머니 영상통화', with: { am: ['dad', 'davin', 'arin'] } }, mom: { am: '', pm: '치과' }, dad: { am: '', pm: 'Herr Maier Termin' }, davin: { am: '@school', pm: '@tkd' }, arin: { am: '', pm: 'Lena랑 놀이터' } } },
+      routine: { [k(0)]: { family: { am: '수영장', pm: '할머니 영상통화', with: { am: ['dad', 'davin', 'arin'] } }, mom: { am: '', pm: '치과' }, dad: { am: '', pm: 'Herr Maier Termin' }, davin: { am: '@school', pm: '@tkd' }, arin: { am: '@sick', pm: 'Lena랑 놀이터' } } },
       routineBase: {}, vacations: {},
       meals: {
         [k(0)]: { lunch: [{ text: 'Brezen' }, { text: 'Weißwurst' }], dinner: [{ text: '된장찌개' }, { text: '계란말이' }, { text: '어린이 김밥', kid: true }] },
@@ -2148,7 +2150,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       },
       kids: {
         davin: { cfg: { small: 10, big: 4, reward: '레고 시티 경찰서', start: 0 }, stickers: st(16), money: { m1: { amt: 10 }, m2: { amt: 2.5 }, m3: { amt: -4 } }, mdone: { [k(0)]: { brushAM: true, study: true }, [k(-6)]: { got: 's0' }, [k(-5)]: { got: 's1' }, [k(-4)]: { got: 's2' }, [k(-2)]: { got: 's3' } }, golds: { [k(-13)]: { at: now - 8 * 864e5, d: 3 } } },
-        arin: { cfg: { small: 7, big: 4, reward: '공주 스티커북', start: 0 }, stickers: st(5), mdone: { [k(-6)]: { got: 's0' }, [k(-5)]: { got: 's1' }, [k(-4)]: { got: 's2' }, [k(-3)]: { got: 's3' }, [k(-2)]: { got: 's4' } } },
+        arin: { cfg: { small: 7, big: 4, reward: '공주 스티커북', start: 0 }, stickers: st(5), mdone: { [k(-6)]: { got: 's0' }, [k(-5)]: { got: 's1' }, [k(-4)]: { got: 's2' }, [k(-3)]: { got: 's3' }, [k(-2)]: { got: 's4' }, [k(-1)]: { sick: true } } },
         lock: { on: true, pin: '12' },
       },
       stores: { super: { id: 'super', key: 'super' }, asia: { id: 'asia', key: 'asia' }, online: { id: 'online', key: 'online' } },
