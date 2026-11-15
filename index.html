@@ -1711,11 +1711,11 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   }
   // 🗑 지우기: 그날 스티커 (그 주 황금 스티커도 — 이제 주가 안 찼으니) / 황금 스티커. 되돌리기 가능
   function delDay(k, x) {
-    const kd = kidOf(k), s = (kd.stickers || {})[x.id], wk = FS.weekKeys(x.key)[0], g = (kd.golds || {})[wk], it = ((kd[FS.ROOM] || {}).items || {})[x.id];
+    const kd = kidOf(k), s = (kd.stickers || {})[x.id], wk = FS.weekKeys(x.key)[0], g = (kd.golds || {})[wk], it = ((kd[FS.ROOM] || {}).items || {})[x.id], ic = ((kd[FS.ROOM] || {}).items || {})[x.id + 'c'];
     const redraw = () => { drawStickers(); renderGrid(); };
-    kidSet([k, 'mdone', x.key, 'got'], null); kidSet([k, 'stickers', x.id], null); if (g) kidSet([k, 'golds', wk], null); if (it) kidSet([k, FS.ROOM, 'items', x.id], null);
+    kidSet([k, 'mdone', x.key, 'got'], null); kidSet([k, 'stickers', x.id], null); if (g) kidSet([k, 'golds', wk], null); if (it) kidSet([k, FS.ROOM, 'items', x.id], null); if (ic) kidSet([k, FS.ROOM, 'items', x.id + 'c'], null);
     redraw();
-    toast(L().delToast, () => { kidSet([k, 'mdone', x.key, 'got'], x.id); if (s) kidSet([k, 'stickers', x.id], s); if (g) kidSet([k, 'golds', wk], g); if (it) kidSet([k, FS.ROOM, 'items', x.id], it); redraw(); });
+    toast(L().delToast, () => { kidSet([k, 'mdone', x.key, 'got'], x.id); if (s) kidSet([k, 'stickers', x.id], s); if (g) kidSet([k, 'golds', wk], g); if (it) kidSet([k, FS.ROOM, 'items', x.id], it); if (ic) kidSet([k, FS.ROOM, 'items', x.id + 'c'], ic); redraw(); });
   }
   function delGold(k, g) {
     const { week, ...v } = g;
@@ -1766,7 +1766,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       if (taps < 3) { wig(gift); return; }
       SND.tada();
       gift.replaceWith(h('div', { class: 'reveal', html: stickerSVG(k, d) }));
-      dots.remove(); hint.textContent = L().rewardGot(`${FS.rewardIcon(d)} ${FS.rewardLabel(d, lang)}`);
+      dots.remove(); hint.textContent = L().rewardGot(FS.rewardText(d, lang));
       const fx = h('div', { class: 'pk-yay' }, ...Array.from({ length: 22 }, (_, i) => h('i', { text: ['⭐', '🎉', '✨', '💛'][i % 4], style: `left:${(i * 41) % 100}%;animation-delay:${(i % 6) * 0.1}s` })));
       document.body.append(fx); setTimeout(() => fx.remove(), 2600);
       setTimeout(() => { box.hidden = true; giveSticker(k, d); }, 1500);
@@ -1788,13 +1788,13 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     kidSet([k, 'mdone', day, 'got'], id);
     kidSet([k, 'stickers', id], st);
     const it = FS.rewardItem(d); // 🥚 포켓몬 방 가방에 열매/코인
-    if (it) kidSet([k, FS.ROOM, 'items', id], it);
+    if (it) { kidSet([k, FS.ROOM, 'items', id], it); kidSet([k, FS.ROOM, 'items', id + 'c'], 'coin'); } // 열매 + 🪙 1개
     SND.stick();
     if (stk) stk.pop = id;
     const redraw = () => { drawStickers(); renderGrid(); };
     redraw();
     toast(L().stkGiven, () => {
-      kidSet([k, 'stickers', id], null); kidSet([k, 'mdone', day, 'got'], null); if (it) kidSet([k, FS.ROOM, 'items', id], null);
+      kidSet([k, 'stickers', id], null); kidSet([k, 'mdone', day, 'got'], null); if (it) { kidSet([k, FS.ROOM, 'items', id], null); kidSet([k, FS.ROOM, 'items', id + 'c'], null); }
       if (goldWeek) kidSet([k, 'golds', goldWeek], null);
       redraw();
     });
