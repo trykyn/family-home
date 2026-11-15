@@ -13,7 +13,7 @@
 <title>우리집 한눈에</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Jua&family=Gaegu:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Jua&display=swap">
 <style>
 /* 우리집 한눈에 — 집에 세워 둔 패드(가로 고정)용 가족 대시보드 (구글 홈 화면처럼 한 화면에 다 보이게).
    위: 시계·날짜·날씨 / 아래 카드: 가족 일정 · 캘린더 · 할 일 · 식단 · 장보기 · 아이들 스티커.
@@ -348,21 +348,6 @@ img { display: block; }
 .stk-btn { display: block; margin: 10px auto 0; padding: 16px 34px; border-radius: 22px; background: #FFC928; color: #5A4300; font: 400 24px/1 var(--font-display); box-shadow: 0 10px 22px -12px rgba(160,110,0,.8); }
 .k-arin .stk-btn { background: #FF8AB3; color: #fff; }
 .done-banner { text-align: center; padding: 18px; border-radius: 24px; background: #FFF1B8; font: 400 22px/1.4 var(--font-display); }
-.stk-give { text-align: center; }
-.stk-q { margin: 0 0 10px; font: 400 22px var(--font-display); }
-.why-pics { display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px; margin-bottom: 14px; }
-.why-pics button { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px; border-radius: 18px; background: #fff; border: 3px solid transparent; font-size: 13px; font-weight: 600; }
-.why-pics button .e { font-size: 34px; }
-.why-pics button[aria-pressed="true"] { border-color: #FFC928; background: #FFF6D0; }
-.gift-area { display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 230px; justify-content: center; }
-.gift-area .gift { width: 170px; height: 170px; animation: bob 1.8s ease-in-out infinite; }
-.gift-area .gift svg, .gift-area .reveal svg { width: 100%; height: 100%; }
-.gift-area .reveal { width: 180px; height: 180px; animation: stk-pop .7s cubic-bezier(.2,1.6,.4,1); }
-.gift-area .taps { display: flex; gap: 8px; }
-.gift-area .taps i { width: 14px; height: 14px; border-radius: 50%; background: #E2D7F0; }
-.gift-area .taps i.on { background: #FFC928; }
-.gift-area .hint { font: 400 18px var(--font-display); color: var(--muted); }
-.stk-give .link { margin-top: 10px; color: var(--muted); font-size: 15px; text-decoration: underline; }
 .ms-mini { display: flex; align-items: center; gap: 3px; margin-top: 2px; }
 .ms-mini span { font-size: 18px; line-height: 1; filter: grayscale(1); opacity: .35; }
 .ms-mini span.on { filter: none; opacity: 1; }
@@ -502,7 +487,7 @@ body { overflow: hidden; }
 .due { font-size: 14px; }
 .kid { padding: 8px 0; }
 
-/* ═══════════ 디자인 시안 (?theme=glass | fridge | bento, 기본 = basic). 한 번 열면 그 패드에서 기억 ═══════════ */
+/* ═══════════ 사계절 창문: 화면 전체 계절 배경 + 반투명 카드 ═══════════ */
 
 /* ── 1. 사계절 창문: 화면 전체가 계절 풍경, 카드는 반투명 유리 ── */
 #bg { display: none; }
@@ -529,72 +514,6 @@ body { overflow: hidden; }
 .theme-glass .w-panel { background: rgba(255,255,255,.55); }
 .theme-glass .pg .slot { background: color-mix(in srgb, var(--mc) 14%, rgba(255,255,255,.7)); }
 .theme-glass .ttb .per { background: rgba(255,246,214,.8); }
-
-/* ── 2. 냉장고 자석 보드: 은색 냉장고 문에 종이 메모 + 자석 + 마스킹테이프, 손글씨 제목 ── */
-body.theme-fridge {
-  background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,0) 0 3px, rgba(255,255,255,.35) 3px 4px),
-    linear-gradient(100deg, #E9EDF1 0%, #FAFBFC 38%, #EEF1F4 62%, #F9FAFB 100%);
-}
-.theme-fridge .card { background: #FFFEF7; border-radius: 6px; padding-top: 22px; position: relative; overflow: visible;
-  box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 16px 26px -18px rgba(30,40,50,.5); transform: rotate(var(--rot, 0deg)); }
-.theme-fridge .card::before { /* 자석 */
-  content: ""; position: absolute; top: -13px; left: 50%; width: 30px; height: 30px; margin-left: -15px; border-radius: 50%; z-index: 3;
-  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.85) 0 18%, transparent 19%), var(--mag, #3DA5FF);
-  box-shadow: 0 4px 6px -2px rgba(0,0,0,.35), inset 0 -3px 0 rgba(0,0,0,.15);
-}
-.theme-fridge #card-plan { --rot: -.5deg; --mag: #E85D75; }
-.theme-fridge #card-cal { --rot: .4deg; --mag: #3DA5FF; }
-.theme-fridge #card-todo { --rot: -.3deg; --mag: #4CBE8C; }
-.theme-fridge #card-kids { --rot: .6deg; --mag: #FFC928; }
-.theme-fridge .c-ic { display: none; }
-.theme-fridge .c-title { font: 700 27px/1 "Gaegu", var(--font-display); }
-.theme-fridge .c-sub { font-family: "Gaegu", var(--font-body); font-weight: 700; font-size: 16px; }
-.theme-fridge #card-todo .c-body { background: repeating-linear-gradient(transparent 0 43px, #E3ECF5 43px 44px); }
-.theme-fridge .todo + .todo { border-top: 0; }
-.theme-fridge .weather { border-radius: 4px; border: 9px solid #fff; border-bottom-width: 9px; transform: rotate(-.6deg); box-shadow: 0 16px 26px -16px rgba(30,40,50,.55); overflow: visible; }
-.theme-fridge .weather::after, .theme-fridge .dinner-box::after { /* 마스킹테이프 */
-  content: ""; position: absolute; top: -14px; left: 50%; width: 92px; height: 24px; margin-left: -46px; z-index: 5; transform: rotate(-3deg);
-  background: repeating-linear-gradient(45deg, rgba(255,201,40,.75) 0 8px, rgba(255,225,120,.75) 8px 16px); border-radius: 2px;
-}
-.theme-fridge .weather .scene { border-radius: 0; }
-.theme-fridge .dinner-box { position: relative; border-radius: 4px; background: #FFF6C9; transform: rotate(1deg); overflow: visible; }
-.theme-fridge .dinner-box::after { width: 64px; margin-left: -32px; background: repeating-linear-gradient(45deg, rgba(106,175,230,.7) 0 8px, rgba(160,210,245,.7) 8px 16px); }
-.theme-fridge .tool { border-radius: 50%; background: #fff; }
-.theme-fridge .clock { font-family: "Gaegu", var(--font-display); font-weight: 700; font-size: 104px; }
-.theme-fridge .date-line { font-family: "Gaegu", var(--font-display); font-weight: 700; font-size: 28px; }
-.theme-fridge .pg .slot, .theme-fridge .ttb .per, .theme-fridge .pkr button { border-radius: 8px; }
-
-/* ── 3. 알록달록 블록: 카드마다 다른 파스텔 색 덩어리, 시계는 진한 남색 블록 ── */
-body.theme-bento { background: #FFF8EF; }
-.theme-bento .card { box-shadow: none; border-radius: 30px; }
-.theme-bento #card-plan { background: #E3F1FC; }
-.theme-bento #card-cal { background: #FFE6D8; }
-.theme-bento #card-todo { background: #DFF5E8; }
-.theme-bento #card-kids { background: #FFE2EC; }
-.theme-bento .c-ic { background: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; }
-.theme-bento .c-title { font-size: 25px; }
-.theme-bento .c-go, .theme-bento .day-nav button:not(.back) { background: #fff; }
-.theme-bento .clockbox { background: #1E3A5F; border-radius: 30px; padding: 0 22px; justify-content: center; }
-.theme-bento .clock { color: #fff; }
-.theme-bento .date-line { color: #9FC6E8; }
-.theme-bento .weather { border-radius: 30px; box-shadow: none; }
-.theme-bento .dinner-box { background: #FFE89A; box-shadow: none; border-radius: 26px; }
-.theme-bento .dinner-box .ico { background: #fff; }
-.theme-bento .tool { background: #fff; box-shadow: none; border-radius: 16px; }
-.theme-bento .pg .slot { background: #fff; }
-.theme-bento .pg .slot.home { background: transparent; border-color: rgba(30,58,95,.15); }
-.theme-bento .pg .half.now { background: #FFE89A; }
-.theme-bento .ttb { border-top-color: rgba(30,58,95,.15); }
-.theme-bento .ttb .per { background: #fff; }
-.theme-bento .pkr { border-top-color: rgba(30,58,95,.15); }
-.theme-bento .pkr button { background: #fff; }
-.theme-bento .ev { background: #fff; border-radius: 10px; padding: 8px 10px 8px 12px; margin: 5px 0; border-left-width: 6px; }
-.theme-bento .ev-day.today { color: #D9612E; }
-.theme-bento .todo { background: #fff; border-radius: 14px; padding: 8px 10px; margin-bottom: 6px; }
-.theme-bento .todo + .todo { border-top: 0; }
-.theme-bento .kid + .kid { border-top-color: rgba(0,0,0,.06); }
-.theme-bento .bar { background: #fff; }
 
 /* ═══ 오늘 일정 크게 · 이번 주 일정 좁게(스크롤) · 주간 미션 크게 ═══ */
 .pg { gap: 10px 10px; }
@@ -680,11 +599,8 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   // localhost 에서 ?demo 로 열면 로그인 없이 예시 자료로 화면을 봄 (개발용)
   const DEMO = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).has('demo');
 
-  const THEMES = ['basic', 'glass', 'fridge', 'bento'];
-  let theme = new URLSearchParams(location.search).get('theme');
-  try { if (THEMES.includes(theme)) localStorage.setItem('family-home:theme', JSON.stringify(theme)); else theme = JSON.parse(localStorage.getItem('family-home:theme')); } catch {}
-  if (!THEMES.includes(theme)) theme = 'glass'; // 기본 = 사계절 창문 (2026-11-15 가족이 고름)
-  document.body.classList.add('theme-' + theme);
+  const theme = 'glass'; // 사계절 창문 (2026-11-15 가족이 고름)
+  document.body.classList.add('theme-glass');
 
   /* ───────── 작은 도구들 ───────── */
   const $ = (s, r = document) => r.querySelector(s);
@@ -703,6 +619,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   }
   const load = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } };
   const store = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  ['family-home:theme', 'family-home:weather', 'family-home:weather2', 'family-home:weather3'].forEach((k) => store(k, null)); // 예전 버전이 남긴 것
   const pad = (n) => String(n).padStart(2, '0');
   const keyOf = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   const fromKey = (k) => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
@@ -723,16 +640,16 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       dateShort: (d) => `${d.getMonth() + 1}/${d.getDate()} (${WD_KO[d.getDay()]})`,
       today: '오늘', tomorrow: '내일',
       who: { family: '가족', mom: '엄마', dad: '아빠', davin: '다빈', arin: '아린', both: '같이' },
-      planToday: '오늘 일정', planTomorrow: '내일 일정', planYesterday: '어제 일정', planDay: '일정', backToday: '오늘로', am: '오전', pm: '오후', dayOff: '쉬는 날', atHome: '집',
+      planToday: '오늘 일정', planTomorrow: '내일 일정', planYesterday: '어제 일정', planDay: '일정', backToday: '오늘로', am: '오전', pm: '오후', atHome: '집',
       cal: '이번 주 일정', noEvents: '일주일 안에 일정이 없어요', noCal: '우리가족 앱에서 구글 캘린더를 연결하면 보여요',
       todo: '챙길 할 일', noTodos: '급한 할 일이 없어요 🎉', more: (n) => `+ ${n}개 더`, doneMsg: '완료로 표시했어요', undo: '되돌리기',
       lunchTitle: '오늘 점심', dinnerTitle: '오늘 저녁', kidTag: '아이', noMeal: '아직 정하지 않았어요', eatSoon: '🧊 빨리 먹기',
-      expToday: '오늘', expGone: '지남', expIn: (n) => `${n}일`,
-      kids: '주간 미션', noReward: '선물 미정', delMode: '스티커 지우기', delHint: '🗑 지울 스티커를 누르세요 (실수하면 되돌리기)', delDone: '완료', delToast: '스티커를 지웠어요', offHint: '빈 칸을 누르면 엄마·아빠가 🏖️ 쉬는 날(아프거나 여행 간 날)로 표시해요', offDone: '🏖️ 쉬는 날로 표시했어요', offUndone: '쉬는 날 표시를 지웠어요', giveBtn: '⭐ 칭찬 스티커 주기', giveWhy: '무엇을 잘했나요?', tapBox: '상자를 톡톡톡 눌러 봐!', giveStick: '⭐ 붙이기', back: '← 스티커판으로', doneAll: (n) => `🎉 큰 스티커 ${n}장 다 모았어요!`, newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 선물 상자 열기!', msGiftTitle: '🎉 오늘 미션 다 했어요!', stkYay: '와! 스티커가 나왔어요!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
+      
+      kids: '주간 미션', noReward: '선물 미정', delMode: '스티커 지우기', delHint: '🗑 지울 스티커를 누르세요 (실수하면 되돌리기)', delDone: '완료', delToast: '스티커를 지웠어요', offHint: '빈 칸을 누르면 엄마·아빠가 🏖️ 쉬는 날(아프거나 여행 간 날)로 표시해요', offDone: '🏖️ 쉬는 날로 표시했어요', offUndone: '쉬는 날 표시를 지웠어요', tapBox: '상자를 톡톡톡 눌러 봐!', newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 선물 상자 열기!', msGiftTitle: '🎉 오늘 미션 다 했어요!', stkYay: '와! 스티커가 나왔어요!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', 
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
       packNone: '챙길 준비물이 없어요 🙂', packHow: '우리가족 앱 → 오늘 일정 아래 🎒 준비물에서 넣을 수 있어요', packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', wakeOff: '끄기', wakeAll: '하루 종일', wakeTime: '시간 정하기', wakeFrom: '시작 시간', wakeTo: '끝 시간', wakeFromTo: '부터', wakeUntil: '까지', wakeNowOn: '지금 화면을 켜 두고 있어요', wakeNowOff: '지금은 켜 두지 않아요 (패드 자동 잠금대로 꺼져요)', wakeNote: '정한 시간이 지나면 패드 설정의 ‘자동 잠금’ 시간이 지난 뒤 화면이 꺼져요. 그래서 패드 자동 잠금은 ‘안 함’ 말고 2~5분으로 해 두세요. 꺼진 화면은 웹 화면이 스스로 켤 수 없어서, 아침에는 화면을 한 번 눌러 깨워 주세요.', lang: 'DE',
       signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
-      signIn: '구글로 로그인', houseTitle: '가족 코드', houseText: '우리가족 앱 설정에 있는 가족 코드를 넣어 주세요.', houseCode: '가족 코드', join: '연결', houseBad: '가족 코드를 찾지 못했어요', signOut: '로그아웃', loadErr: '불러오지 못했어요. 인터넷 연결을 확인해 주세요.',
+      signIn: '구글로 로그인', houseText: '우리가족 앱 설정에 있는 가족 코드를 넣어 주세요.', houseCode: '가족 코드', join: '연결', houseBad: '가족 코드를 찾지 못했어요', signOut: '로그아웃', loadErr: '불러오지 못했어요. 인터넷 연결을 확인해 주세요.',
     },
     de: {
       appName: 'Familie auf einen Blick',
@@ -740,16 +657,16 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       dateShort: (d) => `${WD_DE[d.getDay()]}, ${d.getDate()}.${d.getMonth() + 1}.`,
       today: 'Heute', tomorrow: 'Morgen',
       who: { family: 'Familie', mom: 'Mama', dad: 'Papa', davin: 'Davin', arin: 'Arin', both: 'Zusammen' },
-      planToday: 'Heute', planTomorrow: 'Morgen', planYesterday: 'Gestern', planDay: 'Plan', backToday: 'Heute', am: 'Vorm.', pm: 'Nachm.', dayOff: 'Frei', atHome: 'Zuhause',
+      planToday: 'Heute', planTomorrow: 'Morgen', planYesterday: 'Gestern', planDay: 'Plan', backToday: 'Heute', am: 'Vorm.', pm: 'Nachm.', atHome: 'Zuhause',
       cal: 'Termine', noEvents: 'Keine Termine in den nächsten 7 Tagen', noCal: 'Google Kalender in der Familien-App verbinden',
       todo: 'Wichtige Aufgaben', noTodos: 'Nichts Dringendes 🎉', more: (n) => `+ ${n} weitere`, doneMsg: 'Als erledigt markiert', undo: 'Rückgängig',
       lunchTitle: 'Heute Mittag', dinnerTitle: 'Heute Abend', kidTag: 'Kinder', noMeal: 'Noch nichts geplant', eatSoon: '🧊 Bald essen',
-      expToday: 'heute', expGone: 'abgelaufen', expIn: (n) => `${n} T.`,
-      kids: 'Wochenmission', noReward: 'Geschenk offen', delMode: 'Sticker löschen', delHint: '🗑 Tippe auf einen Sticker zum Löschen (Rückgängig möglich)', delDone: 'Fertig', delToast: 'Sticker gelöscht', offHint: 'Leeres Feld antippen: Eltern tragen einen 🏖️ Pausentag ein (krank, Urlaub)', offDone: '🏖️ Als Pausentag eingetragen', offUndone: 'Pausentag entfernt', giveBtn: '⭐ Sticker geben', giveWhy: 'Wofür?', tapBox: 'Tipp dreimal aufs Geschenk!', giveStick: '⭐ Aufkleben', back: '← Zurück zum Stickerbogen', doneAll: (n) => `🎉 Alle ${n} großen Sticker!`, newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Geschenk öffnen!', msGiftTitle: '🎉 Heute alles geschafft!', stkYay: 'Juhu! Ein Sticker!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
+      
+      kids: 'Wochenmission', noReward: 'Geschenk offen', delMode: 'Sticker löschen', delHint: '🗑 Tippe auf einen Sticker zum Löschen (Rückgängig möglich)', delDone: 'Fertig', delToast: 'Sticker gelöscht', offHint: 'Leeres Feld antippen: Eltern tragen einen 🏖️ Pausentag ein (krank, Urlaub)', offDone: '🏖️ Als Pausentag eingetragen', offUndone: 'Pausentag entfernt', tapBox: 'Tipp dreimal aufs Geschenk!', newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Geschenk öffnen!', msGiftTitle: '🎉 Heute alles geschafft!', stkYay: 'Juhu! Ein Sticker!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', 
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
       packNone: 'Nichts mitzunehmen 🙂', packHow: 'In der Familien-App unter „Heute“ → 🎒 Mitnehmen eintragen', packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', wakeOff: 'Aus', wakeAll: 'Immer', wakeTime: 'Zeiten', wakeFrom: 'Von', wakeTo: 'Bis', wakeFromTo: 'bis', wakeUntil: '', wakeNowOn: 'Der Bildschirm bleibt gerade an', wakeNowOff: 'Gerade nicht (das iPad sperrt sich wie eingestellt)', wakeNote: 'Außerhalb der Zeit geht der Bildschirm nach der „Automatischen Sperre“ des iPads aus – stell sie dafür auf 2–5 Minuten statt „Nie“. Ein ausgeschalteter Bildschirm kann sich nicht selbst einschalten; morgens einmal antippen.', lang: '한',
       signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
-      signIn: 'Mit Google anmelden', houseTitle: 'Familiencode', houseText: 'Den Familiencode findest du in den Einstellungen der Familien-App.', houseCode: 'Familiencode', join: 'Verbinden', houseBad: 'Familiencode nicht gefunden', signOut: 'Abmelden', loadErr: 'Laden fehlgeschlagen. Bitte Internet prüfen.',
+      signIn: 'Mit Google anmelden', houseText: 'Den Familiencode findest du in den Einstellungen der Familien-App.', houseCode: 'Familiencode', join: 'Verbinden', houseBad: 'Familiencode nicht gefunden', signOut: 'Abmelden', loadErr: 'Laden fehlgeschlagen. Bitte Internet prüfen.',
     },
   };
   let lang = load('family-home:lang', load('our-family:lang', (navigator.language || '').toLowerCase().startsWith('de') ? 'de' : 'ko'));
@@ -943,15 +860,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       .sort((a, b) => a.expires.localeCompare(b.expires));
   }
   const kidOf = (k) => (famData().kids || {})[k] || {};
-  const kidCfg = (k) => ({ small: k === 'arin' ? 7 : 10, big: 4, reward: '', start: 0, ...(kidOf(k).cfg || {}) });
-  function kidProgress(k) {
-    if (window.FamilyStickers) return window.FamilyStickers.progressOf(kidOf(k), k);
-    const c = kidCfg(k);
-    const all = Object.values(kidOf(k).stickers || {}).filter((s) => s && (s.at || 0) >= (c.start || 0));
-    const bigs = Math.min(Math.floor(all.length / c.small), c.big);
-    const gift = bigs >= c.big;
-    return { c, bigs, gift, now: gift ? c.small : all.length - bigs * c.small };
-  }
+  const kidCfg = (k) => FS.cfgOf(kidOf(k), k); // 목표·선물 설정 (우리가족 앱과 같은 규칙)
   const kidText = (v, src, tr) => (!v || v.startsWith('@')) ? '' : (src && src !== lang && tr) ? tr : v;
   const moneyOf = (k) => Object.values(kidOf(k).money || {}).reduce((s, m) => s + (Number(m && m.amt) || 0), 0);
   const fmtMoney = (n) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(n || 0);
@@ -978,7 +887,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       wx = { at: Date.now(), cur: d.current, hourly: d.hourly, daily: d.daily };
       store(WX_KEY, wx);
     } catch (e) { console.warn('weather', e); if (!wx) wx = { at: Date.now() - 20 * 60e3, err: true }; }
-    renderTop(); renderBg();
+    safely('top', renderTop); safely('bg', renderBg);
   }
   /* ── 오늘 입을 옷: 밖에 있을 시간(7–19시) 중 가장 추운 체감 온도 + 비·눈 ──
      저녁 6시부터는 내일 옷. */
@@ -1541,22 +1450,13 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   const moreEl = () => h('div', { class: 'more' });
 
   // 가족 일정: 낮에는 오늘, 저녁 5시부터는 내일
-  /* 다빈 시간표 (1d 반, 학교 시간표 사진에서 옮김). 바뀌면 여기만 고치면 됨.
-     GU = 기본 수업, WG = 만들기(Werken/Gestalten), FöD = 독일어 보충, D-Plus = 독일어 플러스(괄호 = 일부만), Rel = 종교/윤리 */
-  const TT_TIMES = [['8:00', '8:45'], ['8:45', '9:30'], ['9:50', '10:35'], ['10:35', '11:20'], ['11:35', '12:20'], ['12:20', '13:05']];
-  const DAVIN_TT = {
-    mon: ['GU', 'GU', 'Sport', 'FöD/GU', 'GU', ''], tue: ['GU', 'GU', 'WG', 'GU', 'GU', 'Sport'], wed: ['GU', 'GU', 'GU', 'GU', '', ''],
-    thu: ['GU', 'GU', 'GU', 'GU', '(D-Plus)', ''], fri: ['Rel', 'Rel', 'GU', 'GU', 'GU', ''],
-  };
-  const SUBJ = {
-    GU: ['📖', '수업', 'GU'], Sport: ['🤸', '체육', 'Sport'], WG: ['✂️', '만들기', 'WG'], 'FöD/GU': ['🔤', '독일어', 'FöD/GU'],
-    '(D-Plus)': ['🔤', '독일어+', 'D-Plus'], Rel: ['🙏', '종교·윤리', 'Reli/Ethik'],
-  };
+  // 다빈 시간표: 공통 파일 FS.ttOf (우리가족 앱 → 다빈 → 🎁 설정에서 고침)
   const hm = (t) => { const [a, b] = t.split(':').map(Number); return a * 60 + b; };
   function davinTimetable(k, isToday) {
     const demoDay = DEMO && new URLSearchParams(location.search).get('ttday'); // 미리보기: &ttday=mon
     if (!demoDay && entryFor('davin', k).am !== '@school') return null; // 학교 안 가는 날(주말·방학·공휴일·바꾼 날)은 안 보여 줌
-    const TT = FS ? FS.ttOf(kidOf('davin')) : DAVIN_TT, TIMES = FS ? FS.TT_TIMES : TT_TIMES, SUBS = FS ? FS.SUBJECTS : SUBJ;
+    if (!FS) return null;
+    const TT = FS.ttOf(kidOf('davin')), TIMES = FS.TT_TIMES, SUBS = FS.SUBJECTS;
     const day = TT[demoDay || DOWK[fromKey(k).getDay()]];
     if (!day) return null;
     const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
@@ -1695,8 +1595,9 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       h('b', { class: 'ms-badge' + (M.got ? ' got' : M.all ? ' ready' : ''), text: M.got ? '✅' : M.all ? '🎁' : `${M.done}/${M.total}` }));
   }
   function kidsCard() {
+    if (!FS) return card('kids', '🎯', 'var(--c-kids)', L().kids, null, null, h('div', { class: 'empty', text: L().stkOffline }));
     const rows = ['davin', 'arin'].map((k) => {
-      const P = kidProgress(k), c = P.c;
+      const c = kidCfg(k);
       const reward = kidText(c.reward, c.rsrc, c.rtr);
       const money = k === 'davin' && kidOf(k).money ? moneyOf(k) : null;
       return h('li', { class: 'kid tap', style: `--mc:${WHO[k]}`, role: 'button', tabindex: '0', onclick: () => openStickers(k) },
@@ -1716,7 +1617,6 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   const stickerSVG = (k, d) => (FS ? FS.stickerSVG(k, d) : '');
   const giftSVG = (k) => (FS ? FS.giftSVG(k) : '');
   const bigSVG = (k, d) => (FS ? FS.bigSVG(k, d) : '');
-  const WHY = FS ? FS.WHY : {};
   const SND = FS ? FS.SND : { tap() {}, tada() {}, boing() {}, stick() {} };
   const kidsData = () => famData().kids || {};
   function kidsWrite(path, value) {
@@ -1757,42 +1657,23 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
         h('button', { type: 'button', text: k, onclick: () => (k === '✕' ? (box.hidden = true) : key(k)) })))));
     box.hidden = false;
   }
-  let stk = null; // { k, mode: 'board' | 'give', why, d, taps, pop }
-  function openStickers(k) { if (!FS) { toast(L().stkOffline); return; } stk = { k, mode: 'board', why: '', d: 0, taps: 0, pop: null }; drawStickers(); $('#stk').hidden = false; }
+  let stk = null; // 열려 있는 주간 미션 창 { k, pop, popGold, del }
+  function openStickers(k) { if (!FS) { toast(L().stkOffline); return; } stk = { k, pop: null }; drawStickers(); $('#stk').hidden = false; }
   function closeStickers() { stk = null; $('#stk').hidden = true; $('#stk-gift').hidden = true; $('#stk-card').replaceChildren(); }
   const wig = (el) => { el.classList.remove('wig'); void el.offsetWidth; el.classList.add('wig'); };
   function drawStickers() {
     if (!stk) return;
-    const k = stk.k, P = kidProgress(k), c = P.c;
-    const all = P.all || [], smallNow = P.smallNow || [];
-    const reward = kidText(c.reward, c.rsrc, c.rtr), bigReward = ''; // 주간판: 이번 주 선물만
+    const k = stk.k, c = kidCfg(k);
+    const reward = kidText(c.reward, c.rsrc, c.rtr);
     const tabs = h('div', { class: 'stk-tabs' }, ...['davin', 'arin'].map((x) => h('button', { type: 'button', 'aria-pressed': String(x === k), style: `--mc:${WHO[x]}`,
-      onclick: () => { stk = { k: x, mode: 'board', why: '', d: 0, taps: 0, pop: null }; drawStickers(); } }, h('img', { src: avatarOf(x), alt: '' }), L().who[x])));
+      onclick: () => { stk = { k: x, pop: null }; drawStickers(); } }, h('img', { src: avatarOf(x), alt: '' }), L().who[x])));
     const head = h('div', { class: 'stk-top', style: `--mc:${WHO[k]}` }, tabs,
-      h('div', { class: 'stk-rw' }, h('span', { text: `🎁 ${reward || L().noReward}` }), bigReward ? h('small', { text: `🏅 ${bigReward}` }) : null),
-      stk.mode === 'give' ? null : h('button', { type: 'button', class: 'del-btn' + (stk.del ? ' on' : ''), 'aria-label': L().delMode, text: stk.del ? L().delDone : '🗑',
+      h('div', { class: 'stk-rw' }, h('span', { text: `🎁 ${reward || L().noReward}` })),
+      h('button', { type: 'button', class: 'del-btn' + (stk.del ? ' on' : ''), 'aria-label': L().delMode, text: stk.del ? L().delDone : '🗑',
         onclick: () => { if (stk.del) { stk.del = false; drawStickers(); } else parentOnly(() => { stk.del = true; drawStickers(); }); } }),
       h('button', { type: 'button', class: 'x', 'aria-label': '✕', text: '✕', onclick: closeStickers }));
     let body;
-    if (stk.mode === 'give') {
-      const pics = h('div', { class: 'why-pics' }, ...Object.entries(WHY).map(([key, t]) => h('button', { type: 'button', 'aria-pressed': String(stk.why === key),
-        onclick: () => { stk.why = stk.why === key ? '' : key; SND.tap(2); drawStickers(); } }, h('span', { class: 'e', text: t[0] }), t[lang === 'de' ? 2 : 1])));
-      let box;
-      if (stk.taps >= 3) {
-        box = h('div', { class: 'gift-area' }, h('div', { class: 'reveal', html: stickerSVG(k, stk.d) }),
-          h('button', { type: 'button', class: 'stk-btn', text: L().giveStick, onclick: () => giveSticker() }));
-      } else {
-        const g = h('button', { type: 'button', class: 'gift', html: giftSVG(k), 'aria-label': L().tapBox, onclick: () => {
-          stk.taps++; SND.tap(stk.taps);
-          if (stk.taps >= 3) { SND.tada(); drawStickers(); return; }
-          wig(g); taps.replaceChildren(...[0, 1, 2].map((i) => h('i', { class: i < stk.taps ? 'on' : '' })));
-        } });
-        const taps = h('div', { class: 'taps' }, ...[0, 1, 2].map((i) => h('i', { class: i < stk.taps ? 'on' : '' })));
-        box = h('div', { class: 'gift-area' }, g, taps, h('span', { class: 'hint', text: L().tapBox }));
-      }
-      body = h('div', { class: 'stk-give' }, h('p', { class: 'stk-q', text: L().giveWhy }), pics, box,
-        h('button', { type: 'button', class: 'link', text: L().back, onclick: () => { stk.mode = 'board'; drawStickers(); } }));
-    } else {
+    { // 주간 미션판
       const today = todayKey(), W = FS.weekState(kidOf(k), k, today);
       const labels = FS.WEEK_LABEL[lang] || FS.WEEK_LABEL.ko;
       const week = h('div', { class: 'wk-board' }, ...W.days.map((x) => {
@@ -1895,34 +1776,32 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       dots.remove(); hint.textContent = L().stkYay;
       const fx = h('div', { class: 'pk-yay' }, ...Array.from({ length: 22 }, (_, i) => h('i', { text: ['⭐', '🎉', '✨', '💛'][i % 4], style: `left:${(i * 41) % 100}%;animation-delay:${(i % 6) * 0.1}s` })));
       document.body.append(fx); setTimeout(() => fx.remove(), 2600);
-      setTimeout(() => { box.hidden = true; stk.d = d; stk.why = 'mission'; stk.mission = true; giveSticker(); }, 1500);
+      setTimeout(() => { box.hidden = true; giveSticker(k, d); }, 1500);
     } });
     box.replaceChildren(h('div', { class: 'gift-pop k-' + k }, h('b', { text: L().msGiftTitle }), gift, dots, hint));
     box.hidden = false;
   }
-  function giveSticker() {
-    const k = stk.k, id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-    const st = { at: Date.now(), d: stk.d, why: stk.why ? `@${stk.why}` : '', by: (S.user && S.user.uid) || 'dashboard' };
-    const fromMission = stk.mission, day = todayKey(); stk.mission = false;
+  // 오늘 미션 스티커 붙이기 (+ 이번 주가 다 차면 🏅 황금 스티커). 되돌리기 가능
+  function giveSticker(k, d) {
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6), day = todayKey();
+    const st = { at: Date.now(), d, why: '@mission', by: (S.user && S.user.uid) || 'dashboard' };
     let goldWeek = '';
-    if (fromMission && FS.weekCompletesToday(kidOf(k), k, day)) { // 일주일 다 채움 → 🏅 황금 스티커
+    if (FS.weekCompletesToday(kidOf(k), k, day)) {
       goldWeek = FS.weekKeys(day)[0];
-      const g = { at: Date.now(), d: stk.d };
-      kidsWrite([k, 'golds', goldWeek], g);
-      if (!DEMO) { const kd = (famData().kids[k] = famData().kids[k] || {}); kd.golds = { ...(kd.golds || {}), [goldWeek]: g }; }
-      stk.popGold = goldWeek; setTimeout(() => SND.tada(), 500);
+      kidSet([k, 'golds', goldWeek], { at: Date.now(), d });
+      if (stk) stk.popGold = goldWeek;
+      setTimeout(() => SND.tada(), 500);
     }
-    if (fromMission) { kidsWrite([k, 'mdone', day, 'got'], id); setMdone(k, day, 'got', id); }
+    kidSet([k, 'mdone', day, 'got'], id);
+    kidSet([k, 'stickers', id], st);
     SND.stick();
-    stk.mode = 'board'; stk.pop = id;
-    kidsWrite([k, 'stickers', id], st);
-    if (!DEMO) { famData().kids = famData().kids || {}; const kd = (famData().kids[k] = famData().kids[k] || {}); kd.stickers = { ...(kd.stickers || {}), [id]: st }; } // 바로 보이게
-    drawStickers(); renderGrid();
+    if (stk) stk.pop = id;
+    const redraw = () => { drawStickers(); renderGrid(); };
+    redraw();
     toast(L().stkGiven, () => {
-      kidsWrite([k, 'stickers', id], null); if (!DEMO && famData().kids[k].stickers) delete famData().kids[k].stickers[id];
-      if (fromMission) { kidsWrite([k, 'mdone', day, 'got'], null); setMdone(k, day, 'got', null); }
-      if (goldWeek) { kidsWrite([k, 'golds', goldWeek], null); if (!DEMO && famData().kids[k].golds) delete famData().kids[k].golds[goldWeek]; }
-      drawStickers(); renderGrid();
+      kidSet([k, 'stickers', id], null); kidSet([k, 'mdone', day, 'got'], null);
+      if (goldWeek) kidSet([k, 'golds', goldWeek], null);
+      redraw();
     });
   }
 
@@ -1948,13 +1827,18 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   function renderGrid() {
     const grid = $('#grid');
     if (!canShow()) { grid.replaceChildren(S.ready ? gateView() : h('div')); return; }
-    grid.replaceChildren(planCard(), calCard(), todoCard(), kidsCard());
-    requestAnimationFrame(fitCards);
+    grid.replaceChildren(...[['plan', planCard], ['cal', calCard], ['todo', todoCard], ['kids', kidsCard]].map(([id, fn]) => safely(id, fn,
+      () => card(id, '⚠️', 'var(--muted)', '…', null, null, h('div', { class: 'empty', text: '🔄' })))));
+    requestAnimationFrame(() => safely('fit', fitCards));
+  }
+  // 한 칸에서 오류가 나도 화면 전체가 멈추지 않게: 그 칸만 비워 두고 다음 새로 그릴 때 다시 시도
+  function safely(name, fn, fallback) {
+    try { return fn(); } catch (e) { console.warn('[우리집]', name, e); return fallback ? fallback() : null; }
   }
   function render() {
     document.documentElement.lang = lang;
     document.title = L().appName;
-    renderTop(); renderGrid(); renderBg();
+    safely('top', renderTop); safely('grid', renderGrid); safely('bg', renderBg);
   }
 
   // 로그인 · 가족 코드
@@ -2069,7 +1953,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       };
       store(FAM_KEY, fam);
       render();
-      if (stk && stk.mode === 'board') drawStickers(); // 우리가족 앱에서 붙인 스티커도 바로 보이게
+      if (stk) drawStickers(); // 우리가족 앱에서 붙인 스티커도 바로 보이게
     }, (e) => console.warn('family', e));
   }
   async function startFirebase() {
@@ -2218,9 +2102,9 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       lastStamp = stamp; render();
       if (newDay) { loadEvents(); loadHolidays(); }
     }
-    packMorning();
-    applyCalm();
-    renderBg();
+    safely('pack', packMorning);
+    safely('calm', applyCalm);
+    safely('bg', renderBg);
     if (wakeCfg.mode === 'time' && !!wakeLock !== wakeWanted()) applyWake().then(renderTop);
   }, 10000);
   // 캘린더 10분마다, 날씨 30분마다 (화면이 켜져 있을 때만)
