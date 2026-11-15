@@ -336,6 +336,8 @@ img { display: block; }
 .big-row .big.full svg { width: 100%; height: 100%; }
 .big-row .big.pop svg { animation: stk-pop 1s cubic-bezier(.2,1.6,.4,1); }
 .big-row .big-gift { font-size: 44px; opacity: .35; filter: grayscale(1); }
+.big-row .big-rw { margin-left: -4px; max-width: 30%; font: 400 21px/1.2 var(--font-display); color: #8A5A00; overflow-wrap: anywhere; }
+.big-row .big-rw.none { font: 500 15px var(--font-body); color: var(--muted); }
 .big-row .big-gift.ready { opacity: 1; filter: none; animation: swing 1.6s ease-in-out infinite; }
 .board-grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 10px; max-width: 640px; margin: 0 auto; }
 .board-grid .slot { aspect-ratio: 1; border-radius: 22px; border: 3px dashed #E2D7F0; display: grid; place-items: center; font: 400 24px var(--font-display); color: #CFC3E0; background: rgba(255,255,255,.7); }
@@ -1650,7 +1652,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       onclick: () => { roomOff(); stk = { k: x, pop: null, room: stk.room }; drawStickers(); } }, h('img', { src: avatarOf(x), alt: '' }), L().who[x])));
     const showRoom = !!window.PokeRoom && !!stk.room; // 네 명 모두 같은 창: 🎯 주간 미션판 ⇄ 🥚 포켓몬 방
     const head = h('div', { class: 'stk-top', style: `--mc:${WHO[k]}` }, tabs,
-      h('div', { class: 'stk-rw' }, h('span', { text: showRoom ? '' : `🎁 ${reward || L().noReward}` })),
+      h('div', { class: 'stk-rw' }), // 빈 칸 (선물 이름은 황금 스티커 줄 🎁 옆으로 — 이름 탭 옆은 좁아서 잘림)
       window.PokeRoom ? h('button', { type: 'button', class: 'room-btn', 'aria-pressed': String(showRoom), text: showRoom ? L().roomBack : k === 'arin' ? L().roomOpenPing : L().roomOpen,
         onclick: () => { stk.room = !stk.room; stk.del = false; if (!stk.room) roomOff(); SND.tap(2); drawStickers(); } }) : null,
       showRoom ? null : h('button', { type: 'button', class: 'del-btn' + (stk.del ? ' on' : ''), 'aria-label': L().delMode, text: stk.del ? L().delDone : '🗑',
@@ -1685,7 +1687,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
         if (g) { const el = h('button', { type: 'button', class: 'big full' + (g.week === stk.popGold ? ' pop' : ''), html: bigSVG(k, g.d || 0), onclick: () => { if (stk.del) return delGold(k, g); wig(el); SND.stick(); } }); golds.append(el); }
         else golds.append(h('span', { class: 'big', text: '🏅' }));
       }
-      golds.append(h('span', { class: 'big-gift' + (G.gift ? ' ready' : ''), text: '🎁' }));
+      golds.append(h('span', { class: 'big-gift' + (G.gift ? ' ready' : ''), text: '🎁' }), h('span', { class: 'big-rw' + (reward ? '' : ' none'), text: reward || L().noReward }));
       body = h('div', { class: 'stk-board' + (stk.del ? ' del-on' : '') }, stk.del ? h('p', { class: 'del-hint', text: L().delHint }) : ms, golds,
         h('div', { class: 'wk-h' }, h('b', { text: L().weekTitle }), h('span', { text: `⭐ ${W.count} / 7` })),
         week,
