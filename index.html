@@ -392,6 +392,17 @@ img { display: block; }
 .wk-slot.missed { opacity: .45; }
 .wk-slot.pop .pic { animation: stk-pop .6s cubic-bezier(.2,1.6,.4,1); }
 .wk-note { text-align: center; margin: 14px 0 0; font: 400 18px var(--font-display); color: var(--muted); }
+#stk-gift { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; background: rgba(18,50,74,.35); }
+#stk-gift[hidden] { display: none; }
+.gift-pop { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px 40px 22px; border-radius: 32px; background: #FFFDF6; box-shadow: 0 30px 70px -20px rgba(0,0,0,.5); animation: pk-in .45s cubic-bezier(.2,1.4,.4,1); }
+.gift-pop b { font: 400 28px var(--font-display); }
+.gift-pop .gift { width: 200px; height: 200px; animation: bob 1.6s ease-in-out infinite; }
+.gift-pop .gift svg, .gift-pop .reveal svg { width: 100%; height: 100%; }
+.gift-pop .reveal { width: 210px; height: 210px; animation: stk-pop .7s cubic-bezier(.2,1.6,.4,1); }
+.gift-pop .taps { display: flex; gap: 10px; }
+.gift-pop .taps i { width: 16px; height: 16px; border-radius: 50%; background: #E2D7F0; }
+.gift-pop .taps i.on { background: #FFC928; }
+.gift-pop .hint { font: 400 20px var(--font-display); color: var(--muted); }
 #stk-pin { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(18,50,74,.35); }
 #stk-pin[hidden] { display: none; }
 .pin-card { background: #fff; border-radius: 28px; padding: 22px 26px; text-align: center; box-shadow: 0 30px 60px -20px rgba(0,0,0,.5); }
@@ -566,7 +577,7 @@ body.theme-bento { background: #FFF8EF; }
 <div id="bg" aria-hidden="true"></div>
 <div id="pack" hidden></div>
 <div id="wake" hidden></div>
-<div id="stk" hidden><div class="stk-card" id="stk-card"></div><div id="stk-pin" hidden></div></div>
+<div id="stk" hidden><div class="stk-card" id="stk-card"></div><div id="stk-pin" hidden></div><div id="stk-gift" hidden></div></div>
 <div id="rotate"><div class="ic">📱</div><p>패드를 가로로 돌려 주세요</p><small>Bitte das iPad quer halten</small></div>
 
 <script src="firebase-config.js"></script>
@@ -628,7 +639,7 @@ body.theme-bento { background: #FFF8EF; }
       todo: '챙길 할 일', noTodos: '급한 할 일이 없어요 🎉', more: (n) => `+ ${n}개 더`, doneMsg: '완료로 표시했어요', undo: '되돌리기',
       lunchTitle: '오늘 점심', dinnerTitle: '오늘 저녁', kidTag: '아이', noMeal: '아직 정하지 않았어요', eatSoon: '🧊 빨리 먹기',
       expToday: '오늘', expGone: '지남', expIn: (n) => `${n}일`,
-      kids: '주간 미션', noReward: '선물 미정', giveBtn: '⭐ 칭찬 스티커 주기', giveWhy: '무엇을 잘했나요?', tapBox: '상자를 톡톡톡 눌러 봐!', giveStick: '⭐ 붙이기', back: '← 스티커판으로', doneAll: (n) => `🎉 큰 스티커 ${n}장 다 모았어요!`, newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 미션 스티커 받기!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
+      kids: '주간 미션', noReward: '선물 미정', giveBtn: '⭐ 칭찬 스티커 주기', giveWhy: '무엇을 잘했나요?', tapBox: '상자를 톡톡톡 눌러 봐!', giveStick: '⭐ 붙이기', back: '← 스티커판으로', doneAll: (n) => `🎉 큰 스티커 ${n}장 다 모았어요!`, newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 선물 상자 열기!', msGiftTitle: '🎉 오늘 미션 다 했어요!', stkYay: '와! 스티커가 나왔어요!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
       packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', wakeOff: '끄기', wakeAll: '하루 종일', wakeTime: '시간 정하기', wakeFrom: '시작 시간', wakeTo: '끝 시간', wakeFromTo: '부터', wakeUntil: '까지', wakeNowOn: '지금 화면을 켜 두고 있어요', wakeNowOff: '지금은 켜 두지 않아요 (패드 자동 잠금대로 꺼져요)', wakeNote: '정한 시간이 지나면 패드 설정의 ‘자동 잠금’ 시간이 지난 뒤 화면이 꺼져요. 그래서 패드 자동 잠금은 ‘안 함’ 말고 2~5분으로 해 두세요. 꺼진 화면은 웹 화면이 스스로 켤 수 없어서, 아침에는 화면을 한 번 눌러 깨워 주세요.', lang: 'DE',
       signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
@@ -645,7 +656,7 @@ body.theme-bento { background: #FFF8EF; }
       todo: 'Wichtige Aufgaben', noTodos: 'Nichts Dringendes 🎉', more: (n) => `+ ${n} weitere`, doneMsg: 'Als erledigt markiert', undo: 'Rückgängig',
       lunchTitle: 'Heute Mittag', dinnerTitle: 'Heute Abend', kidTag: 'Kinder', noMeal: 'Noch nichts geplant', eatSoon: '🧊 Bald essen',
       expToday: 'heute', expGone: 'abgelaufen', expIn: (n) => `${n} T.`,
-      kids: 'Wochenmission', noReward: 'Geschenk offen', giveBtn: '⭐ Sticker geben', giveWhy: 'Wofür?', tapBox: 'Tipp dreimal aufs Geschenk!', giveStick: '⭐ Aufkleben', back: '← Zurück zum Stickerbogen', doneAll: (n) => `🎉 Alle ${n} großen Sticker!`, newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Missions-Sticker holen!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
+      kids: 'Wochenmission', noReward: 'Geschenk offen', giveBtn: '⭐ Sticker geben', giveWhy: 'Wofür?', tapBox: 'Tipp dreimal aufs Geschenk!', giveStick: '⭐ Aufkleben', back: '← Zurück zum Stickerbogen', doneAll: (n) => `🎉 Alle ${n} großen Sticker!`, newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Geschenk öffnen!', msGiftTitle: '🎉 Heute alles geschafft!', stkYay: 'Juhu! Ein Sticker!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
       packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', wakeOff: 'Aus', wakeAll: 'Immer', wakeTime: 'Zeiten', wakeFrom: 'Von', wakeTo: 'Bis', wakeFromTo: 'bis', wakeUntil: '', wakeNowOn: 'Der Bildschirm bleibt gerade an', wakeNowOff: 'Gerade nicht (das iPad sperrt sich wie eingestellt)', wakeNote: 'Außerhalb der Zeit geht der Bildschirm nach der „Automatischen Sperre“ des iPads aus – stell sie dafür auf 2–5 Minuten statt „Nie“. Ein ausgeschalteter Bildschirm kann sich nicht selbst einschalten; morgens einmal antippen.', lang: '한',
       signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
@@ -1539,7 +1550,7 @@ body.theme-bento { background: #FFF8EF; }
   }
   let stk = null; // { k, mode: 'board' | 'give', why, d, taps, pop }
   function openStickers(k) { if (!FS) { toast(L().stkOffline); return; } stk = { k, mode: 'board', why: '', d: 0, taps: 0, pop: null }; drawStickers(); $('#stk').hidden = false; }
-  function closeStickers() { stk = null; $('#stk').hidden = true; $('#stk-card').replaceChildren(); }
+  function closeStickers() { stk = null; $('#stk').hidden = true; $('#stk-gift').hidden = true; $('#stk-card').replaceChildren(); }
   const wig = (el) => { el.classList.remove('wig'); void el.offsetWidth; el.classList.add('wig'); };
   function drawStickers() {
     if (!stk) return;
@@ -1586,7 +1597,7 @@ body.theme-bento { background: #FFF8EF; }
           onclick: () => toggleMission(k, x.id, !M.day[x.id]) }, h('span', { class: 'e', text: FS.missionIcon(x) }), h('span', { class: 't', text: FS.missionLabel(x, lang) })))),
         M.got ? h('div', { class: 'ms-got', text: L().msGot })
           : M.all ? h('button', { type: 'button', class: 'stk-btn ms-claim', text: (unlocked() ? '' : '🔒 ') + L().msClaim,
-            onclick: () => parentOnly(() => { stk.mode = 'give'; stk.why = 'mission'; stk.mission = true; stk.taps = 0; stk.d = Math.floor(Math.random() * 8); drawStickers(); }) }) : null) : null;
+            onclick: () => missionGift(k) }) : null) : null;
       const G = FS.goldState(kidOf(k), k);
       const golds = h('div', { class: 'big-row' });
       for (let i = 0; i < G.need; i++) {
@@ -1617,8 +1628,30 @@ body.theme-bento { background: #FFF8EF; }
     kidsWrite([k, 'mdone', day, id], on ? true : null);
     setMdone(k, day, id, on ? true : null);
     const M = FS.missionState(kidOf(k), k, day);
-    if (on && M.all && !M.got) SND.tada(); else SND.tap(on ? 3 : 1);
+    SND.tap(on ? 3 : 1);
     drawStickers(); renderGrid();
+    if (on && M.all && !M.got) setTimeout(() => missionGift(k), 350); // 마지막 미션을 누르면 바로 선물 상자
+  }
+  // 🎁 미션 선물 상자: 같은 창 위에 떠서 톡톡톡 3번 → 스티커가 펑 → 저절로 그 요일 칸에 붙음
+  function missionGift(k) {
+    const box = $('#stk-gift'), d = Math.floor(Math.random() * 8);
+    let taps = 0;
+    const dots = h('div', { class: 'taps' }, ...[0, 1, 2].map(() => h('i')));
+    const hint = h('span', { class: 'hint', text: L().tapBox });
+    const gift = h('button', { type: 'button', class: 'gift', html: giftSVG(k), 'aria-label': L().tapBox, onclick: () => {
+      if (taps >= 3) return;
+      taps++; SND.tap(taps);
+      [...dots.children].forEach((x, i) => x.classList.toggle('on', i < taps));
+      if (taps < 3) { wig(gift); return; }
+      SND.tada();
+      gift.replaceWith(h('div', { class: 'reveal', html: stickerSVG(k, d) }));
+      dots.remove(); hint.textContent = L().stkYay;
+      const fx = h('div', { class: 'pk-yay' }, ...Array.from({ length: 22 }, (_, i) => h('i', { text: ['⭐', '🎉', '✨', '💛'][i % 4], style: `left:${(i * 41) % 100}%;animation-delay:${(i % 6) * 0.1}s` })));
+      document.body.append(fx); setTimeout(() => fx.remove(), 2600);
+      setTimeout(() => { box.hidden = true; stk.d = d; stk.why = 'mission'; stk.mission = true; giveSticker(); }, 1500);
+    } });
+    box.replaceChildren(h('div', { class: 'gift-pop k-' + k }, h('b', { text: L().msGiftTitle }), gift, dots, hint));
+    box.hidden = false;
   }
   function giveSticker() {
     const k = stk.k, id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
