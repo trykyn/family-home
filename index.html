@@ -278,6 +278,22 @@ img { display: block; }
 .pk-yay { position: fixed; inset: 0; z-index: 41; pointer-events: none; overflow: hidden; }
 .pk-yay i { position: absolute; top: -40px; font-size: 34px; font-style: normal; animation: yay 2.4s ease-in forwards; }
 @keyframes yay { to { transform: translateY(110vh) rotate(540deg); } }
+/* 💡 화면 켜 두기 설정 창 */
+#wake { position: fixed; inset: 0; z-index: 42; display: flex; align-items: flex-start; justify-content: flex-end; padding: 150px 24px 0 0; background: rgba(18,50,74,.25); }
+#wake[hidden] { display: none; }
+.wk-card { width: 380px; max-width: 92vw; background: #FFFDF6; border-radius: 26px; padding: 18px 20px 16px; box-shadow: 0 30px 70px -20px rgba(0,0,0,.45); animation: pk-in .35s cubic-bezier(.2,1.4,.4,1); }
+.wk-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.wk-head .ic { font-size: 30px; }
+.wk-head b { font: 400 24px/1 var(--font-display); }
+.wk-head .x { margin-left: auto; width: 40px; height: 40px; border-radius: 50%; background: var(--bg); color: var(--muted); font-size: 18px; }
+.wk-seg { display: flex; gap: 6px; background: var(--bg); padding: 5px; border-radius: 16px; }
+.wk-seg button { flex: 1; padding: 11px 6px; border-radius: 12px; font-weight: 600; font-size: 15px; color: var(--muted); }
+.wk-seg button[aria-pressed="true"] { background: var(--deep); color: #fff; }
+.wk-time { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 16px; font-weight: 600; }
+.wk-time input { font: 600 22px/1 var(--font-body); padding: 8px 10px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; color: var(--ink); font-variant-numeric: tabular-nums; }
+.wk-now { margin: 14px 0 0; font-size: 14px; font-weight: 600; color: var(--muted); }
+.wk-now.on { color: var(--ok); }
+.wk-note { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
 #toast {
   position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 30;
   background: #12324A; color: #fff; padding: 12px 18px; border-radius: 14px; display: flex; gap: 16px; align-items: center; box-shadow: 0 10px 30px -10px rgba(0,0,0,.5);
@@ -440,6 +456,7 @@ body.theme-bento { background: #FFF8EF; }
 </div>
 <div id="bg" aria-hidden="true"></div>
 <div id="pack" hidden></div>
+<div id="wake" hidden></div>
 <div id="rotate"><div class="ic">📱</div><p>패드를 가로로 돌려 주세요</p><small>Bitte das iPad quer halten</small></div>
 
 <script src="firebase-config.js"></script>
@@ -500,7 +517,7 @@ body.theme-bento { background: #FFF8EF; }
       expToday: '오늘', expGone: '지남', expIn: (n) => `${n}일`,
       kids: '칭찬 스티커', noReward: '보상 미정', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
-      packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', lang: 'DE',
+      packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', wakeOff: '끄기', wakeAll: '하루 종일', wakeTime: '시간 정하기', wakeFrom: '시작 시간', wakeTo: '끝 시간', wakeFromTo: '부터', wakeUntil: '까지', wakeNowOn: '지금 화면을 켜 두고 있어요', wakeNowOff: '지금은 켜 두지 않아요 (패드 자동 잠금대로 꺼져요)', wakeNote: '정한 시간이 지나면 패드 설정의 ‘자동 잠금’ 시간이 지난 뒤 화면이 꺼져요. 그래서 패드 자동 잠금은 ‘안 함’ 말고 2~5분으로 해 두세요. 꺼진 화면은 웹 화면이 스스로 켤 수 없어서, 아침에는 화면을 한 번 눌러 깨워 주세요.', lang: 'DE',
       signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
       signIn: '구글로 로그인', houseTitle: '가족 코드', houseText: '우리가족 앱 설정에 있는 가족 코드를 넣어 주세요.', houseCode: '가족 코드', join: '연결', houseBad: '가족 코드를 찾지 못했어요', signOut: '로그아웃', loadErr: '불러오지 못했어요. 인터넷 연결을 확인해 주세요.',
     },
@@ -517,7 +534,7 @@ body.theme-bento { background: #FFF8EF; }
       expToday: 'heute', expGone: 'abgelaufen', expIn: (n) => `${n} T.`,
       kids: 'Sticker', noReward: 'Belohnung offen', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
-      packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', lang: '한',
+      packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', wakeOff: 'Aus', wakeAll: 'Immer', wakeTime: 'Zeiten', wakeFrom: 'Von', wakeTo: 'Bis', wakeFromTo: 'bis', wakeUntil: '', wakeNowOn: 'Der Bildschirm bleibt gerade an', wakeNowOff: 'Gerade nicht (das iPad sperrt sich wie eingestellt)', wakeNote: 'Außerhalb der Zeit geht der Bildschirm nach der „Automatischen Sperre“ des iPads aus – stell sie dafür auf 2–5 Minuten statt „Nie“. Ein ausgeschalteter Bildschirm kann sich nicht selbst einschalten; morgens einmal antippen.', lang: '한',
       signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
       signIn: 'Mit Google anmelden', houseTitle: 'Familiencode', houseText: 'Den Familiencode findest du in den Einstellungen der Familien-App.', houseCode: 'Familiencode', join: 'Verbinden', houseBad: 'Familiencode nicht gefunden', signOut: 'Abmelden', loadErr: 'Laden fehlgeschlagen. Bitte Internet prüfen.',
     },
@@ -1176,7 +1193,7 @@ body.theme-bento { background: #FFF8EF; }
 
     const tools = h('div', { class: 'tools' },
       h('button', { type: 'button', class: 'tool lang', title: 'Sprache / 언어', text: L().lang, onclick: () => { lang = lang === 'ko' ? 'de' : 'ko'; store('family-home:lang', lang); render(); } }),
-      h('button', { type: 'button', class: 'tool' + (wakeOn ? ' on' : ''), title: wakeMsg || L().wake, 'aria-pressed': String(wakeOn), text: '💡', onclick: toggleWake }),
+      h('button', { type: 'button', class: 'tool' + (wakeOn() ? ' on' : ''), title: wakeMsg || L().wake, 'aria-pressed': String(wakeOn()), text: '💡', onclick: toggleWake }),
       packButton());
     $('#top').replaceChildren(clock, weather, h('div', { class: 'side' }, canShow() ? foodBox() : h('span', { style: 'flex:1' }), tools));
   }
@@ -1408,18 +1425,52 @@ body.theme-bento { background: #FFF8EF; }
   }
 
   /* 화면 켜 두기 (집에 세워 둔 패드용) */
-  let wakeOn = load('family-home:wake', false), wakeLock = null, wakeMsg = '';
+  // 설정: { mode: 'off' | 'all' | 'time', from: '06:30', to: '21:30' } (예전 true/false 도 읽음)
+  let wakeCfg = (() => {
+    const v = load('family-home:wake', null);
+    if (v && typeof v === 'object') return { mode: 'off', from: '06:30', to: '21:30', ...v };
+    return { mode: v === true ? 'all' : 'off', from: '06:30', to: '21:30' };
+  })();
+  let wakeLock = null, wakeMsg = '';
+  const toMin = (t) => { const [a, b] = String(t || '0:0').split(':').map(Number); return a * 60 + (b || 0); };
+  function wakeWanted() {
+    if (wakeCfg.mode === 'all') return true;
+    if (wakeCfg.mode !== 'time') return false;
+    const n = new Date().getHours() * 60 + new Date().getMinutes(), a = toMin(wakeCfg.from), b = toMin(wakeCfg.to);
+    return a <= b ? n >= a && n < b : n >= a || n < b; // 밤을 넘기는 시간(예: 20시–7시)도 됨
+  }
+  const wakeOn = () => wakeWanted();
   async function applyWake() {
     try {
-      if (wakeOn && document.visibilityState === 'visible') {
+      const want = wakeWanted();
+      if (want && document.visibilityState === 'visible') {
         if (!('wakeLock' in navigator)) { wakeMsg = L().wakeNo; return; }
         if (!wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); }
-      } else if (!wakeOn && wakeLock) { await wakeLock.release(); wakeLock = null; }
+      } else if (!want && wakeLock) { await wakeLock.release(); wakeLock = null; }
     } catch (e) { console.warn('wake', e); }
   }
-  function toggleWake() {
-    wakeOn = !wakeOn; wakeMsg = ''; store('family-home:wake', wakeOn);
-    applyWake().then(() => { if (wakeMsg) toast(wakeMsg); renderTop(); });
+  function saveWake() { store('family-home:wake', wakeCfg); wakeMsg = ''; applyWake().then(() => { if (wakeMsg) toast(wakeMsg); renderTop(); }); }
+  function toggleWake() { openWake(); }
+  function openWake() {
+    const box = $('#wake');
+    const close = () => { box.hidden = true; box.replaceChildren(); };
+    const draw = () => {
+      const seg = h('div', { class: 'wk-seg' }, ...[['off', L().wakeOff], ['all', L().wakeAll], ['time', L().wakeTime]].map(([m, label]) =>
+        h('button', { type: 'button', 'aria-pressed': String(wakeCfg.mode === m), text: label, onclick: () => { wakeCfg.mode = m; saveWake(); draw(); } })));
+      const time = (k) => h('input', { type: 'time', value: wakeCfg[k], 'aria-label': k === 'from' ? L().wakeFrom : L().wakeTo,
+        onchange: (e) => { if (e.target.value) { wakeCfg[k] = e.target.value; saveWake(); draw(); } } });
+      const now = wakeWanted();
+      box.replaceChildren(h('div', { class: 'wk-card', role: 'dialog', 'aria-modal': 'true' },
+        h('div', { class: 'wk-head' }, h('span', { class: 'ic', text: '💡' }), h('b', { text: L().wake }),
+          h('button', { type: 'button', class: 'x', 'aria-label': '✕', text: '✕', onclick: close })),
+        seg,
+        wakeCfg.mode === 'time' ? h('div', { class: 'wk-time' }, time('from'), h('span', { text: L().wakeFromTo }), time('to'), h('span', { text: L().wakeUntil })) : null,
+        h('p', { class: 'wk-now' + (now ? ' on' : ''), text: now ? L().wakeNowOn : L().wakeNowOff }),
+        h('p', { class: 'wk-note', text: L().wakeNote })));
+    };
+    draw();
+    box.hidden = false;
+    box.onclick = (e) => { if (e.target === box) close(); };
   }
 
   /* ───────── 로그인 · 가족 문서 (우리가족 앱과 같은 Firebase) ───────── */
@@ -1585,6 +1636,7 @@ body.theme-bento { background: #FFF8EF; }
       if (newDay) { loadEvents(); loadHolidays(); }
     }
     packMorning();
+    if (wakeCfg.mode === 'time' && !!wakeLock !== wakeWanted()) applyWake().then(renderTop);
   }, 10000);
   // 캘린더 10분마다, 날씨 30분마다 (화면이 켜져 있을 때만)
   setInterval(() => { if (document.visibilityState === 'visible') loadEvents(); }, 10 * 60e3);
