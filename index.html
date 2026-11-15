@@ -283,7 +283,8 @@ img { display: block; }
 #toast button { color: #8CCFFF; font-weight: 700; }
 
 /* 가로 화면 고정: 3×2 카드가 화면 하나에 딱 맞음. 세로로 들면 "가로로 돌려 주세요" */
-#app { height: 100vh; }
+#app { height: 100vh; min-height: 0; position: fixed; left: 0; top: 0; transform-origin: 0 0; }
+body { overflow: hidden; }
 #grid { flex: 1; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1.75fr) minmax(0, 1fr);
   grid-template-areas: "plan cal todo" "kids cal todo"; }
 #card-plan { grid-area: plan; } #card-cal { grid-area: cal; } #card-todo { grid-area: todo; } #card-kids { grid-area: kids; }
@@ -296,6 +297,50 @@ img { display: block; }
   #rotate small { color: var(--muted); font-size: 16px; }
 }
 @keyframes turn { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
+
+/* ═══ 배치 다듬기: 위 줄 높이·가장자리 맞추기, 일정 카드는 왼쪽 한 줄 전체, 글자 조금 크게 ═══ */
+#top { flex-wrap: nowrap; height: 156px; }
+.clockbox { flex: none; width: 250px; padding: 0 4px; }
+.weather { flex: 1 1 0; }
+.side { flex: none; width: 300px; display: flex; flex-direction: column; gap: 10px; }
+.side .dinner-box { flex: 1; align-self: stretch; }
+.side .tools { flex-direction: row; justify-content: flex-end; gap: 8px; }
+.side .tool { width: 46px; height: 40px; }
+#grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 236px;
+  grid-template-areas: "plan cal todo" "plan cal kids"; }
+.card { padding: 16px 18px 14px; border-radius: 24px; }
+.c-head { margin-bottom: 12px; }
+.c-title { font-size: 22px; }
+/* 가족 일정: 칸이 넓어진 만큼 그림 크게 */
+.pg { gap: 8px 8px; }
+.pg .who img { width: 50px; height: 50px; }
+.pg .who b { font-size: 14px; }
+.pg .slot { padding: 10px 4px 7px; border-radius: 16px; }
+.pg .slot .e { font-size: 38px; }
+.pg .slot .t { font-size: 12px; margin-top: 4px; }
+.pg .slot.home .e { font-size: 30px; }
+.pg .half { font-size: 28px; }
+.ttb { margin-top: 12px; padding-top: 12px; gap: 5px; }
+.ttb .tt-who { width: 36px; }
+.ttb .tt-who img { width: 32px; height: 32px; }
+.ttb .per { padding: 5px 1px 4px; border-radius: 12px; }
+.ttb .per .e { font-size: 24px; }
+.ttb .per .t { font-size: 11px; }
+.pkr { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+.pkr .pk-ic { font-size: 22px; margin-right: 2px; }
+.pkr button { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px 4px 4px; border-radius: 99px; font-size: 15px; font-weight: 600; background: color-mix(in srgb, var(--mc) 14%, white); }
+.pkr button img { width: 24px; height: 24px; border-radius: 50%; }
+.pkr button .e { font-size: 18px; }
+.pkr button.done { opacity: .45; text-decoration: line-through; }
+/* 이번 주 일정 · 할 일: 글자 크게, 줄 간격 넉넉하게 */
+.ev-day { font-size: 14px; font-weight: 700; padding: 10px 0 4px; }
+.ev-day.today { color: var(--c-cal); }
+.ev { font-size: 17px; padding: 5px 0 5px 12px; margin: 3px 0; border-left-width: 5px; border-radius: 2px; }
+.ev .tm { font-size: 15px; min-width: 48px; }
+.todo { padding: 8px 0; gap: 12px; }
+.todo .tx { font-size: 17px; }
+.due { font-size: 14px; }
+.kid { padding: 8px 0; }
 </style>
 </head>
 <body>
@@ -817,6 +862,14 @@ img { display: block; }
   const packDay = () => (new Date().getHours() >= 18 ? keyOf(addDays(new Date(), 1)) : todayKey());
   const PACK_DONE = 'family-home:pack-done', PACK_SHOWN = 'family-home:pack-shown';
   const packDone = (k) => { const d = load(PACK_DONE, null); return d && d.date === k ? d.ids : []; };
+  function packRow(k) {
+    if (!canShow()) return null;
+    const items = packItems(k), done = packDone(k);
+    if (!items.length) return null;
+    return h('div', { class: 'pkr' }, h('span', { class: 'pk-ic', text: '🎒' }),
+      ...items.map((x) => h('button', { type: 'button', class: done.includes(x.id) ? 'done' : '', style: `--mc:${WHO[x.who || 'family']}`, onclick: () => openPack(k) },
+        h('img', { src: avatarOf(x.who || 'family'), alt: '' }), h('span', { class: 'e', text: x.ic }), x.text)));
+  }
   function packButton() {
     if (!canShow()) return null;
     const k = packDay(), items = packItems(k), done = packDone(k);
@@ -831,7 +884,7 @@ img { display: block; }
     const done = new Set(packDone(k));
     const isToday = k === todayKey();
     const groups = PACK_WHO.map((w) => [w, items.filter((x) => x.who === w)]).filter(([, xs]) => xs.length);
-    const save = () => { store(PACK_DONE, { date: k, ids: [...done] }); renderTop(); };
+    const save = () => { store(PACK_DONE, { date: k, ids: [...done] }); renderTop(); renderGrid(); };
     const close = () => { box.hidden = true; box.replaceChildren(); };
     const yay = () => {
       const fx = h('div', { class: 'pk-yay' }, ...Array.from({ length: 26 }, (_, i) => h('i', { text: ['🎉', '⭐', '🎈', '✨', '💛'][i % 5], style: `left:${(i * 37) % 100}%;animation-delay:${(i % 7) * 0.12}s` })));
@@ -905,7 +958,7 @@ img { display: block; }
       h('button', { type: 'button', class: 'tool lang', title: 'Sprache / 언어', text: L().lang, onclick: () => { lang = lang === 'ko' ? 'de' : 'ko'; store('family-home:lang', lang); render(); } }),
       h('button', { type: 'button', class: 'tool' + (wakeOn ? ' on' : ''), title: wakeMsg || L().wake, 'aria-pressed': String(wakeOn), text: '💡', onclick: toggleWake }),
       packButton());
-    $('#top').replaceChildren(clock, weather, canShow() ? foodBox() : null, tools);
+    $('#top').replaceChildren(clock, weather, h('div', { class: 'side' }, canShow() ? foodBox() : h('span', { style: 'flex:1' }), tools));
   }
 
   /* ───────── 카드 ───────── */
@@ -987,7 +1040,7 @@ img { display: block; }
     }
     const title = off0 === 0 ? L().planToday : off0 === 1 ? L().planTomorrow : off0 === -1 ? L().planYesterday : L().planDay;
     const c = card('plan', '🗓️', 'var(--c-plan)', title, L().dateShort(d), APPS.family,
-      off.length ? h('div', { class: 'plan-off' }, ...off.map((x) => h('span', { text: x }))) : null, grid, davinTimetable(k, off0 === 0 && !evening));
+      off.length ? h('div', { class: 'plan-off' }, ...off.map((x) => h('span', { text: x }))) : null, grid, davinTimetable(k, off0 === 0 && !evening), packRow(k));
     const nav = h('div', { class: 'day-nav' },
       planShift ? h('button', { type: 'button', class: 'back', text: L().backToday, onclick: () => movePlan(null) }) : null,
       h('button', { type: 'button', 'aria-label': '‹', text: '‹', onclick: () => movePlan(-1) }),
@@ -1286,9 +1339,10 @@ img { display: block; }
   // 화면은 1180×820(아이패드 가로) 기준으로 짜 두고, 기기 화면에 맞게 통째로 확대·축소 (작은 패드에서 카드가 잘리지 않게)
   function fitZoom() {
     const app = $('#app'), z = Math.min(innerWidth / 1180, innerHeight / 820);
-    app.style.zoom = z;
+    // CSS zoom 은 브라우저마다 길이를 두 번 곱하기도 해서, 크기는 그대로 두고 그림처럼 확대·축소(transform)
     app.style.width = `${innerWidth / z}px`;
     app.style.height = `${innerHeight / z}px`;
+    app.style.transform = `scale(${z})`;
   }
   fitZoom();
   if (DEMO) { demoSetup(); S.ready = true; window.__kid = { kidSVG, dressFor }; }
