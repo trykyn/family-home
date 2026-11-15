@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F3F8FC">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="우리집">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>우리집 한눈에</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Jua&display=swap">
+<style>
+/* 우리집 한눈에 — 집에 세워 둔 패드(가로 고정)용 가족 대시보드 (구글 홈 화면처럼 한 화면에 다 보이게).
+   위: 시계·날짜·날씨 / 아래 카드: 가족 일정 · 캘린더 · 할 일 · 식단 · 장보기 · 아이들 스티커.
+   자료는 우리가족·주간식단·장보기 앱이 함께 쓰는 가족 문서(households/{코드})와 우리가족 캘린더 서버에서 읽음.
+   3×2 카드를 화면 하나에 딱 맞추고 넘치는 줄은 "+N개 더"로 접음. 밝은 화면만 (다크 모드·밤 화면 없음). */
+:root {
+  --bg: #F3F8FC;
+  --surface: #FFFFFF;
+  --ink: #12324A;
+  --muted: #5A7689;
+  --faint: #8BA3B4;
+  --line: #DCEAF4;
+  --sky-soft: #E4F3FF;
+  --blue: #6AAFE6;
+  --deep: #2F7FC1;
+  --late: #C8423A;
+  --ok: #2E9D5A;
+  --c-plan: #6AAFE6; --c-cal: #F08A5D; --c-todo: #4CBE8C; --c-meal: #F2B33D; --c-shop: #9B7BE0; --c-kids: #FF7AA2;
+  --shadow: 0 1px 0 rgba(30,110,170,.05), 0 14px 30px -22px rgba(30,110,170,.55);
+  --font-display: "Jua", "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --gap: 14px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink); font: 16px/1.45 var(--font-body);
+  -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+img { display: block; }
+.muted { color: var(--muted); }
+
+#app {
+  min-height: 100dvh; display: flex; flex-direction: column; gap: var(--gap);
+  padding: max(16px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+}
+
+/* ── 위: 시계 · 날씨 ── */
+#top { display: flex; align-items: stretch; gap: var(--gap); flex-wrap: wrap; }
+.clockbox { flex: 0 1 auto; min-width: 0; padding: 4px 6px; display: flex; flex-direction: column; justify-content: center; }
+.clock { font: 400 clamp(64px, 8vw, 96px)/0.95 var(--font-display); letter-spacing: .01em; font-variant-numeric: tabular-nums; }
+.date-line { font: 400 clamp(20px, 2.3vw, 27px)/1.2 var(--font-display); color: var(--muted); margin-top: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chip { font-size: 14px; padding: 3px 10px; border-radius: 99px; background: var(--sky-soft); color: var(--deep); font-weight: 500; }
+.weather {
+  flex: 1 1 520px; min-width: 0; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  background: var(--surface); border-radius: 22px; box-shadow: var(--shadow); padding: 14px 20px;
+}
+.w-now { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.w-ic { font-size: 48px; line-height: 1; }
+.w-temp { font: 400 52px/1 var(--font-display); }
+.w-meta { font-size: 15px; color: var(--muted); line-height: 1.35; }
+.w-meta b { color: var(--ink); font-weight: 600; }
+.w-hint { margin-top: 3px; font-weight: 600; color: var(--deep); font-size: 15px; }
+.w-hours { display: flex; gap: 4px; margin-left: auto; flex: none; }
+.w-h { width: 54px; text-align: center; padding: 6px 0; border-radius: 14px; font-size: 14px; }
+.w-h .t { color: var(--muted); }
+.w-h .e { font-size: 24px; line-height: 1.3; }
+.w-h .d { font-weight: 600; }
+.w-h .p { font-size: 12px; color: var(--deep); min-height: 16px; }
+.w-h.day { background: var(--sky-soft); }
+.w-empty { color: var(--muted); }
+.tools { display: flex; flex-direction: column; gap: 6px; justify-content: center; }
+.tool {
+  width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; font-size: 19px;
+  background: var(--surface); box-shadow: var(--shadow);
+}
+.tool.on { background: var(--deep); color: #fff; }
+.tool.lang { font-size: 13px; font-weight: 700; letter-spacing: .02em; }
+
+/* ── 카드 ── */
+#grid { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
+.card {
+  background: var(--surface); border-radius: 22px; box-shadow: var(--shadow);
+  padding: 14px 16px 12px; display: flex; flex-direction: column; min-height: 0; min-width: 0;
+}
+.c-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex: none; }
+.c-ic { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; font-size: 18px; background: color-mix(in srgb, var(--cc) 22%, transparent); flex: none; }
+.c-title { font: 400 21px/1.2 var(--font-display); }
+.c-sub { color: var(--muted); font-size: 14px; }
+.c-go { margin-left: auto; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: var(--faint); font-size: 18px; flex: none; }
+.c-go:active { background: var(--sky-soft); }
+.c-body { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+.c-body > * { flex-shrink: 0; }
+.empty { color: var(--faint); padding: 6px 0; }
+.more { color: var(--muted); font-size: 14px; padding-top: 4px; flex: none; }
+.more:empty { display: none; }
+.fit { list-style: none; margin: 0; padding: 0; }
+
+/* 가족 일정 */
+.plan-row, .plan-cols { display: grid; grid-template-columns: 32px 58px 1fr 1fr; gap: 8px; align-items: center; }
+.plan-row { padding: 4px 0; font-size: 16px; line-height: 1.25; }
+.plan-row + .plan-row { border-top: 1px solid var(--line); }
+.plan-row img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: var(--sky-soft); box-shadow: 0 0 0 2.5px var(--mc); }
+.plan-row .nm { font-weight: 600; font-size: 14px; color: var(--mc); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plan-row span:empty::before { content: '–'; color: var(--faint); }
+.plan-cols { font-size: 12px; color: var(--faint); margin-bottom: 2px; }
+.plan-cols span:first-child { grid-column: 3; }
+.plan-off { font-size: 14px; color: var(--deep); font-weight: 500; margin-bottom: 4px; }
+
+/* 캘린더 */
+.ev-day { font-size: 13px; font-weight: 600; color: var(--muted); padding: 6px 0 2px; }
+.ev-day.today { color: var(--c-cal); }
+.ev-day:first-child { padding-top: 0; }
+.ev { display: flex; gap: 10px; align-items: baseline; padding: 3px 0 3px 10px; border-left: 4px solid var(--ec); margin: 2px 0; font-size: 16px; line-height: 1.3; }
+.ev .tm { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; min-width: 42px; flex: none; }
+.ev .tt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 할 일 */
+.todo { display: flex; align-items: center; gap: 10px; padding: 5px 0; transition: opacity .3s; }
+.todo + .todo { border-top: 1px solid var(--line); }
+.tick { width: 28px; height: 28px; border-radius: 50%; border: 2.5px solid var(--c-todo); flex: none; display: grid; place-items: center; }
+.tick i { width: 12px; height: 7px; border: solid #fff; border-width: 0 0 3px 3px; transform: rotate(-45deg) translate(1px, -1px); opacity: 0; }
+.todo.done .tick { background: var(--c-todo); }
+.todo.done .tick i { opacity: 1; }
+.todo.done .tx { text-decoration: line-through; color: var(--faint); }
+.todo .tx { flex: 1; min-width: 0; font-size: 16px; line-height: 1.3; }
+.who { display: inline-block; margin-left: 6px; font-size: 12px; font-weight: 600; color: var(--wc); vertical-align: 1px; }
+.due { font-size: 13px; color: var(--muted); flex: none; }
+.due.late { color: var(--late); font-weight: 600; }
+.due.today { color: var(--c-todo); font-weight: 600; }
+
+/* 식단 */
+.dinner-now { font: 400 22px/1.3 var(--font-display); padding: 2px 0 8px; }
+.kid-tag { display: inline-block; font: 600 12px/1 var(--font-body); padding: 3px 7px; border-radius: 99px; background: color-mix(in srgb, var(--c-meal) 25%, transparent); margin: 0 4px 0 2px; vertical-align: 4px; }
+.lunch { font-size: 14px; color: var(--muted); margin: -4px 0 8px; }
+.meal-row { display: grid; grid-template-columns: 74px 1fr; gap: 8px; padding: 5px 0; border-top: 1px solid var(--line); font-size: 15px; line-height: 1.3; }
+.meal-row .d { color: var(--muted); font-size: 14px; }
+
+/* 장보기 */
+.store { padding: 4px 0 6px; }
+.store + .store { border-top: 1px solid var(--line); padding-top: 7px; }
+.store-h { font-size: 14px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+.store-h b { color: var(--c-shop); }
+.items { display: flex; flex-wrap: wrap; gap: 5px; }
+.item { font-size: 15px; padding: 2px 10px; border-radius: 99px; background: color-mix(in srgb, var(--c-shop) 14%, transparent); }
+.fridge { margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--line); font-size: 14px; flex: none; }
+.fridge b { color: var(--late); font-weight: 600; }
+
+/* 아이들 */
+.kid { display: grid; grid-template-columns: 52px 1fr; gap: 12px; align-items: center; padding: 6px 0; }
+.kid + .kid { border-top: 1px solid var(--line); }
+.kid img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 3px var(--mc); }
+.kid .nm { font: 400 19px/1.2 var(--font-display); display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.kid .nm small { font: 500 14px var(--font-body); color: var(--muted); }
+.bar { height: 14px; border-radius: 99px; background: var(--sky-soft); overflow: hidden; margin: 6px 0 4px; }
+.bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #FFD54A, #FFB300); }
+.kid .rw { font-size: 14px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.money { font-size: 14px; font-weight: 600; color: var(--ok); }
+
+/* 로그인 */
+.gate { grid-column: 1 / -1; text-align: center; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.gate img { width: 96px; height: 96px; border-radius: 24px; }
+.gate h1 { font: 400 30px var(--font-display); margin: 0; }
+.gate p { margin: 0; color: var(--muted); max-width: 440px; }
+.btn { padding: 12px 22px; border-radius: 14px; background: var(--deep); color: #fff; font-weight: 600; }
+.input { padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; text-align: center; letter-spacing: .1em; }
+.err { color: var(--late); }
+.link-btn { color: var(--muted); text-decoration: underline; font-size: 14px; }
+
+/* 알림 */
+#toast {
+  position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 30;
+  background: #12324A; color: #fff; padding: 12px 18px; border-radius: 14px; display: flex; gap: 16px; align-items: center; box-shadow: 0 10px 30px -10px rgba(0,0,0,.5);
+}
+#toast button { color: #8CCFFF; font-weight: 700; }
+
+/* 가로 화면 고정: 3×2 카드가 화면 하나에 딱 맞음. 세로로 들면 "가로로 돌려 주세요" */
+#app { height: 100vh; }
+#grid { flex: 1; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
+#rotate { display: none; }
+@media (orientation: portrait) {
+  #app { display: none; }
+  #rotate { display: flex; position: fixed; inset: 0; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px; }
+  #rotate .ic { font-size: 72px; animation: turn 2.4s ease-in-out infinite; }
+  #rotate p { margin: 0; font: 400 26px/1.4 var(--font-display); }
+  #rotate small { color: var(--muted); font-size: 16px; }
+}
+@keyframes turn { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="top"></header>
+  <main id="grid"></main>
+</div>
+<div id="rotate"><div class="ic">📱</div><p>패드를 가로로 돌려 주세요</p><small>Bitte das iPad quer halten</small></div>
+
+<script src="firebase-config.js"></script>
+<script>
+(() => {
+  'use strict';
+  const WORKER = 'https://our-family-calendar.weekly-meals-reader.workers.dev';
+  const APPS = { family: '../our-family/', meals: '../weekly-meals/', shop: '../shopping-list/' };
+  const PLACE = { lat: 48.137, lon: 11.575 }; // 뮌헨
+  // localhost 에서 ?demo 로 열면 로그인 없이 예시 자료로 화면을 봄 (개발용)
+  const DEMO = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).has('demo');
+
+  /* ───────── 작은 도구들 ───────── */
+  const $ = (s, r = document) => r.querySelector(s);
+  function h(tag, attrs, ...kids) {
+    const el = document.createElement(tag);
+    if (attrs) for (const [k, v] of Object.entries(attrs)) {
+      if (v == null || v === false) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'text') el.textContent = v;
+      else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? '' : v);
+    }
+    for (const c of kids.flat(Infinity)) if (c != null && c !== false) el.append(c instanceof Node ? c : String(c));
+    return el;
+  }
+  const load = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } };
+  const store = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  const pad = (n) => String(n).padStart(2, '0');
+  const keyOf = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const fromKey = (k) => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const todayKey = () => keyOf(new Date());
+  const hhmm = (d) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const hasHangul = (s) => /[ㄱ-ㆎ가-힣]/.test(String(s || ''));
+
+  /* ───────── 글자 (한국어 / Deutsch) ───────── */
+  const WD_KO = ['일', '월', '화', '수', '목', '금', '토'];
+  const WD_DE = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+  const T = {
+    ko: {
+      appName: '우리집 한눈에',
+      dateLong: (d) => `${d.getMonth() + 1}월 ${d.getDate()}일 ${WD_KO[d.getDay()]}요일`,
+      dateShort: (d) => `${d.getMonth() + 1}/${d.getDate()} (${WD_KO[d.getDay()]})`,
+      today: '오늘', tomorrow: '내일',
+      who: { family: '가족', mom: '엄마', dad: '아빠', davin: '다빈', arin: '아린', both: '같이' },
+      planToday: '오늘 일정', planTomorrow: '내일 일정', am: '오전', pm: '오후', dayOff: '쉬는 날',
+      cal: '다가오는 일정', noEvents: '2주 안에 일정이 없어요', noCal: '우리가족 앱에서 구글 캘린더를 연결하면 보여요',
+      todo: '할 일', noTodos: '할 일이 없어요 🎉', more: (n) => `+ ${n}개 더`, doneMsg: '완료로 표시했어요', undo: '되돌리기',
+      meals: '저녁', dinnerToday: '오늘 저녁', lunch: '점심', kidTag: '아이', noDinner: '아직 안 정했어요', noMeal: '–',
+      shop: '장보기', noShop: '살 것이 없어요', stores: { super: '슈퍼마켓', asia: '아시아 마켓', online: '인터넷' }, eatSoon: '🧊 빨리 먹기',
+      expToday: '오늘', expGone: '지남', expIn: (n) => `${n}일`,
+      kids: '칭찬 스티커', noReward: '보상 미정', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
+      wNow: '체감', wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요',
+      hint: { rain: '☂️ 우산 챙기세요', snow: '🧤 눈 와요, 따뜻하게', frost: '🧣 영하예요, 따뜻하게', hot: '💧 더워요, 물 챙기기' },
+      wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', lang: 'DE',
+      signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
+      signIn: '구글로 로그인', houseTitle: '가족 코드', houseText: '우리가족 앱 설정에 있는 가족 코드를 넣어 주세요.', houseCode: '가족 코드', join: '연결', houseBad: '가족 코드를 찾지 못했어요', signOut: '로그아웃', loadErr: '불러오지 못했어요. 인터넷 연결을 확인해 주세요.',
+    },
+    de: {
+      appName: 'Familie auf einen Blick',
+      dateLong: (d) => d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }),
+      dateShort: (d) => `${WD_DE[d.getDay()]}, ${d.getDate()}.${d.getMonth() + 1}.`,
+      today: 'Heute', tomorrow: 'Morgen',
+      who: { family: 'Familie', mom: 'Mama', dad: 'Papa', davin: 'Davin', arin: 'Arin', both: 'Zusammen' },
+      planToday: 'Heute', planTomorrow: 'Morgen', am: 'Vormittag', pm: 'Nachmittag', dayOff: 'Frei',
+      cal: 'Termine', noEvents: 'Keine Termine in den nächsten 2 Wochen', noCal: 'Google Kalender in der Familien-App verbinden',
+      todo: 'Aufgaben', noTodos: 'Alles erledigt 🎉', more: (n) => `+ ${n} weitere`, doneMsg: 'Als erledigt markiert', undo: 'Rückgängig',
+      meals: 'Abendessen', dinnerToday: 'Heute Abend', lunch: 'Mittag', kidTag: 'Kinder', noDinner: 'Noch nicht geplant', noMeal: '–',
+      shop: 'Einkaufen', noShop: 'Nichts zu kaufen', stores: { super: 'Supermarkt', asia: 'Asia-Markt', online: 'Internet' }, eatSoon: '🧊 Bald essen',
+      expToday: 'heute', expGone: 'abgelaufen', expIn: (n) => `${n} T.`,
+      kids: 'Sticker', noReward: 'Belohnung offen', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
+      wNow: 'gefühlt', wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen',
+      hint: { rain: '☂️ Regenschirm mitnehmen', snow: '🧤 Schnee – warm anziehen', frost: '🧣 Frost – warm anziehen', hot: '💧 Heiß – Wasser mitnehmen' },
+      wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', lang: '한',
+      signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
+      signIn: 'Mit Google anmelden', houseTitle: 'Familiencode', houseText: 'Den Familiencode findest du in den Einstellungen der Familien-App.', houseCode: 'Familiencode', join: 'Verbinden', houseBad: 'Familiencode nicht gefunden', signOut: 'Abmelden', loadErr: 'Laden fehlgeschlagen. Bitte Internet prüfen.',
+    },
+  };
+  let lang = load('family-home:lang', load('our-family:lang', (navigator.language || '').toLowerCase().startsWith('de') ? 'de' : 'ko'));
+  if (!T[lang]) lang = 'ko';
+  const L = () => T[lang];
+  const WHO = { family: '#2A9690', mom: '#D2557F', dad: '#2F7FC1', davin: '#B89000', arin: '#8E52CC', both: '#2A9690' };
+  const MEMBERS = ['family', 'mom', 'dad', 'davin', 'arin'];
+  const avatarOf = (m) => (m === 'family' ? 'icon-180.png' : `avatar-${m}.png`);
+
+  /* ───────── 상태 ───────── */
+  const S = { user: null, house: null, ready: false };
+  const FAM_KEY = 'family-home:fam';
+  let fam = load(FAM_KEY, null);
+  const EV_KEY = 'family-home:events';
+  let cal = load(EV_KEY, { events: [], calendars: [], at: 0, none: false });
+  const HOL_KEY = 'family-home:holidays';
+  let hol = load(HOL_KEY, null);
+  const WX_KEY = 'family-home:weather';
+  let wx = load(WX_KEY, null);
+  let fb = null;
+  const canShow = () => DEMO || (S.user && S.house);
+  const famData = () => fam || {};
+
+  async function api(path, body) {
+    if (DEMO) return demoApi(path, body);
+    const token = await fb.auth.currentUser.getIdToken();
+    const r = await fetch(WORKER + path, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify(body || {}) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) { const e = new Error(d.error || String(r.status)); e.code = d.error; throw e; }
+    return d;
+  }
+
+  /* ───────── 우리가족 앱 자료: 하루 일정 · 휴가 · 공휴일 (우리가족 앱과 같은 규칙) ───────── */
+  const DOWK = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  const ACT = {
+    work: ['일', 'Arbeit'], school: ['학교', 'Schule'], kinder: ['유치원', 'Kindergarten'], swim: ['수영', 'Schwimmen'],
+    schoolSport: ['학교 운동', 'Schulsport'], tkd: ['태권도', 'Taekwondo'], music: ['음악', 'Musik'],
+  };
+  const W = (am, pm) => ({ am: am ? `@${am}` : '', pm: pm ? `@${pm}` : '' });
+  const ROUTINE_DEFAULT = {
+    family: {},
+    mom: { mon: W('work'), tue: W('work'), wed: W('work'), thu: W('work') },
+    dad: { mon: W('work'), tue: W('work'), wed: W('work'), thu: W('work'), fri: W('work') },
+    davin: { mon: W('school', 'swim'), tue: W('school'), wed: W('school', 'schoolSport'), thu: W('school'), fri: W('school', 'tkd') },
+    arin: { mon: W('kinder'), tue: W('kinder'), wed: W('kinder'), thu: W('kinder', 'swim'), fri: W('kinder', 'music') },
+  };
+  const HOL_KO = {
+    'Neujahr': '신정', 'Heilige Drei Könige': '주현절', 'Karfreitag': '성금요일', 'Ostermontag': '부활절 월요일',
+    'Tag der Arbeit': '노동절', 'Christi Himmelfahrt': '예수 승천일', 'Pfingstmontag': '성령강림 월요일',
+    'Fronleichnam': '성체 축일', 'Mariä Himmelfahrt': '성모 승천일', 'Tag der Deutschen Einheit': '독일 통일의 날',
+    'Allerheiligen': '모든 성인의 날', '1. Weihnachtsfeiertag': '성탄절', '2. Weihnachtsfeiertag': '성탄절 다음 날',
+    'Herbstferien': '가을 방학', 'Buß- und Bettag': '학교 쉬는 날', 'Weihnachtsferien': '성탄 방학',
+    'Frühjahrsferien': '봄 방학', 'Osterferien': '부활절 방학', 'Pfingstferien': '성령강림 방학', 'Sommerferien': '여름 방학',
+  };
+  const holidaysOn = (key) => (hol ? hol.list.filter((x) => x.s <= key && key <= x.e).sort((a, b) => (a.type === b.type ? 0 : a.type === 'pub' ? -1 : 1)) : []);
+  const holName = (x) => lang === 'de' ? x.de : (HOL_KO[x.de] || x.de);
+  const vacationsOn = (key) => Object.values(famData().vacations || {}).filter((v) => v && v.s <= key && key <= v.e);
+  const vacName = (v) => !v.name ? (lang === 'de' ? 'Urlaub' : '가족 휴가') : (v.src && v.src !== lang && v.tr) ? v.tr : v.name;
+  async function loadHolidays() {
+    if (hol && Date.now() - hol.at < 7 * 864e5) return;
+    const q = `countryIsoCode=DE&subdivisionCode=DE-BY&languageIsoCode=DE&validFrom=${keyOf(addDays(new Date(), -30))}&validTo=${keyOf(addDays(new Date(), 400))}`;
+    try {
+      const [ph, sh] = await Promise.all(['PublicHolidays', 'SchoolHolidays'].map((p) =>
+        fetch(`https://openholidaysapi.org/${p}?${q}`, { headers: { Accept: 'application/json' } }).then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })));
+      const inBY = (x) => x.nationwide || (x.subdivisions || []).some((s) => s.code === 'DE-BY');
+      const name = (x) => ((x.name || []).find((n) => n.language === 'DE') || (x.name || [])[0] || {}).text || '';
+      hol = { at: Date.now(), list: [
+        ...ph.filter(inBY).map((x) => ({ s: x.startDate, e: x.endDate, de: name(x), type: 'pub' })),
+        ...sh.filter(inBY).map((x) => ({ s: x.startDate, e: x.endDate, de: name(x), type: 'sch' })),
+      ] };
+      store(HOL_KEY, hol);
+      render();
+    } catch (e) { console.warn('holidays', e); }
+  }
+  function entryFor(m, key) {
+    const d = famData();
+    const day = d.routine && d.routine[key] && d.routine[key][m];
+    if (day) return day;
+    const dow = DOWK[fromKey(key).getDay()];
+    let e = (d.routineBase && d.routineBase[m] && d.routineBase[m][dow]) || ROUTINE_DEFAULT[m][dow] || { am: '', pm: '' };
+    const hs = holidaysOn(key);
+    if (hs.some((x) => x.type === 'pub') || vacationsOn(key).length) return { am: '', pm: '' };
+    if (hs.length) {
+      const off = (v) => v === '@school' || v === '@schoolSport';
+      if (off(e.am) || off(e.pm)) e = { ...e, am: off(e.am) ? '' : e.am, pm: off(e.pm) ? '' : e.pm };
+    }
+    return e;
+  }
+  function slotText(e, s) {
+    const v = (e && e[s]) || '';
+    if (v.startsWith('@')) { const a = ACT[v.slice(1)]; return a ? a[lang === 'de' ? 1 : 0] : ''; }
+    if (v && e.src && e.src !== lang && e.tr && e.tr[s]) return e.tr[s];
+    return v;
+  }
+  const mealOn = (key, meal) => { const m = (famData().meals || {})[key]; return (m && Array.isArray(m[meal]) && m[meal]) || []; };
+  const todoText = (t) => (t.tr && t.tr.text && (hasHangul(t.text) ? 'ko' : 'de') !== lang) ? t.tr.text : t.text;
+  function openTodos() {
+    return Object.values(famData().todos || {}).filter((t) => t && t.text && !t.done)
+      .sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999') || (a.pri || 2) - (b.pri || 2) || (a.at || 0) - (b.at || 0));
+  }
+
+  /* 캘린더 (우리가족 캘린더 서버가 연결된 구글 캘린더에서 읽어 줌) */
+  function calEvents(fromK, toK) {
+    const calColor = Object.fromEntries((cal.calendars || []).map((c) => [c.id, c.color]));
+    return (cal.events || []).map((e) => {
+      const allDay = !!(e.start && e.start.date);
+      const s = allDay ? e.start.date : keyOf(new Date(e.start.dateTime));
+      const time = allDay ? '' : hhmm(new Date(e.start.dateTime));
+      let eKey = allDay ? keyOf(addDays(fromKey(e.end.date || e.start.date), -1)) : keyOf(new Date((e.end && e.end.dateTime) || e.start.dateTime));
+      if (eKey < s) eKey = s;
+      const endAt = allDay ? null : new Date((e.end && e.end.dateTime) || e.start.dateTime);
+      return { id: e.id, title: e.title || (lang === 'de' ? '(ohne Titel)' : '(제목 없음)'), s, e: eKey, time, allDay, endAt, color: calColor[e.cal] || '#6AAFE6' };
+    }).filter((e) => e.e >= fromK && e.s <= toK).sort((a, b) => a.s.localeCompare(b.s) || (a.allDay ? -1 : b.allDay ? 1 : a.time.localeCompare(b.time)));
+  }
+  async function loadEvents() {
+    if (!canShow()) return;
+    try {
+      const start = fromKey(todayKey());
+      const d = await api('/events', { timeMin: start.toISOString(), timeMax: addDays(start, 21).toISOString() });
+      cal = { events: d.events || [], calendars: d.calendars || [], at: Date.now(), none: !(d.accounts || []).length };
+    } catch (e) { console.warn('events', e); return; }
+    store(EV_KEY, cal);
+    render();
+  }
+
+  /* 장보기 · 아이들 (같은 가족 문서) */
+  const storeName = (s) => (s.key && L().stores[s.key]) || s.name || '';
+  function shopping() {
+    const d = famData();
+    const stores = Object.values(d.stores || {});
+    const rank = (s) => (['super', 'asia', 'online'].indexOf(s.id) + 1) || 9;
+    const items = Object.values(d.items || {}).filter((i) => i && i.name);
+    return stores.sort((a, b) => rank(a) - rank(b) || String(a.id).localeCompare(String(b.id)))
+      .map((s) => ({ s, items: items.filter((i) => i.store === s.id) })).filter((x) => x.items.length);
+  }
+  function eatSoon() {
+    const lim = keyOf(addDays(new Date(), 3));
+    return Object.values(famData().stock || {}).filter((x) => x && x.name && x.expires && x.expires <= lim && x.loc !== 'freezer')
+      .sort((a, b) => a.expires.localeCompare(b.expires));
+  }
+  const kidOf = (k) => (famData().kids || {})[k] || {};
+  const kidCfg = (k) => ({ small: k === 'arin' ? 7 : 10, big: 4, reward: '', start: 0, ...(kidOf(k).cfg || {}) });
+  function kidProgress(k) {
+    const c = kidCfg(k);
+    const all = Object.values(kidOf(k).stickers || {}).filter((s) => s && (s.at || 0) >= (c.start || 0));
+    const bigs = Math.min(Math.floor(all.length / c.small), c.big);
+    const gift = bigs >= c.big;
+    return { c, bigs, gift, now: gift ? c.small : all.length - bigs * c.small };
+  }
+  const kidText = (v, src, tr) => (!v || v.startsWith('@')) ? '' : (src && src !== lang && tr) ? tr : v;
+  const moneyOf = (k) => Object.values(kidOf(k).money || {}).reduce((s, m) => s + (Number(m && m.amt) || 0), 0);
+  const fmtMoney = (n) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(n || 0);
+
+  /* ───────── 날씨 (Open-Meteo, 무료·열쇠 없음) ───────── */
+  const WMO = [
+    [[0], '☀️', '🌙', '맑음', 'Klar'], [[1], '🌤️', '🌙', '대체로 맑음', 'Überwiegend klar'], [[2], '⛅', '☁️', '구름 조금', 'Teils bewölkt'],
+    [[3], '☁️', '☁️', '흐림', 'Bedeckt'], [[45, 48], '🌫️', '🌫️', '안개', 'Nebel'], [[51, 53, 55, 56, 57], '🌦️', '🌧️', '이슬비', 'Nieselregen'],
+    [[61, 63, 65, 66, 67], '🌧️', '🌧️', '비', 'Regen'], [[71, 73, 75, 77], '🌨️', '🌨️', '눈', 'Schnee'],
+    [[80, 81, 82], '🌦️', '🌧️', '소나기', 'Schauer'], [[85, 86], '🌨️', '🌨️', '눈 소나기', 'Schneeschauer'], [[95, 96, 99], '⛈️', '⛈️', '뇌우', 'Gewitter'],
+  ];
+  const wmo = (code) => WMO.find((x) => x[0].includes(code)) || WMO[3];
+  const wIcon = (code, day) => wmo(code)[day ? 1 : 2];
+  const wName = (code) => wmo(code)[lang === 'de' ? 4 : 3];
+  async function loadWeather() {
+    if (wx && Date.now() - wx.at < 25 * 60e3) return;
+    const q = `latitude=${PLACE.lat}&longitude=${PLACE.lon}&current=temperature_2m,apparent_temperature,weather_code,is_day`
+      + '&hourly=temperature_2m,weather_code,precipitation_probability,is_day'
+      + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Europe%2FBerlin&forecast_days=3';
+    try {
+      const r = await fetch(`https://api.open-meteo.com/v1/forecast?${q}`);
+      if (!r.ok) throw new Error(String(r.status));
+      const d = await r.json();
+      wx = { at: Date.now(), cur: d.current, hourly: d.hourly, daily: d.daily };
+      store(WX_KEY, wx);
+    } catch (e) { console.warn('weather', e); if (!wx) wx = { at: Date.now() - 20 * 60e3, err: true }; }
+    renderTop();
+  }
+  function weatherHint() {
+    if (!wx || !wx.hourly) return '';
+    const now = `${todayKey()}T${pad(new Date().getHours())}:00`;
+    const i0 = Math.max(0, wx.hourly.time.indexOf(now));
+    const next = wx.hourly.time.slice(i0, i0 + 12).map((_, i) => ({ c: wx.hourly.weather_code[i0 + i], p: wx.hourly.precipitation_probability[i0 + i], t: wx.hourly.temperature_2m[i0 + i] }));
+    const H = L().hint;
+    if (next.some((x) => [71, 73, 75, 77, 85, 86].includes(x.c))) return H.snow;
+    if (next.some((x) => (x.p || 0) >= 50 || [61, 63, 65, 80, 81, 82, 95, 96, 99].includes(x.c))) return H.rain;
+    if (next.some((x) => x.t <= 0)) return H.frost;
+    if (next.some((x) => x.t >= 28)) return H.hot;
+    return '';
+  }
+
+  /* ───────── 위: 시계 · 날씨 · 버튼 ───────── */
+  function renderTop() {
+    const now = new Date(), k = todayKey();
+    const chips = [...vacationsOn(k).map((v) => `✈️ ${vacName(v)}`), ...holidaysOn(k).map((x) => `${x.type === 'pub' ? '🎉' : '🏖️'} ${holName(x)}`)];
+    const clock = h('div', { class: 'clockbox' },
+      h('div', { class: 'clock', id: 'clock', text: hhmm(now) }),
+      h('div', { class: 'date-line', text: L().dateLong(now) }),
+      chips.length ? h('div', { class: 'chips' }, ...chips.map((c) => h('span', { class: 'chip', text: c }))) : null);
+
+    let weather;
+    if (wx && wx.cur && wx.daily) {
+      const c = wx.cur, d = wx.daily;
+      const hint = weatherHint();
+      const nowH = `${k}T${pad(now.getHours())}:00`;
+      const i0 = Math.max(0, wx.hourly.time.indexOf(nowH));
+      const hours = [];
+      for (let i = i0 + 2; hours.length < 4 && i < wx.hourly.time.length; i += 3) {
+        const p = wx.hourly.precipitation_probability[i];
+        hours.push(h('div', { class: 'w-h' },
+          h('div', { class: 't', text: wx.hourly.time[i].slice(11, 13) + (lang === 'de' ? ' Uhr' : '시') }),
+          h('div', { class: 'e', text: wIcon(wx.hourly.weather_code[i], wx.hourly.is_day[i]) }),
+          h('div', { class: 'd', text: `${Math.round(wx.hourly.temperature_2m[i])}°` }),
+          h('div', { class: 'p', text: p >= 30 ? `💧${p}%` : '' })));
+      }
+      if (d.time[1]) hours.push(h('div', { class: 'w-h day' },
+        h('div', { class: 't', text: L().tomorrow }),
+        h('div', { class: 'e', text: wIcon(d.weather_code[1], 1) }),
+        h('div', { class: 'd', text: `${Math.round(d.temperature_2m_min[1])}°/${Math.round(d.temperature_2m_max[1])}°` }),
+        h('div', { class: 'p', text: d.precipitation_probability_max[1] >= 30 ? `💧${d.precipitation_probability_max[1]}%` : '' })));
+      weather = h('section', { class: 'weather', 'aria-label': wName(c.weather_code) },
+        h('div', { class: 'w-now' },
+          h('div', { class: 'w-ic', text: wIcon(c.weather_code, c.is_day) }),
+          h('div', {}, h('div', { class: 'w-temp', text: `${Math.round(c.temperature_2m)}°` })),
+          h('div', { class: 'w-meta' },
+            h('div', {}, h('b', { text: wName(c.weather_code) }), ` · ${L().wNow} ${Math.round(c.apparent_temperature)}°`),
+            h('div', { text: `${L().wHi} ${Math.round(d.temperature_2m_max[0])}° · ${L().wLo} ${Math.round(d.temperature_2m_min[0])}°` }),
+            hint ? h('div', { class: 'w-hint', text: hint }) : null)),
+        h('div', { class: 'w-hours' }, ...hours));
+    } else {
+      weather = h('section', { class: 'weather' }, h('span', { class: 'w-empty', text: wx && wx.err ? L().wErr : '…' }));
+    }
+
+    const tools = h('div', { class: 'tools' },
+      h('button', { type: 'button', class: 'tool lang', title: 'Sprache / 언어', text: L().lang, onclick: () => { lang = lang === 'ko' ? 'de' : 'ko'; store('family-home:lang', lang); render(); } }),
+      h('button', { type: 'button', class: 'tool' + (wakeOn ? ' on' : ''), title: wakeMsg || L().wake, 'aria-pressed': String(wakeOn), text: '💡', onclick: toggleWake }));
+    $('#top').replaceChildren(clock, weather, tools);
+  }
+
+  /* ───────── 카드 ───────── */
+  function card(id, ic, color, title, sub, href, ...body) {
+    return h('section', { class: 'card', id: 'card-' + id, style: `--cc:${color}` },
+      h('div', { class: 'c-head' },
+        h('span', { class: 'c-ic', text: ic }),
+        h('div', { style: 'min-width:0' }, h('div', { class: 'c-title', text: title }), sub ? h('div', { class: 'c-sub', text: sub }) : null),
+        href ? h('a', { class: 'c-go', href, 'aria-label': title, text: '›' }) : null),
+      h('div', { class: 'c-body' }, ...body));
+  }
+  const moreEl = () => h('div', { class: 'more' });
+
+  // 가족 일정: 낮에는 오늘, 저녁 5시부터는 내일
+  function planCard() {
+    const now = new Date();
+    const evening = now.getHours() >= 17;
+    const d = evening ? addDays(now, 1) : now, k = keyOf(d);
+    const off = [...vacationsOn(k).map((v) => `✈️ ${vacName(v)}`), ...holidaysOn(k).map((x) => `${x.type === 'pub' ? '🎉' : '🏖️'} ${holName(x)}`)];
+    const rows = MEMBERS.map((m) => {
+      const e = entryFor(m, k), am = slotText(e, 'am'), pm = slotText(e, 'pm');
+      if (m === 'family' && !am && !pm) return null;
+      return h('li', { class: 'plan-row', style: `--mc:${WHO[m]}` }, h('img', { src: avatarOf(m), alt: '' }),
+        h('span', { class: 'nm', text: L().who[m] }), h('span', { text: am }), h('span', { text: pm }));
+    }).filter(Boolean);
+    return card('plan', '🗓️', 'var(--c-plan)', evening ? L().planTomorrow : L().planToday, L().dateShort(d), APPS.family,
+      off.length ? h('div', { class: 'plan-off', text: off.join(' · ') }) : null,
+      h('div', { class: 'plan-cols' }, h('span', { text: L().am }), h('span', { text: L().pm })),
+      h('ul', { class: 'fit' }, ...rows), moreEl());
+  }
+
+  function calCard() {
+    const now = new Date(), k = keyOf(now), k1 = keyOf(addDays(now, 1));
+    const evs = calEvents(k, keyOf(addDays(now, 14))).filter((e) => !e.endAt || e.endAt > now);
+    const list = h('ul', { class: 'fit' });
+    let last = '';
+    for (const e of evs) {
+      const dk = e.s < k ? k : e.s;
+      if (dk !== last) { last = dk; list.append(h('li', { class: 'ev-day' + (dk === k ? ' today' : ''), text: dk === k ? `${L().today} · ${L().dateShort(fromKey(dk))}` : dk === k1 ? `${L().tomorrow} · ${L().dateShort(fromKey(dk))}` : L().dateShort(fromKey(dk)) })); }
+      list.append(h('li', { class: 'ev', style: `--ec:${e.color}` }, h('span', { class: 'tm', text: e.time || '◦' }), h('span', { class: 'tt', text: e.title })));
+    }
+    return card('cal', '📅', 'var(--c-cal)', L().cal, null, APPS.family + '#calendar',
+      evs.length ? [list, moreEl()] : h('div', { class: 'empty', text: cal.none ? L().noCal : L().noEvents }));
+  }
+
+  function todoCard() {
+    const k = todayKey();
+    const todos = openTodos();
+    const list = h('ul', { class: 'fit' }, ...todos.map((t) => {
+      const late = t.due && t.due < k;
+      const li = h('li', { class: 'todo' },
+        h('button', { type: 'button', class: 'tick', 'aria-label': '✓', onclick: () => { li.classList.add('done'); setTimeout(() => setTodoDone(t, true), 400); } }, h('i')),
+        h('span', { class: 'tx' }, todoText(t), t.who && WHO[t.who] && L().who[t.who] ? h('span', { class: 'who', style: `--wc:${WHO[t.who]}`, text: L().who[t.who] }) : null),
+        t.due ? h('span', { class: 'due' + (late ? ' late' : t.due === k ? ' today' : ''), text: t.due === k ? L().today : L().dateShort(fromKey(t.due)) }) : null);
+      return li;
+    }));
+    return card('todo', '✅', 'var(--c-todo)', L().todo, todos.length ? String(todos.length) : null, APPS.family + '#todo',
+      todos.length ? [list, moreEl()] : h('div', { class: 'empty', text: L().noTodos }));
+  }
+
+  function mealLine(items) {
+    const grown = items.filter((x) => !x.kid).map((x) => x.text), kids = items.filter((x) => x.kid).map((x) => x.text);
+    return [grown.join(' · '), kids.length ? [grown.length ? ' ' : '', h('span', { class: 'kid-tag', text: L().kidTag }), kids.join(' · ')] : null];
+  }
+  function mealCard() {
+    const now = new Date(), k = todayKey();
+    const dinner = mealOn(k, 'dinner'), lunch = mealOn(k, 'lunch');
+    const rows = [];
+    for (let i = 1; i <= 6; i++) {
+      const d = addDays(now, i), items = mealOn(keyOf(d), 'dinner');
+      rows.push(h('li', { class: 'meal-row' }, h('span', { class: 'd', text: i === 1 ? L().tomorrow : L().dateShort(d) }),
+        h('span', {}, items.length ? mealLine(items) : h('span', { class: 'muted', text: L().noMeal }))));
+    }
+    return card('meal', '🍲', 'var(--c-meal)', L().dinnerToday, null, APPS.meals,
+      h('div', { class: 'dinner-now' }, dinner.length ? mealLine(dinner) : h('span', { class: 'muted', text: L().noDinner })),
+      lunch.length ? h('div', { class: 'lunch' }, `${L().lunch}: `, mealLine(lunch)) : null,
+      h('ul', { class: 'fit' }, ...rows), moreEl());
+  }
+
+  function shopCard() {
+    const groups = shopping(), soon = eatSoon(), k = todayKey();
+    const total = groups.reduce((n, g) => n + g.items.length, 0);
+    const list = h('ul', { class: 'fit' }, ...groups.map((g) => h('li', { class: 'store' },
+      h('div', { class: 'store-h' }, storeName(g.s), ' ', h('b', { text: String(g.items.length) })),
+      h('div', { class: 'items' }, ...g.items.slice(0, 14).map((i) => h('span', { class: 'item', text: i.name }))))));
+    const fridge = soon.length ? h('div', { class: 'fridge' }, h('b', { text: L().eatSoon }), ' ',
+      soon.slice(0, 5).map((x) => {
+        const n = Math.round((fromKey(x.expires) - fromKey(k)) / 864e5);
+        return `${x.name} (${n < 0 ? L().expGone : n === 0 ? L().expToday : L().expIn(n)})`;
+      }).join(' · ')) : null;
+    return card('shop', '🛒', 'var(--c-shop)', L().shop, total ? String(total) : null, APPS.shop,
+      total ? [list, moreEl()] : h('div', { class: 'empty', text: L().noShop }), fridge);
+  }
+
+  function kidsCard() {
+    const rows = ['davin', 'arin'].map((k) => {
+      const P = kidProgress(k), c = P.c;
+      const reward = kidText(c.reward, c.rsrc, c.rtr);
+      const money = k === 'davin' && kidOf(k).money ? moneyOf(k) : null;
+      return h('li', { class: 'kid', style: `--mc:${WHO[k]}` },
+        h('img', { src: avatarOf(k), alt: '' }),
+        h('div', { style: 'min-width:0' },
+          h('div', { class: 'nm' }, L().who[k], h('small', { text: P.gift ? L().allDone : `⭐ ${P.now} / ${c.small}   🏅 ${P.bigs} / ${c.big}` }),
+            money != null ? h('span', { class: 'money', text: `💶 ${fmtMoney(money)}` }) : null),
+          h('div', { class: 'bar' }, h('i', { style: `width:${Math.round(100 * Math.min(1, P.now / c.small))}%` })),
+          h('div', { class: 'rw', text: `🎁 ${reward || L().noReward}` })));
+    });
+    return card('kids', '⭐', 'var(--c-kids)', L().kids, null, APPS.family + '#davin', h('ul', { class: 'fit' }, ...rows));
+  }
+
+  // 카드 칸에 다 안 들어가는 줄은 뒤에서부터 접고 "+N개 더"로 (캘린더는 날짜 머리만 남지 않게)
+  function fitCards() {
+    for (const body of document.querySelectorAll('.c-body')) {
+      const list = $('.fit', body), more = $('.more', body);
+      if (!list || !more) continue;
+      let hidden = 0;
+      more.textContent = '';
+      if (body.scrollHeight <= body.clientHeight + 1) continue;
+      more.textContent = L().more(9); // "+N개 더" 줄 자리도 미리 잡아 둠
+      while (body.scrollHeight > body.clientHeight + 1 && list.children.length > 1) {
+        const last = list.lastElementChild;
+        if (!last.classList.contains('ev-day')) hidden++;
+        last.remove();
+        while (list.lastElementChild && list.lastElementChild.classList.contains('ev-day')) list.lastElementChild.remove();
+      }
+      more.textContent = hidden ? L().more(hidden) : '';
+    }
+  }
+
+  function renderGrid() {
+    const grid = $('#grid');
+    if (!canShow()) { grid.replaceChildren(S.ready ? gateView() : h('div')); return; }
+    grid.replaceChildren(planCard(), calCard(), todoCard(), mealCard(), shopCard(), kidsCard());
+    requestAnimationFrame(fitCards);
+  }
+  function render() {
+    document.documentElement.lang = lang;
+    document.title = L().appName;
+    renderTop(); renderGrid();
+  }
+
+  // 로그인 · 가족 코드
+  function gateView() {
+    const box = h('div', { class: 'gate' }, h('img', { src: 'icon-512.png', alt: '' }), h('h1', { text: L().appName }));
+    if (!S.user) {
+      box.append(h('p', { text: L().signInText }), h('button', { type: 'button', class: 'btn', text: L().signIn, onclick: signIn }));
+      if (S.err) box.append(h('p', { class: 'err', text: S.err }));
+    } else {
+      const inp = h('input', { class: 'input', placeholder: L().houseCode, autocapitalize: 'characters', 'aria-label': L().houseCode });
+      box.append(h('p', { text: L().houseText }),
+        h('form', { style: 'display:flex;gap:8px;flex-wrap:wrap;justify-content:center', onsubmit: (e) => { e.preventDefault(); joinHouse(inp.value); } }, inp, h('button', { class: 'btn', text: L().join })),
+        S.err ? h('p', { class: 'err', text: S.err }) : null,
+        h('button', { type: 'button', class: 'link-btn', text: L().signOut, onclick: () => fb.A.signOut(fb.auth) }));
+    }
+    return box;
+  }
+
+  /* 할 일 완료 (우리가족 할일목록과 같은 칸) */
+  async function setTodoDone(t, done) {
+    if (DEMO) { t.done = done; t.doneAt = done ? Date.now() : null; render(); }
+    else if (fb && S.house) {
+      await fb.F.updateDoc(fb.F.doc(fb.db, 'households', S.house), { [`todos.${t.id}.done`]: done, [`todos.${t.id}.doneAt`]: done ? Date.now() : null })
+        .catch((e) => console.warn('todo', e));
+    }
+    if (done) toast(L().doneMsg, () => setTodoDone(t, false));
+  }
+  let toastTimer = null;
+  function toast(text, undo) {
+    const old = $('#toast'); if (old) old.remove();
+    clearTimeout(toastTimer);
+    const el = h('div', { id: 'toast', role: 'status' }, h('span', { text }),
+      undo ? h('button', { type: 'button', text: L().undo, onclick: () => { el.remove(); undo(); } }) : null);
+    document.body.append(el);
+    toastTimer = setTimeout(() => el.remove(), 6000);
+  }
+
+  /* 화면 켜 두기 (집에 세워 둔 패드용) */
+  let wakeOn = load('family-home:wake', false), wakeLock = null, wakeMsg = '';
+  async function applyWake() {
+    try {
+      if (wakeOn && document.visibilityState === 'visible') {
+        if (!('wakeLock' in navigator)) { wakeMsg = L().wakeNo; return; }
+        if (!wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); }
+      } else if (!wakeOn && wakeLock) { await wakeLock.release(); wakeLock = null; }
+    } catch (e) { console.warn('wake', e); }
+  }
+  function toggleWake() {
+    wakeOn = !wakeOn; wakeMsg = ''; store('family-home:wake', wakeOn);
+    applyWake().then(() => { if (wakeMsg) toast(wakeMsg); renderTop(); });
+  }
+
+  /* ───────── 로그인 · 가족 문서 (우리가족 앱과 같은 Firebase) ───────── */
+  const HOUSE_KEY = 'family-home:house';
+  let famUnsub = null;
+  function listenFamily() {
+    if (famUnsub) famUnsub(); famUnsub = null;
+    if (!fb || !S.house) return;
+    famUnsub = fb.F.onSnapshot(fb.F.doc(fb.db, 'households', S.house), (snap) => {
+      if (!snap.exists() && snap.metadata.fromCache) return;
+      const d = (snap.exists() && snap.data()) || {};
+      const from = keyOf(addDays(new Date(), -1)), to = keyOf(addDays(new Date(), 10));
+      const meals = Object.fromEntries(Object.entries(d.meals || {}).filter(([k]) => k >= from && k <= to));
+      const kids = {};
+      for (const k of ['davin', 'arin']) if (d.kids && d.kids[k]) kids[k] = { cfg: d.kids[k].cfg || {}, stickers: d.kids[k].stickers || {}, money: d.kids[k].money || null };
+      fam = {
+        todos: d.todos || {}, routine: d.routine || {}, routineBase: d.routineBase || {}, vacations: d.vacations || {}, meals, kids,
+        stores: d.stores || {}, items: d.items || {}, stock: d.stock || {},
+      };
+      store(FAM_KEY, fam);
+      render();
+    }, (e) => console.warn('family', e));
+  }
+  async function startFirebase() {
+    const cfg = window.FIREBASE_CONFIG;
+    if (!cfg) { S.ready = true; render(); return; }
+    try {
+      const V = 'https://www.gstatic.com/firebasejs/10.12.2/';
+      const [{ initializeApp }, A, F] = await Promise.all([import(V + 'firebase-app.js'), import(V + 'firebase-auth.js'), import(V + 'firebase-firestore.js')]);
+      const app = initializeApp(cfg);
+      let db;
+      try { db = F.initializeFirestore(app, { localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() }) }); }
+      catch (e) { console.warn('cache', e); db = F.getFirestore(app); }
+      fb = { A, F, auth: A.getAuth(app), db };
+      A.onAuthStateChanged(fb.auth, async (user) => {
+        S.user = user; S.house = null; S.err = '';
+        if (user) {
+          try {
+            const u = await F.getDoc(F.doc(fb.db, 'users', user.uid));
+            S.house = (u.exists() && u.data().house) || null;
+            store(HOUSE_KEY, { uid: user.uid, house: S.house });
+          } catch (e) {
+            console.warn('house', e);
+            const c = load(HOUSE_KEY, null);
+            if (c && c.uid === user.uid) S.house = c.house;
+          }
+        } else {
+          // 로그아웃: 이 기기에 저장한 가족 자료 지우기
+          fam = null; store(FAM_KEY, null); cal = { events: [], calendars: [], at: 0 }; store(EV_KEY, null); store(HOUSE_KEY, null);
+        }
+        S.ready = true;
+        listenFamily();
+        render();
+        if (S.house) loadEvents();
+      });
+    } catch (e) {
+      console.warn('firebase', e);
+      S.ready = true; S.err = L().loadErr; render();
+    }
+  }
+  async function signIn() {
+    S.err = '';
+    try { await fb.A.signInWithPopup(fb.auth, new fb.A.GoogleAuthProvider()); }
+    catch (e) { if (!/popup-closed|cancelled-popup/.test(String(e && e.code))) { S.err = L().loadErr; render(); } }
+  }
+  async function joinHouse(raw) {
+    const code = String(raw).toUpperCase().replace(/[^A-Z0-9]/g, '');
+    S.err = '';
+    try {
+      if (!code || !(await fb.F.getDoc(fb.F.doc(fb.db, 'households', code))).exists()) { S.err = L().houseBad; render(); return; }
+      await fb.F.setDoc(fb.F.doc(fb.db, 'users', S.user.uid), { house: code }, { merge: true });
+      S.house = code; store(HOUSE_KEY, { uid: S.user.uid, house: code });
+      listenFamily(); render(); loadEvents();
+    } catch (e) { console.warn(e); S.err = L().houseBad; render(); }
+  }
+
+  /* ───────── 미리보기용 예시 자료 (localhost?demo 일 때만) ───────── */
+  function demoSetup() {
+    const now = Date.now(), k = (n) => keyOf(addDays(new Date(), n));
+    S.user = { uid: 'demo' }; S.house = 'DEMO';
+    const st = (n) => Object.fromEntries(Array.from({ length: n }, (_, i) => [`s${i}`, { at: now - i * 864e5, d: i % 6 }]));
+    fam = {
+      todos: {
+        t1: { id: 't1', text: '소풍 비용 3유로 봉투에 넣기', who: 'mom', due: k(0), done: false, at: now - 5e5 },
+        t2: { id: 't2', text: 'Winterreifen wechseln', who: 'dad', due: k(-1), done: false, at: now - 4e5 },
+        t3: { id: 't3', text: '아린 실내화 사기', who: 'arin', due: k(3), done: false, at: now - 3e5 },
+        t4: { id: 't4', text: '다빈 수영 가방 챙기기', who: 'davin', due: k(1), done: false, at: now - 2e5 },
+        t5: { id: 't5', text: 'Arzttermin U8 vereinbaren', who: 'dad', due: '', done: false, at: now - 1e5 },
+        t6: { id: 't6', text: '택배 반품하기', who: '', due: '', done: false, at: now - 9e4 },
+        t7: { id: 't7', text: '크리스마스 카드 쓰기', who: 'both', due: '', done: false, at: now - 8e4 },
+        t8: { id: 't8', text: 'Steuererklärung Unterlagen sammeln', who: 'dad', due: '', done: false, at: now - 7e4 },
+      },
+      routine: { [k(0)]: { family: { am: '', pm: '할머니 영상통화' }, mom: { am: '@work', pm: '' }, dad: { am: '@work', pm: '@work' }, davin: { am: '@school', pm: '@tkd' }, arin: { am: '@kinder', pm: '@music' } } },
+      routineBase: {}, vacations: {},
+      meals: {
+        [k(0)]: { dinner: [{ text: '된장찌개' }, { text: '계란말이' }, { text: '어린이 김밥', kid: true }] },
+        [k(1)]: { dinner: [{ text: 'Spaghetti Bolognese' }] }, [k(2)]: { dinner: [{ text: '닭볶음탕' }] },
+        [k(3)]: { dinner: [{ text: 'Kartoffelsuppe' }, { text: '빵' }] }, [k(5)]: { dinner: [{ text: '불고기' }, { text: '잡채' }] },
+      },
+      kids: {
+        davin: { cfg: { small: 10, big: 4, reward: '레고 시티 경찰서', start: 0 }, stickers: st(16), money: { m1: { amt: 10 }, m2: { amt: 2.5 }, m3: { amt: -4 } } },
+        arin: { cfg: { small: 7, big: 4, reward: '공주 스티커북', start: 0 }, stickers: st(5) },
+      },
+      stores: { super: { id: 'super', key: 'super' }, asia: { id: 'asia', key: 'asia' }, online: { id: 'online', key: 'online' } },
+      items: {
+        i1: { id: 'i1', store: 'super', name: '우유' }, i2: { id: 'i2', store: 'super', name: 'Brezen' }, i3: { id: 'i3', store: 'super', name: '바나나' },
+        i4: { id: 'i4', store: 'super', name: '계란' }, i5: { id: 'i5', store: 'super', name: 'Klopapier' }, i6: { id: 'i6', store: 'asia', name: '두부' },
+        i7: { id: 'i7', store: 'asia', name: '고추장' }, i8: { id: 'i8', store: 'asia', name: '김' }, i9: { id: 'i9', store: 'online', name: '아린 겨울 장갑' },
+      },
+      stock: {
+        x1: { id: 'x1', name: '두부', expires: k(0), loc: null }, x2: { id: 'x2', name: '요거트', expires: k(1), loc: null },
+        x3: { id: 'x3', name: 'Hackfleisch', expires: k(2), loc: null }, x4: { id: 'x4', name: '냉동 만두', expires: k(1), loc: 'freezer' },
+      },
+    };
+    const t = (n, hh, mm) => { const d = addDays(fromKey(todayKey()), n); d.setHours(hh, mm); return d.toISOString(); };
+    cal = { at: now, calendars: [{ id: 'c1', color: '#F4511E' }, { id: 'c2', color: '#33B679' }, { id: 'c3', color: '#8E24AA' }], events: [
+      { id: 'e0', cal: 'c3', title: '다빈 태권도 승급 심사', start: { dateTime: t(0, 15, 30) }, end: { dateTime: t(0, 23, 50) } },
+      { id: 'e1', cal: 'c1', title: '치과 (엄마)', start: { dateTime: t(1, 9, 30) }, end: { dateTime: t(1, 10, 15) } },
+      { id: 'e4', cal: 'c3', title: '아린 친구 Lena 놀러 옴', start: { dateTime: t(1, 15, 0) }, end: { dateTime: t(1, 17, 0) } },
+      { id: 'e2', cal: 'c2', title: 'Elternabend 1b', start: { dateTime: t(4, 19, 0) }, end: { dateTime: t(4, 21, 0) } },
+      { id: 'e3', cal: 'c2', title: '다빈 친구 생일파티', start: { date: k(6) }, end: { date: k(7) } },
+      { id: 'e5', cal: 'c1', title: 'Weihnachtsmarkt mit Oma', start: { dateTime: t(8, 16, 0) }, end: { dateTime: t(8, 19, 0) } },
+    ] };
+  }
+  async function demoApi(path) {
+    await new Promise((r) => setTimeout(r, 200));
+    if (path === '/events') return { events: cal.events, calendars: cal.calendars, accounts: [{ main: true }] };
+    return {};
+  }
+
+  /* ───────── 시작 ───────── */
+  // 화면은 1180×820(아이패드 가로) 기준으로 짜 두고, 기기 화면에 맞게 통째로 확대·축소 (작은 패드에서 카드가 잘리지 않게)
+  function fitZoom() {
+    const app = $('#app'), z = Math.min(innerWidth / 1180, innerHeight / 820);
+    app.style.zoom = z;
+    app.style.width = `${innerWidth / z}px`;
+    app.style.height = `${innerHeight / z}px`;
+  }
+  fitZoom();
+  if (DEMO) { demoSetup(); S.ready = true; }
+  render();
+  // 글꼴이 늦게 오면 줄 높이가 바뀌므로 카드 칸 맞춤을 다시
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderGrid());
+  if (!DEMO) startFirebase();
+  loadHolidays();
+  loadWeather();
+  applyWake();
+  // 시계: 10초마다 / 날짜가 바뀌거나 정시마다 전체 새로 (일정 카드가 오늘→내일로 넘어가는 등)
+  let lastStamp = `${todayKey()} ${new Date().getHours()}`;
+  setInterval(() => {
+    const now = new Date();
+    const c = $('#clock'); if (c) c.textContent = hhmm(now);
+    const stamp = `${todayKey()} ${now.getHours()}`;
+    if (stamp !== lastStamp) {
+      const newDay = stamp.slice(0, 10) !== lastStamp.slice(0, 10);
+      lastStamp = stamp; render();
+      if (newDay) { loadEvents(); loadHolidays(); }
+    }
+  }, 10000);
+  // 캘린더 10분마다, 날씨 30분마다 (화면이 켜져 있을 때만)
+  setInterval(() => { if (document.visibilityState === 'visible') loadEvents(); }, 10 * 60e3);
+  setInterval(() => { if (document.visibilityState === 'visible') loadWeather(); }, 30 * 60e3);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    applyWake(); render();
+    if (Date.now() - (cal.at || 0) > 5 * 60e3) loadEvents();
+    loadWeather();
+  });
+  let rz = null;
+  window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { fitZoom(); renderGrid(); }, 150); });
+  if ('serviceWorker' in navigator && !DEMO) navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});
+})();
+</script>
+</body>
+</html>
