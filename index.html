@@ -133,6 +133,12 @@ img { display: block; }
 .c-ic { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; font-size: 18px; background: color-mix(in srgb, var(--cc) 22%, transparent); flex: none; }
 .c-title { font: 400 21px/1.2 var(--font-display); }
 .c-sub { color: var(--muted); font-size: 14px; }
+.day-nav { margin-left: auto; display: flex; align-items: center; gap: 4px; flex: none; }
+.day-nav button { width: 34px; height: 34px; border-radius: 50%; background: var(--sky-soft); color: var(--deep); font-size: 20px; line-height: 1; display: grid; place-items: center; }
+.day-nav button:active { transform: scale(.92); }
+.day-nav .back { width: auto; padding: 0 10px; border-radius: 99px; font: 600 13px/1 var(--font-body); background: #FFF1B8; color: #8A6A00; }
+.day-nav + .c-go { margin-left: 0; }
+#card-plan .c-body { touch-action: pan-y; }
 .c-go { margin-left: auto; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: var(--faint); font-size: 18px; flex: none; }
 .c-go:active { background: var(--sky-soft); }
 .c-body { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
@@ -344,7 +350,7 @@ img { display: block; }
       dateShort: (d) => `${d.getMonth() + 1}/${d.getDate()} (${WD_KO[d.getDay()]})`,
       today: '오늘', tomorrow: '내일',
       who: { family: '가족', mom: '엄마', dad: '아빠', davin: '다빈', arin: '아린', both: '같이' },
-      planToday: '오늘 일정', planTomorrow: '내일 일정', am: '오전', pm: '오후', dayOff: '쉬는 날', atHome: '집',
+      planToday: '오늘 일정', planTomorrow: '내일 일정', planYesterday: '어제 일정', planDay: '일정', backToday: '오늘로', am: '오전', pm: '오후', dayOff: '쉬는 날', atHome: '집',
       cal: '다가오는 일정', noEvents: '2주 안에 일정이 없어요', noCal: '우리가족 앱에서 구글 캘린더를 연결하면 보여요',
       todo: '할 일', noTodos: '할 일이 없어요 🎉', more: (n) => `+ ${n}개 더`, doneMsg: '완료로 표시했어요', undo: '되돌리기',
       lunchTitle: '오늘 점심', dinnerTitle: '오늘 저녁', kidTag: '아이', noMeal: '아직 정하지 않았어요', eatSoon: '🧊 빨리 먹기',
@@ -361,7 +367,7 @@ img { display: block; }
       dateShort: (d) => `${WD_DE[d.getDay()]}, ${d.getDate()}.${d.getMonth() + 1}.`,
       today: 'Heute', tomorrow: 'Morgen',
       who: { family: 'Familie', mom: 'Mama', dad: 'Papa', davin: 'Davin', arin: 'Arin', both: 'Zusammen' },
-      planToday: 'Heute', planTomorrow: 'Morgen', am: 'Vorm.', pm: 'Nachm.', dayOff: 'Frei', atHome: 'Zuhause',
+      planToday: 'Heute', planTomorrow: 'Morgen', planYesterday: 'Gestern', planDay: 'Plan', backToday: 'Heute', am: 'Vorm.', pm: 'Nachm.', dayOff: 'Frei', atHome: 'Zuhause',
       cal: 'Termine', noEvents: 'Keine Termine in den nächsten 2 Wochen', noCal: 'Google Kalender in der Familien-App verbinden',
       todo: 'Aufgaben', noTodos: 'Alles erledigt 🎉', more: (n) => `+ ${n} weitere`, doneMsg: 'Als erledigt markiert', undo: 'Rückgängig',
       lunchTitle: 'Heute Mittag', dinnerTitle: 'Heute Abend', kidTag: 'Kinder', noMeal: 'Noch nichts geplant', eatSoon: '🧊 Bald essen',
@@ -947,11 +953,20 @@ img { display: block; }
       ...pers, h('div', { class: 'end' }, h('span', { class: 'e', text: '🏠' }), end));
   }
 
+  // 일정 카드 날짜 넘기기: ‹ › 버튼이나 옆으로 쓸기. 2분 동안 안 만지면 원래 날(오늘, 저녁 5시부터는 내일)로 돌아옴
+  let planShift = 0, planTimer = null;
+  function movePlan(n) {
+    planShift = n == null ? 0 : planShift + n;
+    clearTimeout(planTimer);
+    if (planShift) planTimer = setTimeout(() => { planShift = 0; renderGrid(); }, 2 * 60e3);
+    renderGrid();
+  }
   function planCard() {
     const now = new Date();
     const evening = now.getHours() >= 17;
-    const d = evening ? addDays(now, 1) : now, k = keyOf(d);
-    const nowHalf = evening ? '' : now.getHours() < 12 ? 'am' : 'pm';
+    const off0 = (evening ? 1 : 0) + planShift; // 오늘에서 며칠 뒤
+    const d = addDays(now, off0), k = keyOf(d);
+    const nowHalf = off0 === 0 && !evening ? (now.getHours() < 12 ? 'am' : 'pm') : '';
     const off = [...vacationsOn(k).map((v) => `✈️ ${vacName(v)}`), ...holidaysOn(k).map((x) => `${x.type === 'pub' ? '🎉' : '🏖️'} ${holName(x)}`)];
     const people = MEMBERS.filter((m) => m !== 'family' || slotText(entryFor(m, k), 'am') || slotText(entryFor(m, k), 'pm'));
     const grid = h('div', { class: 'pg', style: `--n:${people.length}` }, h('span'));
@@ -969,8 +984,22 @@ img { display: block; }
           h('span', { class: 'e' + (ics.length > 1 ? ' two' : ''), text: ics.join('') || '🏠' }), h('span', { class: 't', text: t || L().atHome })));
       }
     }
-    const c = card('plan', '🗓️', 'var(--c-plan)', evening ? L().planTomorrow : L().planToday, L().dateShort(d), APPS.family,
-      off.length ? h('div', { class: 'plan-off' }, ...off.map((x) => h('span', { text: x }))) : null, grid, davinTimetable(k, !evening));
+    const title = off0 === 0 ? L().planToday : off0 === 1 ? L().planTomorrow : off0 === -1 ? L().planYesterday : L().planDay;
+    const c = card('plan', '🗓️', 'var(--c-plan)', title, L().dateShort(d), APPS.family,
+      off.length ? h('div', { class: 'plan-off' }, ...off.map((x) => h('span', { text: x }))) : null, grid, davinTimetable(k, off0 === 0 && !evening));
+    const nav = h('div', { class: 'day-nav' },
+      planShift ? h('button', { type: 'button', class: 'back', text: L().backToday, onclick: () => movePlan(null) }) : null,
+      h('button', { type: 'button', 'aria-label': '‹', text: '‹', onclick: () => movePlan(-1) }),
+      h('button', { type: 'button', 'aria-label': '›', text: '›', onclick: () => movePlan(1) }));
+    $('.c-head', c).insertBefore(nav, $('.c-go', c));
+    // 옆으로 쓸어서 넘기기
+    let sx = null, sy = 0;
+    c.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+    c.addEventListener('touchend', (e) => {
+      if (sx == null) return;
+      const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) movePlan(dx < 0 ? 1 : -1);
+    });
     return c;
   }
 
