@@ -572,6 +572,10 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
 /* 🗑 스티커 지우기 모드: 붙은 스티커에 빨간 ✕ */
 .del-on .wk-slot.got, .del-on .slot.wk.full, .del-on .big.full { position: relative; }
 .del-on .wk-slot.got::after, .del-on .slot.wk.full::after, .del-on .big.full::after { content: '✕'; position: absolute; top: -6px; right: -6px; width: 24px; height: 24px; border-radius: 50%; background: #E5484D; color: #fff; font: 700 14px/24px system-ui, sans-serif; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,.25); z-index: 2; }
+.stk-card.room { width: min(96vw, 1120px); }
+.stk-card.room .pr-room { aspect-ratio: auto; height: min(64vh, 640px); }
+.stk-top .room-btn { height: 46px; padding: 0 18px; border-radius: 23px; background: #fff; color: #6B3E12; font: 700 18px/1 var(--font-body, inherit); flex: none; border: 3px solid transparent; }
+.stk-top .room-btn[aria-pressed="true"] { border-color: #FF8A3D; background: #FFF0D6; }
 .stk-top .del-btn { height: 46px; min-width: 46px; padding: 0 14px; border-radius: 23px; background: #fff; color: var(--muted); font-size: 20px; flex: none; }
 .stk-top .del-btn.on { background: #E5484D; color: #fff; font-size: 17px; font-weight: 700; }
 .del-hint { margin: 0 0 12px; padding: 12px 14px; border-radius: 16px; background: #FDECEC; color: #C2363B; font-weight: 700; text-align: center; font-size: 17px; }
@@ -590,6 +594,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
 
 <script src="firebase-config.js"></script>
 <script src="../our-family/stickers-shared.js"></script>
+<script src="../our-family/poke-room.js"></script>
 <script>
 (() => {
   'use strict';
@@ -645,7 +650,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       todo: '챙길 할 일', noTodos: '급한 할 일이 없어요 🎉', more: (n) => `+ ${n}개 더`, doneMsg: '완료로 표시했어요', undo: '되돌리기',
       lunchTitle: '오늘 점심', dinnerTitle: '오늘 저녁', kidTag: '아이', noMeal: '아직 정하지 않았어요', eatSoon: '🧊 빨리 먹기',
       
-      kids: '주간 미션', noReward: '선물 미정', delMode: '스티커 지우기', delHint: '🗑 지울 스티커를 누르세요 (실수하면 되돌리기)', delDone: '완료', delToast: '스티커를 지웠어요', offHint: '빈 칸을 누르면 엄마·아빠가 🏖️ 쉬는 날(아프거나 여행 간 날)로 표시해요', offDone: '🏖️ 쉬는 날로 표시했어요', offUndone: '쉬는 날 표시를 지웠어요', tapBox: '상자를 톡톡톡 눌러 봐!', newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 선물 상자 열기!', msGiftTitle: '🎉 오늘 미션 다 했어요!', stkYay: '와! 스티커가 나왔어요!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', 
+      kids: '주간 미션', roomOpen: '🏠 포켓몬 방', roomBack: '🎯 미션판', noReward: '선물 미정', delMode: '스티커 지우기', delHint: '🗑 지울 스티커를 누르세요 (실수하면 되돌리기)', delDone: '완료', delToast: '스티커를 지웠어요', offHint: '빈 칸을 누르면 엄마·아빠가 🏖️ 쉬는 날(아프거나 여행 간 날)로 표시해요', offDone: '🏖️ 쉬는 날로 표시했어요', offUndone: '쉬는 날 표시를 지웠어요', tapBox: '상자를 톡톡톡 눌러 봐!', newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 선물 상자 열기!', msGiftTitle: '🎉 오늘 미션 다 했어요!', stkYay: '와! 스티커가 나왔어요!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', 
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
       packNone: '챙길 준비물이 없어요 🙂', packHow: '우리가족 앱 → 오늘 일정 아래 🎒 준비물에서 넣을 수 있어요', packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', wakeOff: '끄기', wakeAll: '하루 종일', wakeTime: '시간 정하기', wakeFrom: '시작 시간', wakeTo: '끝 시간', wakeFromTo: '부터', wakeUntil: '까지', wakeNowOn: '지금 화면을 켜 두고 있어요', wakeNowOff: '지금은 켜 두지 않아요 (패드 자동 잠금대로 꺼져요)', wakeNote: '정한 시간이 지나면 패드 설정의 ‘자동 잠금’ 시간이 지난 뒤 화면이 꺼져요. 그래서 패드 자동 잠금은 ‘안 함’ 말고 2~5분으로 해 두세요. 꺼진 화면은 웹 화면이 스스로 켤 수 없어서, 아침에는 화면을 한 번 눌러 깨워 주세요.', lang: 'DE',
       signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
@@ -662,7 +667,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       todo: 'Wichtige Aufgaben', noTodos: 'Nichts Dringendes 🎉', more: (n) => `+ ${n} weitere`, doneMsg: 'Als erledigt markiert', undo: 'Rückgängig',
       lunchTitle: 'Heute Mittag', dinnerTitle: 'Heute Abend', kidTag: 'Kinder', noMeal: 'Noch nichts geplant', eatSoon: '🧊 Bald essen',
       
-      kids: 'Wochenmission', noReward: 'Geschenk offen', delMode: 'Sticker löschen', delHint: '🗑 Tippe auf einen Sticker zum Löschen (Rückgängig möglich)', delDone: 'Fertig', delToast: 'Sticker gelöscht', offHint: 'Leeres Feld antippen: Eltern tragen einen 🏖️ Pausentag ein (krank, Urlaub)', offDone: '🏖️ Als Pausentag eingetragen', offUndone: 'Pausentag entfernt', tapBox: 'Tipp dreimal aufs Geschenk!', newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Geschenk öffnen!', msGiftTitle: '🎉 Heute alles geschafft!', stkYay: 'Juhu! Ein Sticker!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', 
+      kids: 'Wochenmission', roomOpen: '🏠 Pokémon', roomBack: '🎯 Missionen', noReward: 'Geschenk offen', delMode: 'Sticker löschen', delHint: '🗑 Tippe auf einen Sticker zum Löschen (Rückgängig möglich)', delDone: 'Fertig', delToast: 'Sticker gelöscht', offHint: 'Leeres Feld antippen: Eltern tragen einen 🏖️ Pausentag ein (krank, Urlaub)', offDone: '🏖️ Als Pausentag eingetragen', offUndone: 'Pausentag entfernt', tapBox: 'Tipp dreimal aufs Geschenk!', newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Geschenk öffnen!', msGiftTitle: '🎉 Heute alles geschafft!', stkYay: 'Juhu! Ein Sticker!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', 
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
       packNone: 'Nichts mitzunehmen 🙂', packHow: 'In der Familien-App unter „Heute“ → 🎒 Mitnehmen eintragen', packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', wakeOff: 'Aus', wakeAll: 'Immer', wakeTime: 'Zeiten', wakeFrom: 'Von', wakeTo: 'Bis', wakeFromTo: 'bis', wakeUntil: '', wakeNowOn: 'Der Bildschirm bleibt gerade an', wakeNowOff: 'Gerade nicht (das iPad sperrt sich wie eingestellt)', wakeNote: 'Außerhalb der Zeit geht der Bildschirm nach der „Automatischen Sperre“ des iPads aus – stell sie dafür auf 2–5 Minuten statt „Nie“. Ein ausgeschalteter Bildschirm kann sich nicht selbst einschalten; morgens einmal antippen.', lang: '한',
       signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
@@ -1610,7 +1615,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   }
 
   /* ───────── ⭐ 칭찬 스티커판 (우리가족 앱과 같은 자료: kids.{k}.stickers.{id} = { at, d, why, by }) ─────────
-     그림은 우리가족 앱과 똑같이: 다빈 = 동글동글 속성 몬스터, 아린 = 반짝이 하트 요정. 잠금(kids.lock)이 켜져 있으면 엄마·아빠 비밀번호 */
+     그림은 우리가족 앱과 똑같이: 다빈 = 포켓몬, 아린 = 반짝이 하트 요정. 다빈은 🏠 포켓몬 방도 (../our-family/poke-room.js). 잠금(kids.lock)이 켜져 있으면 엄마·아빠 비밀번호 */
   // 스티커 그림 · 칭찬 이유 · 소리 · 개수 규칙은 우리가족 앱과 함께 쓰는 공통 파일(../our-family/stickers-shared.js)에서 가져옴.
   // 그 파일을 고치면 두 앱에 한 번에 적용됨. 못 불러왔으면(처음 켤 때 인터넷이 없는 등) 스티커판만 쉬고 나머지는 그대로
   const FS = window.FamilyStickers || null;
@@ -1657,23 +1662,33 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
         h('button', { type: 'button', text: k, onclick: () => (k === '✕' ? (box.hidden = true) : key(k)) })))));
     box.hidden = false;
   }
-  let stk = null; // 열려 있는 주간 미션 창 { k, pop, popGold, del }
+  let stk = null; // 열려 있는 주간 미션 창 { k, pop, popGold, del, room }
+  // 🏠 포켓몬 방: 한 번 만든 방은 창을 다시 그려도 그대로 둠 (포켓몬이 걷던 자리 유지)
+  let roomCtl = null, roomRedraw = 0;
+  const roomBox = h('div', { class: 'stk-roombox' });
+  function roomOff() { if (roomCtl) { roomCtl.destroy(); roomCtl = null; } }
   function openStickers(k) { if (!FS) { toast(L().stkOffline); return; } stk = { k, pop: null }; drawStickers(); $('#stk').hidden = false; }
-  function closeStickers() { stk = null; $('#stk').hidden = true; $('#stk-gift').hidden = true; $('#stk-card').replaceChildren(); }
+  function closeStickers() { roomOff(); stk = null; $('#stk').hidden = true; $('#stk-gift').hidden = true; $('#stk-card').replaceChildren(); }
   const wig = (el) => { el.classList.remove('wig'); void el.offsetWidth; el.classList.add('wig'); };
   function drawStickers() {
     if (!stk) return;
     const k = stk.k, c = kidCfg(k);
     const reward = kidText(c.reward, c.rsrc, c.rtr);
     const tabs = h('div', { class: 'stk-tabs' }, ...['davin', 'arin'].map((x) => h('button', { type: 'button', 'aria-pressed': String(x === k), style: `--mc:${WHO[x]}`,
-      onclick: () => { stk = { k: x, pop: null }; drawStickers(); } }, h('img', { src: avatarOf(x), alt: '' }), L().who[x])));
+      onclick: () => { roomOff(); stk = { k: x, pop: null }; drawStickers(); } }, h('img', { src: avatarOf(x), alt: '' }), L().who[x])));
+    const showRoom = k === 'davin' && stk.room && !!window.PokeRoom;
     const head = h('div', { class: 'stk-top', style: `--mc:${WHO[k]}` }, tabs,
-      h('div', { class: 'stk-rw' }, h('span', { text: `🎁 ${reward || L().noReward}` })),
-      h('button', { type: 'button', class: 'del-btn' + (stk.del ? ' on' : ''), 'aria-label': L().delMode, text: stk.del ? L().delDone : '🗑',
+      h('div', { class: 'stk-rw' }, h('span', { text: showRoom ? '' : `🎁 ${reward || L().noReward}` })),
+      k === 'davin' && window.PokeRoom ? h('button', { type: 'button', class: 'room-btn', 'aria-pressed': String(showRoom), text: showRoom ? L().roomBack : L().roomOpen,
+        onclick: () => { stk.room = !stk.room; stk.del = false; if (!stk.room) roomOff(); SND.tap(2); drawStickers(); } }) : null,
+      showRoom ? null : h('button', { type: 'button', class: 'del-btn' + (stk.del ? ' on' : ''), 'aria-label': L().delMode, text: stk.del ? L().delDone : '🗑',
         onclick: () => { if (stk.del) { stk.del = false; drawStickers(); } else parentOnly(() => { stk.del = true; drawStickers(); }); } }),
       h('button', { type: 'button', class: 'x', 'aria-label': '✕', text: '✕', onclick: closeStickers }));
     let body;
-    { // 주간 미션판
+    if (showRoom) {
+      body = roomBox;
+      if (roomCtl) roomCtl.update();
+    } else { // 주간 미션판
       const today = todayKey(), W = FS.weekState(kidOf(k), k, today);
       const labels = FS.WEEK_LABEL[lang] || FS.WEEK_LABEL.ko;
       const week = h('div', { class: 'wk-board' }, ...W.days.map((x) => {
@@ -1707,7 +1722,9 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
           : h('div', {}, h('p', { class: 'wk-note', text: W.all ? L().weekGold : L().weekRule }), W.all ? null : h('p', { class: 'wk-off-hint', text: L().offHint })));
     }
     $('#stk-card').replaceChildren(head, body);
-    $('#stk-card').className = `stk-card k-${k}`;
+    $('#stk-card').className = `stk-card k-${k}` + (showRoom ? ' room' : '');
+    if (showRoom && !roomCtl) roomCtl = window.PokeRoom.mount(roomBox, { kid: k, lang: () => lang, data: () => kidOf(k), big: true, snd: SND,
+      write: (path, v) => { kidSet([k, ...path], v); clearTimeout(roomRedraw); roomRedraw = setTimeout(() => { if (stk) drawStickers(); renderGrid(); }, 0); } });
   }
   // 미션 ✓: 가족 문서 kids.{k}.mdone.{오늘}.{미션} (우리가족 앱과 같이 보임). 바로 보이게 이 기기에서도 먼저 바꿈
   // 가족 문서에 쓰고 이 화면에도 바로 반영 (예시 화면은 kidsWrite 가 이미 바꿈)
@@ -1720,11 +1737,11 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   }
   // 🗑 지우기: 그날 스티커 (그 주 황금 스티커도 — 이제 주가 안 찼으니) / 황금 스티커. 되돌리기 가능
   function delDay(k, x) {
-    const kd = kidOf(k), s = (kd.stickers || {})[x.id], wk = FS.weekKeys(x.key)[0], g = (kd.golds || {})[wk];
+    const kd = kidOf(k), s = (kd.stickers || {})[x.id], wk = FS.weekKeys(x.key)[0], g = (kd.golds || {})[wk], rm = ((kd.room || {}).mons || {})[x.id];
     const redraw = () => { drawStickers(); renderGrid(); };
-    kidSet([k, 'mdone', x.key, 'got'], null); kidSet([k, 'stickers', x.id], null); if (g) kidSet([k, 'golds', wk], null);
+    kidSet([k, 'mdone', x.key, 'got'], null); kidSet([k, 'stickers', x.id], null); if (g) kidSet([k, 'golds', wk], null); if (rm) kidSet([k, 'room', 'mons', x.id], null);
     redraw();
-    toast(L().delToast, () => { kidSet([k, 'mdone', x.key, 'got'], x.id); if (s) kidSet([k, 'stickers', x.id], s); if (g) kidSet([k, 'golds', wk], g); redraw(); });
+    toast(L().delToast, () => { kidSet([k, 'mdone', x.key, 'got'], x.id); if (s) kidSet([k, 'stickers', x.id], s); if (g) kidSet([k, 'golds', wk], g); if (rm) kidSet([k, 'room', 'mons', x.id], rm); redraw(); });
   }
   function delGold(k, g) {
     const { week, ...v } = g;
@@ -1742,7 +1759,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     const today = todayKey();
     if (x.off) { kidsWrite([k, 'mdone', x.key, 'off'], null); setMdone(k, x.key, 'off', null); if (x.sick) { kidsWrite([k, 'mdone', x.key, 'sick'], null); setMdone(k, x.key, 'sick', null); } drawStickers(); renderGrid(); toast(L().offUndone); return; }
     if (FS.weekCompletesWithOff(kidOf(k), k, today, x.key)) {
-      const wk = FS.weekKeys(today)[0], g = { at: Date.now(), d: Math.floor(Math.random() * 8) };
+      const wk = FS.weekKeys(today)[0], g = { at: Date.now(), d: FS.newStickerD(kidOf(k), k) };
       kidsWrite([k, 'golds', wk], g);
       if (!DEMO) { const kd = (famData().kids[k] = famData().kids[k] || {}); kd.golds = { ...(kd.golds || {}), [wk]: g }; }
       stk.popGold = wk; setTimeout(() => SND.tada(), 300);
@@ -1762,7 +1779,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   }
   // 🎁 미션 선물 상자: 같은 창 위에 떠서 톡톡톡 3번 → 스티커가 펑 → 저절로 그 요일 칸에 붙음
   function missionGift(k) {
-    const box = $('#stk-gift'), d = Math.floor(Math.random() * 8);
+    const box = $('#stk-gift'), d = FS.newStickerD(kidOf(k), k);
     let taps = 0;
     const dots = h('div', { class: 'taps' }, ...[0, 1, 2].map(() => h('i')));
     const hint = h('span', { class: 'hint', text: L().tapBox });
@@ -1773,7 +1790,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       if (taps < 3) { wig(gift); return; }
       SND.tada();
       gift.replaceWith(h('div', { class: 'reveal', html: stickerSVG(k, d) }));
-      dots.remove(); hint.textContent = L().stkYay;
+      dots.remove(); hint.textContent = k === 'arin' ? L().stkYay : `${FS.pokeName(FS.pokeOf(d), lang)}! ${L().stkYay}`;
       const fx = h('div', { class: 'pk-yay' }, ...Array.from({ length: 22 }, (_, i) => h('i', { text: ['⭐', '🎉', '✨', '💛'][i % 4], style: `left:${(i * 41) % 100}%;animation-delay:${(i % 6) * 0.1}s` })));
       document.body.append(fx); setTimeout(() => fx.remove(), 2600);
       setTimeout(() => { box.hidden = true; giveSticker(k, d); }, 1500);
@@ -1794,12 +1811,14 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     }
     kidSet([k, 'mdone', day, 'got'], id);
     kidSet([k, 'stickers', id], st);
+    const rm = FS.roomMon(k, d); // 다빈: 포켓몬 방에도 한 마리
+    if (rm) kidSet([k, 'room', 'mons', id], rm);
     SND.stick();
     if (stk) stk.pop = id;
     const redraw = () => { drawStickers(); renderGrid(); };
     redraw();
     toast(L().stkGiven, () => {
-      kidSet([k, 'stickers', id], null); kidSet([k, 'mdone', day, 'got'], null);
+      kidSet([k, 'stickers', id], null); kidSet([k, 'mdone', day, 'got'], null); if (rm) kidSet([k, 'room', 'mons', id], null);
       if (goldWeek) kidSet([k, 'golds', goldWeek], null);
       redraw();
     });
