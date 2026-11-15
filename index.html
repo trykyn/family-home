@@ -573,13 +573,49 @@ body.theme-bento { background: #FFF8EF; }
     [/청소|putzen/i, '🧹'], [/요리|kochen|backen/i, '🍳'], [/식당|외식|restaurant|essen gehen/i, '🍽️'], [/운동|헬스|필라테스|sport|fitness|gym|yoga/i, '🏃'],
     [/학교|schule/i, '🏫'], [/유치원|kita|kindergarten/i, '🧸'], [/일|회사|출근|arbeit|büro|dienst/i, '💼'], [/집|zuhause|zu hause|daheim/i, '🏠'],
   ];
+  /* 일정 글에 사람 이름이 있으면 얼굴: 남자 이름 👦 · 여자 이름 👧 (Herr/Frau·아저씨/아줌마는 어른 얼굴).
+     흔한 독일·한국 이름 목록으로 추측 (한글로 쓴 독일 이름도). 모르는 이름은 그림 없음 */
+  const NAMES_M = new Set(('ben paul leon finn fin elias jonas luis louis noah felix luca luka lukas lucas max maximilian henry henri emil anton theo '
+    + 'jakob jacob liam oskar oscar matteo moritz julian david niklas nico tim tom jan jonathan alexander leo levi samuel simon tobias philipp '
+    + 'vincent valentin benedikt ferdinand konstantin raphael rafael florian sebastian johannes lorenz linus karl carl mats mattis milan mika '
+    + 'hannes till lenny aaron adam daniel fabian lars lennard lennart malte ole peter thomas michael stefan markus andreas martin christian '
+    + 'wolfgang klaus jürgen juergen uwe frank kilian quirin korbinian xaver lio ludwig vitus ludwig jonah julius leonard leopold oliver '
+    + 'arthur artur elia joshua levin nick robin ryan tom jannik yannick marlon mattia samu '
+    + '레오 막스 펠릭스 폴 루카스 루카 노아 벤 엘리아스 요나스 핀 루이스 팀 얀 톰 니코 니클라스 테오 에밀 안톤 야콥 리암 오스카 모리츠 율리안 다니엘 '
+    + '서준 하준 도윤 시우 은우 지호 이준 민준 예준 주원 유준 지후 준우 도현 건우 우진 선우 서진 현우 연우 정우 지환 승우 시윤 준서 유찬 수호 '
+    + '로운 이안 태오 지훈 민재 준호 성민 동현 재민 승민 현준 민성 다빈').split(' '));
+  const NAMES_F = new Set(('emma mia hannah hanna emilia sofia sophia lina ella mila lea leah lena marie clara klara anna ida lia luisa louisa frieda '
+    + 'frida greta amelie johanna laura lara leni nele paula charlotte maja maya mathilda matilda elena julia lisa sarah sara katharina helena '
+    + 'sophie sofie nina eva alina antonia isabella juna romy emily elisa fiona carla carlotta magdalena theresa valentina melina jana svenja '
+    + 'sabine petra andrea monika claudia susanne katrin nicole stefanie christina lotta lotte marlene pia rosa smilla zoe zoé ronja anni annika '
+    + 'hailey leonie luna mira nora olivia ella elif amira aylin lucia lucy liv merle tilda linda maria '
+    + '레나 엠마 미아 소피아 소피 한나 클라라 마리 안나 리나 엘라 밀라 레아 그레타 아멜리 요한나 라우라 파울라 샤를로테 마야 율리아 리사 니나 에바 로타 '
+    + '서아 하윤 지안 서윤 하은 아윤 지유 아린 시아 수아 하린 윤서 채원 민서 서연 예린 소윤 지아 다은 유나 예은 수빈 나은 서하 채아 소율 이서 다인 '
+    + '하율 은서 지원 수진 민지 은지 유진 지은 혜원 예나 나연').split(' '));
+  const PARTICLE = /(이랑|랑|이네|네|이와|와|과|이하고|하고|이한테|한테|에게|이가|가|이는|는|을|를|의|이|집|생일)$/;
+  function personIcon(txt) {
+    if (/\b(frau|fr\.)\s+\p{Lu}/iu.test(txt) || /아줌마|이모|고모|선생님/.test(txt)) return '👩';
+    if (/\b(herr|hr\.)\s+\p{Lu}/iu.test(txt) || /아저씨|삼촌/.test(txt)) return '👨';
+    for (let w of String(txt).split(/[^\p{L}]+/u)) {
+      if (!w) continue;
+      const lw = w.toLowerCase(), base = lw.replace(PARTICLE, ''); // 'Lena랑' → 'lena', '민준이네' → '민준'
+      const tries = [lw, lw.replace(/s$/, ''), base, base.replace(PARTICLE, '')];
+      if (tries.some((x) => x && NAMES_F.has(x))) return '👧';
+      if (tries.some((x) => x && NAMES_M.has(x))) return '👦';
+    }
+    return '';
+  }
+  // 일정 칸 그림 (활동 그림 + 이름이 있으면 얼굴, 최대 2개)
   function slotIcon(e, s) {
     const v = (e && e[s]) || '';
-    if (!v) return '';
-    if (v.startsWith('@')) return ACT_IC[v.slice(1)] || '📌';
+    if (!v) return [];
+    if (v.startsWith('@')) return [ACT_IC[v.slice(1)] || '📌'];
     const txt = [v, e.tr && e.tr[s]].filter(Boolean).join(' ');
     const hit = WORD_IC.find(([re]) => re.test(txt));
-    return hit ? hit[1] : '📌';
+    const face = personIcon(txt);
+    const act = hit ? hit[1] : '';
+    if (face) return act && act !== '🧒' ? [act, face] : [face]; // '친구'(🧒) + 이름이면 얼굴만
+    return [act || '📌'];
   }
   const ROUTINE_DEFAULT = {
     family: {},
@@ -1216,8 +1252,8 @@ body.theme-bento { background: #FFF8EF; }
         const e = entryFor(m, k), fe = m === 'family' ? null : entryFor('family', k);
         const parts = [{ ic: slotIcon(e, half), t: slotText(e, half) }];
         if (fe && fe[half] && joins(fe, half, m)) parts.push({ ic: slotIcon(fe, half), t: slotText(fe, half) });
-        const got = parts.filter((x) => x.t || x.ic);
-        const ics = [...new Set(got.map((x) => x.ic).filter(Boolean))], t = got.map((x) => x.t).filter(Boolean).join(' · ');
+        const got = parts.filter((x) => x.t || x.ic.length);
+        const ics = [...new Set(got.flatMap((x) => x.ic))].slice(0, 2), t = got.map((x) => x.t).filter(Boolean).join(' · ');
         grid.append(h('div', { class: 'slot' + (ics.length ? '' : ' home') + (half === nowHalf ? ' now' : ''), style: `--mc:${WHO[m]}`, title: t || L().atHome },
           h('span', { class: 'e' + (ics.length > 1 ? ' two' : ''), text: ics.join('') || '🏠' }), h('span', { class: 't', text: t || L().atHome })));
       }
@@ -1476,7 +1512,7 @@ body.theme-bento { background: #FFF8EF; }
         t7: { id: 't7', text: '크리스마스 카드 쓰기', who: 'both', due: '', pri: 1, done: false, at: now - 8e4 },
         t8: { id: 't8', text: 'Steuererklärung Unterlagen sammeln', who: 'dad', due: '', done: false, at: now - 7e4 },
       },
-      routine: { [k(0)]: { family: { am: '수영장', pm: '할머니 영상통화', with: { am: ['dad', 'davin', 'arin'] } }, mom: { am: '', pm: '치과' }, dad: { am: '', pm: '@work' }, davin: { am: '@school', pm: '@tkd' }, arin: { am: '', pm: '' } } },
+      routine: { [k(0)]: { family: { am: '수영장', pm: '할머니 영상통화', with: { am: ['dad', 'davin', 'arin'] } }, mom: { am: '', pm: '치과' }, dad: { am: '', pm: 'Herr Maier Termin' }, davin: { am: '@school', pm: '@tkd' }, arin: { am: '', pm: 'Lena랑 놀이터' } } },
       routineBase: {}, vacations: {},
       meals: {
         [k(0)]: { lunch: [{ text: 'Brezen' }, { text: 'Weißwurst' }], dinner: [{ text: '된장찌개' }, { text: '계란말이' }, { text: '어린이 김밥', kid: true }] },
@@ -1529,7 +1565,7 @@ body.theme-bento { background: #FFF8EF; }
     app.style.transform = `scale(${z})`;
   }
   fitZoom();
-  if (DEMO) { demoSetup(); S.ready = true; window.__kid = { kidSVG, girlSVG, dressFor }; }
+  if (DEMO) { demoSetup(); S.ready = true; window.__kid = { kidSVG, girlSVG, dressFor, personIcon }; }
   render();
   // 글꼴이 늦게 오면 줄 높이가 바뀌므로 카드 칸 맞춤을 다시
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderGrid());
