@@ -143,7 +143,8 @@ img { display: block; }
 .fit { list-style: none; margin: 0; padding: 0; }
 
 /* 가족 일정 */
-.pg { display: grid; grid-template-columns: 30px repeat(var(--n), minmax(0, 1fr)); gap: 6px 6px; align-items: stretch; }
+.pg { display: grid; grid-template-columns: 30px repeat(var(--n), minmax(0, 1fr)); gap: 6px 6px; align-items: stretch; padding: 4px 3px 3px; }
+.pg .slot .e.two { font-size: 24px; letter-spacing: -2px; }
 .pg .who { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
 .pg .who img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: var(--sky-soft); box-shadow: 0 0 0 3px var(--mc); }
 .pg .who b { font-size: 13px; color: var(--mc); line-height: 1.1; white-space: nowrap; }
@@ -441,6 +442,7 @@ img { display: block; }
     if (v && e.src && e.src !== lang && e.tr && e.tr[s]) return e.tr[s];
     return v;
   }
+  const joins = (fe, s, m) => !fe.with || !Array.isArray(fe.with[s]) || fe.with[s].includes(m); // 가족 일정에 함께하는 사람 (없으면 모두)
   const mealOn = (key, meal) => { const m = (famData().meals || {})[key]; return (m && Array.isArray(m[meal]) && m[meal]) || []; };
   const todoText = (t) => (t.tr && t.tr.text && (hasHangul(t.text) ? 'ko' : 'de') !== lang) ? t.tr.text : t.text;
   function openTodos() {
@@ -800,9 +802,14 @@ img { display: block; }
     for (const half of ['am', 'pm']) {
       grid.append(h('div', { class: 'half' + (half === nowHalf ? ' now' : '') }, half === 'am' ? '🌅' : '☀️', h('small', { text: half === 'am' ? L().am : L().pm })));
       for (const m of people) {
-        const e = entryFor(m, k), ic = slotIcon(e, half), t = slotText(e, half);
-        grid.append(h('div', { class: 'slot' + (ic ? '' : ' home') + (half === nowHalf ? ' now' : ''), style: `--mc:${WHO[m]}`, title: t || L().atHome },
-          h('span', { class: 'e', text: ic || '🏠' }), h('span', { class: 't', text: t || L().atHome })));
+        // 우리가족 앱처럼: 가족 일정에 이 사람이 함께하면(with) 그 사람 칸에도 같이 보여 줌
+        const e = entryFor(m, k), fe = m === 'family' ? null : entryFor('family', k);
+        const parts = [{ ic: slotIcon(e, half), t: slotText(e, half) }];
+        if (fe && fe[half] && joins(fe, half, m)) parts.push({ ic: slotIcon(fe, half), t: slotText(fe, half) });
+        const got = parts.filter((x) => x.t || x.ic);
+        const ics = [...new Set(got.map((x) => x.ic).filter(Boolean))], t = got.map((x) => x.t).filter(Boolean).join(' · ');
+        grid.append(h('div', { class: 'slot' + (ics.length ? '' : ' home') + (half === nowHalf ? ' now' : ''), style: `--mc:${WHO[m]}`, title: t || L().atHome },
+          h('span', { class: 'e' + (ics.length > 1 ? ' two' : ''), text: ics.join('') || '🏠' }), h('span', { class: 't', text: t || L().atHome })));
       }
     }
     const c = card('plan', '🗓️', 'var(--c-plan)', evening ? L().planTomorrow : L().planToday, L().dateShort(d), APPS.family,
@@ -1043,7 +1050,7 @@ img { display: block; }
         t7: { id: 't7', text: '크리스마스 카드 쓰기', who: 'both', due: '', done: false, at: now - 8e4 },
         t8: { id: 't8', text: 'Steuererklärung Unterlagen sammeln', who: 'dad', due: '', done: false, at: now - 7e4 },
       },
-      routine: { [k(0)]: { family: { am: '', pm: '할머니 영상통화' }, mom: { am: '@work', pm: '치과' }, dad: { am: '@work', pm: '@work' }, davin: { am: '@school', pm: '@tkd' }, arin: { am: '@kinder', pm: '@music' } } },
+      routine: { [k(0)]: { family: { am: '수영장', pm: '할머니 영상통화', with: { am: ['dad', 'davin', 'arin'] } }, mom: { am: '', pm: '치과' }, dad: { am: '', pm: '@work' }, davin: { am: '', pm: '@tkd' }, arin: { am: '', pm: '' } } },
       routineBase: {}, vacations: {},
       meals: {
         [k(0)]: { lunch: [{ text: 'Brezen' }, { text: 'Weißwurst' }], dinner: [{ text: '된장찌개' }, { text: '계란말이' }, { text: '어린이 김밥', kid: true }] },
