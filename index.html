@@ -1709,11 +1709,11 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   }
   // 🗑 지우기: 그날 스티커 (그 주 황금 스티커도 — 이제 주가 안 찼으니) / 황금 스티커. 되돌리기 가능
   function delDay(k, x) {
-    const kd = kidOf(k), s = (kd.stickers || {})[x.id], wk = FS.weekKeys(x.key)[0], g = (kd.golds || {})[wk], it = ((kd.poke || {}).items || {})[x.id];
+    const kd = kidOf(k), s = (kd.stickers || {})[x.id], wk = FS.weekKeys(x.key)[0], g = (kd.golds || {})[wk], it = ((kd[FS.ROOM] || {}).items || {})[x.id];
     const redraw = () => { drawStickers(); renderGrid(); };
-    kidSet([k, 'mdone', x.key, 'got'], null); kidSet([k, 'stickers', x.id], null); if (g) kidSet([k, 'golds', wk], null); if (it) kidSet([k, 'poke', 'items', x.id], null);
+    kidSet([k, 'mdone', x.key, 'got'], null); kidSet([k, 'stickers', x.id], null); if (g) kidSet([k, 'golds', wk], null); if (it) kidSet([k, FS.ROOM, 'items', x.id], null);
     redraw();
-    toast(L().delToast, () => { kidSet([k, 'mdone', x.key, 'got'], x.id); if (s) kidSet([k, 'stickers', x.id], s); if (g) kidSet([k, 'golds', wk], g); if (it) kidSet([k, 'poke', 'items', x.id], it); redraw(); });
+    toast(L().delToast, () => { kidSet([k, 'mdone', x.key, 'got'], x.id); if (s) kidSet([k, 'stickers', x.id], s); if (g) kidSet([k, 'golds', wk], g); if (it) kidSet([k, FS.ROOM, 'items', x.id], it); redraw(); });
   }
   function delGold(k, g) {
     const { week, ...v } = g;
@@ -1786,13 +1786,13 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     kidSet([k, 'mdone', day, 'got'], id);
     kidSet([k, 'stickers', id], st);
     const it = FS.rewardItem(d); // 🥚 포켓몬 방 가방에 열매/코인
-    if (it) kidSet([k, 'poke', 'items', id], it);
+    if (it) kidSet([k, FS.ROOM, 'items', id], it);
     SND.stick();
     if (stk) stk.pop = id;
     const redraw = () => { drawStickers(); renderGrid(); };
     redraw();
     toast(L().stkGiven, () => {
-      kidSet([k, 'stickers', id], null); kidSet([k, 'mdone', day, 'got'], null); if (it) kidSet([k, 'poke', 'items', id], null);
+      kidSet([k, 'stickers', id], null); kidSet([k, 'mdone', day, 'got'], null); if (it) kidSet([k, FS.ROOM, 'items', id], null);
       if (goldWeek) kidSet([k, 'golds', goldWeek], null);
       redraw();
     });
@@ -1937,9 +1937,9 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       const meals = Object.fromEntries(Object.entries(d.meals || {}).filter(([k]) => k >= from && k <= to));
       const kids = {};
       const mFrom = window.FamilyStickers ? window.FamilyStickers.weekKeys(todayKey())[0] : keyOf(addDays(new Date(), -6));
-      // 네 명 모두 (엄마·아빠도 주간 미션 · 🥚 포켓몬 방). poke = 포켓몬 방 자료 — 빠지면 알을 골라도 다시 '알 고르기'가 됨
+      // 네 명 모두 (엄마·아빠도 주간 미션 · 🥚 포켓몬 방). room = 키우기 방 자료 (빠지면 알을 골라도 다시 '알 고르기'가 됨), poke = 예전 방 (요일 칸 그림만)
       for (const k of ['davin', 'arin', 'mom', 'dad']) if (d.kids && d.kids[k]) kids[k] = { cfg: d.kids[k].cfg || {}, stickers: d.kids[k].stickers || {}, money: d.kids[k].money || null,
-        missions: d.kids[k].missions || null, golds: d.kids[k].golds || {}, timetable: d.kids[k].timetable || null, poke: d.kids[k].poke || null, mdone: Object.fromEntries(Object.entries(d.kids[k].mdone || {}).filter(([day]) => day >= mFrom)) };
+        missions: d.kids[k].missions || null, golds: d.kids[k].golds || {}, timetable: d.kids[k].timetable || null, poke: d.kids[k].poke || null, room: d.kids[k].room || null, mdone: Object.fromEntries(Object.entries(d.kids[k].mdone || {}).filter(([day]) => day >= mFrom)) };
       if (d.kids && d.kids.lock) kids.lock = d.kids.lock;
       fam = {
         todos: d.todos || {}, routine: d.routine || {}, routineBase: d.routineBase || {}, vacations: d.vacations || {}, meals, kids,
