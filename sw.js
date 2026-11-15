@@ -6,7 +6,7 @@ const OK_ORIGINS = ['https://www.gstatic.com', 'https://fonts.googleapis.com', '
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['./', 'index.html', 'manifest.webmanifest', 'favicon.png', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'firebase-config.js',
-    'avatar-mom.png', 'avatar-dad.png', 'avatar-davin.png', 'avatar-arin.png'])));
+    'monster.png', 'avatar-family.png', 'avatar-mom.png', 'avatar-dad.png', 'avatar-davin.png', 'avatar-arin.png'])));
   self.skipWaiting();
 });
 self.addEventListener('activate', (e) => e.waitUntil((async () => {
