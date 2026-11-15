@@ -67,24 +67,6 @@ img { display: block; }
   background: #D2F0FF; border-radius: 22px; box-shadow: var(--shadow); padding: 6px 22px 6px 16px;
 }
 .weather > :not(.scene) { position: relative; z-index: 2; }
-/* 작은 몬스터 (monster.png = 8장면 한 줄, 장면마다 134×150). 언덕 위를 왔다 갔다, 누르면 깡충 */
-.weather > .monster { position: absolute; z-index: 1; left: 0; right: 0; bottom: 2px; height: 70px; pointer-events: none; }
-.monster .walk { position: absolute; bottom: 0; left: 47%; animation: wander var(--walk-speed, 30s) ease-in-out infinite; }
-.monster .turn { animation: face var(--walk-speed, 30s) step-end infinite; }
-.monster .mon {
-  --mw: 62px; width: var(--mw); height: 70px; pointer-events: auto; cursor: pointer;
-  background: url(monster.png) 0 0 / calc(var(--mw) * 8) 100% no-repeat;
-  animation: mon-frames var(--sprite-speed, 4.8s) steps(8) infinite, mon-bob 1.2s ease-in-out infinite;
-}
-.monster .mon.hop { animation: mon-frames calc(var(--sprite-speed, 4.8s) / 4) steps(8) infinite, mon-hop .5s ease-out 2; }
-.monster.sleep .walk, .monster.sleep .turn { animation: none; }
-.monster.sleep .walk { left: 58%; }
-.monster.sleep .mon { animation: mon-bob 3s ease-in-out infinite; background-position: calc(var(--mw) * -5) 0; } /* 6번째 장면 (졸림) */
-@keyframes mon-frames { from { background-position: 0 0; } to { background-position: calc(var(--mw) * -8) 0; } }
-@keyframes mon-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
-@keyframes mon-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-22px); } }
-@keyframes wander { 0%, 4% { left: 47%; } 46%, 54% { left: 68%; } 96%, 100% { left: 47%; } }
-@keyframes face { 0% { transform: scaleX(-1); } 50% { transform: scaleX(1); } } /* 그림은 왼쪽을 봄 → 오른쪽으로 갈 땐 뒤집기 */
 .w-panel { display: flex; align-items: center; gap: 16px; flex: none; padding: 8px 16px; border-radius: 20px; background: rgba(255,255,255,.5); border: 1.5px solid rgba(255,255,255,.75); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 .w-now { display: flex; flex-direction: column; align-items: center; flex: none; }
 .w-now .row { display: flex; align-items: center; gap: 6px; }
@@ -758,16 +740,6 @@ img { display: block; }
     return el;
   }
 
-  // 날씨 칸의 작은 몬스터: 낮에는 장면을 바꾸며 언덕을 왔다 갔다, 밤에는 가운데서 졸기. 누르면 깡충
-  const MONSTER = { frameSec: 0.6, walkSec: 30 }; // 속도 조절: 장면 하나 0.6초, 한 바퀴 걷기 30초
-  function monsterEl() {
-    const night = !!(wx && wx.cur && sceneOf().night);
-    const mon = h('div', { class: 'mon', role: 'img', 'aria-label': 'monster' });
-    mon.addEventListener('click', () => { mon.classList.remove('hop'); void mon.offsetWidth; mon.classList.add('hop'); setTimeout(() => mon.classList.remove('hop'), 1100); });
-    return h('div', { class: 'monster' + (night ? ' sleep' : ''), style: `--sprite-speed:${MONSTER.frameSec * 8}s;--walk-speed:${MONSTER.walkSec}s` },
-      h('div', { class: 'walk' }, h('div', { class: 'turn' }, mon)));
-  }
-
   /* ───────── 위: 시계 · 날씨 · 버튼 ───────── */
   function renderTop() {
     const now = new Date(), k = todayKey();
@@ -787,7 +759,7 @@ img { display: block; }
         fig.addEventListener('click', () => { fig.classList.remove('wiggle'); void fig.getBBox(); fig.classList.add('wiggle'); setTimeout(() => fig.classList.remove('wiggle'), 700); });
         kid = h('div', { class: 'w-kid' }, fig, o.tomorrow ? h('span', { class: 'w-when', text: L().clothesTomorrow }) : null);
       }
-      weather = h('section', { class: 'weather', 'aria-label': wName(c.weather_code) }, sceneEl(), monsterEl(), h('div', { class: 'w-panel' },
+      weather = h('section', { class: 'weather', 'aria-label': wName(c.weather_code) }, sceneEl(), h('div', { class: 'w-panel' },
         h('div', { class: 'w-now' },
           h('div', { class: 'row' }, h('span', { class: 'w-ic', text: wIcon(c.weather_code, c.is_day) }), h('span', { class: 'w-temp', text: `${Math.round(c.temperature_2m)}°` })),
           h('div', { class: 'w-desc', text: wName(c.weather_code) })),
