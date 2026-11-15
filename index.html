@@ -85,8 +85,22 @@ img { display: block; }
 .w-umb .e { font-size: 44px; line-height: 1.05; transform-origin: 50% 90%; animation: swing 2.2s ease-in-out infinite; }
 .w-umb b { font: 400 15px/1 var(--font-display); color: var(--deep); }
 .w-kid { margin-left: auto; align-self: flex-end; gap: 0; display: flex; align-items: center; gap: 10px; flex: none; position: relative; }
-.w-kid .kid-fig + .kid-fig { margin-left: -34px; animation-delay: -1.6s; }
-.w-kid .kid-fig.girl { height: 132px; }
+.w-kid .kid-fig + .kid-fig { margin-left: -34px; }
+.w-kid { padding-right: 10px; }
+.kid-fig { overflow: visible; }
+/* 네 식구가 들어가도록 날씨 숫자 칸을 조금 작게 */
+.w-panel { gap: 12px; padding: 8px 12px; }
+.w-ic { font-size: 46px; }
+.w-temp { font-size: 46px; }
+.w-hilo { font-size: 23px; gap: 6px; }
+.w-hilo svg { width: 16px; height: 16px; }
+.w-umb .e { font-size: 36px; }
+.w-umb b { font-size: 13px; }
+.w-kid .kid-fig:nth-child(2) { animation-delay: -.8s; } .w-kid .kid-fig:nth-child(3) { animation-delay: -1.6s; } .w-kid .kid-fig:nth-child(4) { animation-delay: -2.4s; }
+.w-kid .kid-fig.dad { height: 150px; }
+.w-kid .kid-fig.mom { height: 138px; }
+.w-kid .kid-fig { height: 116px; }
+.w-kid .kid-fig.girl { height: 104px; }
 .kid-fig { height: 146px; width: auto; display: block; cursor: pointer; animation: bob 3.2s ease-in-out infinite; }
 .kid-fig.wiggle { animation: wiggle .6s ease-in-out; }
 .w-when { position: absolute; top: 4px; right: 0; font: 400 15px/1 var(--font-display); padding: 5px 10px; border-radius: 99px; background: #FFF1B8; color: #8A6A00; }
@@ -1060,6 +1074,77 @@ body.theme-bento { background: #FFF8EF; }
     return `<svg class="kid-fig" viewBox="0 0 160 250" role="img" aria-label="${L().clothes}">${P.join('')}</svg>`;
   }
 
+  // 엄마·아빠 (어른, 가족 그림 얼굴처럼): 아빠 = 노란 머리(독일), 엄마 = 검은 긴 머리(한국). 날씨 옷은 아이들과 같은 기준
+  function adultSVG(o, who) {
+    const SK = '#FFD9B8', dad = who === 'dad';
+    const HAIR = dad ? '#E8B54A' : '#1E1A1A';
+    const TOP = (dad
+      ? { tshirt: '#3E6FB0', long: '#7A8B99', hoodie: '#4C9A6A', jacket: '#2F4F6F', puffer: '#3B4A5A', raincoat: '#1F5E8C' }
+      : { tshirt: '#F28C8C', long: '#B39DDB', hoodie: '#F6A5C0', jacket: '#C8A27A', puffer: '#EADBC8', raincoat: '#E85D75' })[o.top];
+    const longCoat = !dad && ['jacket', 'puffer', 'raincoat'].includes(o.top); // 엄마는 무릎까지 오는 코트
+    const P = [];
+    // 엄마 긴 머리 (뒤)
+    if (!dad && o.head !== 'hood') P.push(`<path d="M50 56Q46 98 52 118Q66 124 80 120Q94 124 108 118Q114 98 110 56Z" fill="${HAIR}"/>`);
+    if (o.head === 'hood') P.push(`<circle cx="80" cy="58" r="33" fill="${TOP}"/>`);
+    // 다리 · 신발
+    const bottom = o.bottom === 'shorts' ? (dad ? 'shorts' : 'skirt') : 'pants';
+    const LEG = dad ? '#3A4F6E' : '#2E3440';
+    if (bottom === 'pants') P.push(`<path d="M70 176V264M90 176V264" stroke="${LEG}" stroke-width="17" stroke-linecap="round"/>`);
+    else P.push(`<path d="M70 176V264M90 176V264" stroke="${SK}" stroke-width="15" stroke-linecap="round"/>`);
+    if (bottom === 'shorts') P.push('<path d="M56 168h48v34a4 4 0 0 1-4 4H84l-4-18-4 18H60a4 4 0 0 1-4-4z" fill="#C2A878"/>');
+    if (bottom === 'skirt') P.push('<path d="M58 166h44l10 48q-32 8-64 0z" fill="#F2C14E"/>');
+    if (o.shoes === 'sneakers') P.push('<g fill="#fff" stroke="#9BB0C0" stroke-width="2"><ellipse cx="66" cy="272" rx="14" ry="7"/><ellipse cx="94" cy="272" rx="14" ry="7"/></g>');
+    else if (o.shoes === 'sandals') P.push(`<g fill="${SK}"><ellipse cx="66" cy="270" rx="12" ry="6"/><ellipse cx="94" cy="270" rx="12" ry="6"/></g><g fill="${dad ? '#6D4C41' : '#FF8A65'}"><rect x="53" y="273" width="26" height="5" rx="2.5"/><rect x="81" y="273" width="26" height="5" rx="2.5"/></g>`);
+    else {
+      const bc = o.shoes === 'rainboots' ? (dad ? '#2E6B4E' : '#C2185B') : '#6D4C41';
+      P.push(`<g fill="${bc}"><path d="M60 244h20v34H56a4 4 0 0 1-4-4v-2a6 6 0 0 1 6-6h2z"/><path d="M80 244h20v24h2a6 6 0 0 1 6 6v0a4 4 0 0 1-4 4H80z"/></g>`);
+      if (o.shoes === 'snowboots') P.push('<g fill="#F7F7F7" stroke="#C9D3DC" stroke-width="1.5"><rect x="55" y="239" width="27" height="10" rx="5"/><rect x="78" y="239" width="27" height="10" rx="5"/></g>');
+    }
+    // 팔 (우산: 아빠는 오른손, 엄마는 왼손을 들어 올림)
+    const up = o.umbrella;
+    const handL = !dad && up ? [36, 128] : [40, 172], handR = dad && up ? [124, 128] : [120, 172];
+    const sleeves = o.top !== 'tshirt';
+    P.push(`<path d="M58 100L${handL[0]} ${handL[1]}M102 100L${handR[0]} ${handR[1]}" stroke="${sleeves ? TOP : SK}" stroke-width="${o.top === 'puffer' ? 17 : 14}" stroke-linecap="round"/>`);
+    if (!sleeves) P.push(`<path d="M58 100L51 122M102 100L109 122" stroke="${TOP}" stroke-width="16" stroke-linecap="round"/>`);
+    // 몸통 (엄마 코트는 길게)
+    const bodyEnd = longCoat ? 214 : 178;
+    if (o.top === 'puffer') P.push(`<rect x="50" y="88" width="60" height="${bodyEnd - 86}" rx="22" fill="${TOP}"/><path d="M53 116h54M53 144h54${longCoat ? 'M54 176h52' : ''}" stroke="#fff" stroke-opacity=".45" stroke-width="2.5"/><path d="M80 92v${bodyEnd - 96}" stroke="#fff" stroke-opacity=".6" stroke-width="2"/>`);
+    else if (o.top === 'raincoat') P.push(`<path d="M60 90h40q8 0 10 9l${longCoat ? '10 115' : '8 79'}H${longCoat ? 40 : 42}l${longCoat ? '10 -115' : '8 -79'}q2-9 10-9z" fill="${TOP}"/><g fill="#fff" fill-opacity=".8"><circle cx="80" cy="110" r="3"/><circle cx="80" cy="132" r="3"/><circle cx="80" cy="154" r="3"/></g>`);
+    else if (o.top === 'jacket') P.push(`<path d="M58 90h44q6 0 7 7l${longCoat ? '5 117' : '3 81'}H${longCoat ? 46 : 48}l${longCoat ? '5 -117' : '3 -81'}q1-7 7-7z" fill="${TOP}"/><path d="M80 92v${bodyEnd - 96}" stroke="#000" stroke-opacity=".18" stroke-width="2"/><path d="M68 90l12 12 12-12" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3"/>`);
+    else {
+      P.push(`<rect x="55" y="90" width="50" height="86" rx="15" fill="${TOP}"/>`);
+      if (o.top === 'hoodie') P.push('<rect x="65" y="140" width="30" height="16" rx="6" fill="#000" fill-opacity=".12"/>');
+      if (o.top === 'long' && dad) P.push('<path d="M64 92l16 10 16-10" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3"/>');
+      if (!dad && o.top === 'tshirt') P.push('<path d="M66 92q14 10 28 0" fill="none" stroke="#fff" stroke-width="3"/>');
+    }
+    if (o.scarf) P.push(`<rect x="57" y="84" width="46" height="13" rx="6.5" fill="${dad ? '#C0392B' : '#F4D35E'}"/><rect x="${dad ? 88 : 60}" y="90" width="12" height="32" rx="5" fill="${dad ? '#C0392B' : '#F4D35E'}"/>`);
+    P.push(`<g fill="${o.gloves ? (dad ? '#37474F' : '#F48FB1') : SK}"><circle cx="${handL[0]}" cy="${handL[1] + 2}" r="8.5"/><circle cx="${handR[0]}" cy="${handR[1] + 2}" r="8.5"/></g>`);
+    // 머리 · 얼굴 (가족 그림처럼: 동그란 눈, 분홍 볼, 활짝 웃는 입)
+    P.push(`<circle cx="80" cy="58" r="27" fill="${SK}"/>`);
+    if (o.head !== 'beanie' && o.head !== 'hood') {
+      if (dad) P.push(`<path d="M53 62Q50 30 80 28Q108 28 108 56Q104 46 96 42Q88 48 72 44Q62 50 56 52Q54 56 53 62Z" fill="${HAIR}"/><path d="M70 32q8-12 22-8q-6 2-8 8" fill="${HAIR}"/>`);
+      else P.push(`<path d="M53 66Q50 30 80 30Q110 30 107 66Q104 50 96 44Q86 52 66 50Q58 54 53 66Z" fill="${HAIR}"/>`);
+    }
+    P.push('<g fill="#2B2B2B"><ellipse cx="71" cy="61" rx="3.4" ry="4.2"/><ellipse cx="89" cy="61" rx="3.4" ry="4.2"/></g><g fill="#fff"><circle cx="72.2" cy="59.6" r="1.2"/><circle cx="90.2" cy="59.6" r="1.2"/></g>');
+    P.push('<ellipse cx="63" cy="69" rx="5.8" ry="4" fill="#FF8F9A" fill-opacity=".55"/><ellipse cx="97" cy="69" rx="5.8" ry="4" fill="#FF8F9A" fill-opacity=".55"/>');
+    P.push('<path d="M73 70Q80 81 87 70Z" fill="#E2553F"/>');
+    if (!dad) P.push('<path d="M66 57l-3-2M94 57l3-2" stroke="#2B2B2B" stroke-width="1.5" stroke-linecap="round"/>');
+    // 모자
+    if (o.head === 'beanie') P.push(`<path d="M52 56Q50 26 80 26Q110 26 108 56Z" fill="${dad ? '#7A8B99' : '#F48FB1'}"/><rect x="49" y="50" width="62" height="12" rx="6" fill="${dad ? '#9FB0BD' : '#F8BBD0'}"/>` + (o.umbrella ? '' : '<circle cx="80" cy="26" r="7.5" fill="#fff"/>')
+      + (!dad ? `<path d="M52 62Q48 90 54 104" stroke="${HAIR}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M108 62Q112 90 106 104" stroke="${HAIR}" stroke-width="9" fill="none" stroke-linecap="round"/>` : ''));
+    if (o.head === 'sunhat') P.push(dad ? '<path d="M54 50Q56 28 80 28Q104 28 106 50Z" fill="#3E6FB0"/><path d="M100 50q20 0 24 6H100z" fill="#2F5A93"/>'
+      : '<path d="M58 44Q60 20 80 20Q100 20 102 44Z" fill="#FFE6A8"/><rect x="58" y="38" width="44" height="6" fill="#E57373"/><ellipse cx="80" cy="45" rx="48" ry="9" fill="#FFE6A8"/>');
+    if (o.head === 'hood') P.push(`<path d="M46 64Q45 22 80 22Q115 22 114 64Q109 40 80 38Q51 40 46 64Z" fill="${TOP}"/>`);
+    if (o.glasses) P.push('<g fill="#263238"><rect x="62" y="55" width="16" height="11" rx="4"/><rect x="82" y="55" width="16" height="11" rx="4"/></g><path d="M78 59h4" stroke="#263238" stroke-width="2.2"/>');
+    // 우산 (아빠: 오른쪽 큰 남색 우산, 엄마: 왼쪽 빨간 우산)
+    if (up) {
+      const [hx, hy] = dad ? handR : handL, cx = dad ? 118 : 42, col = dad ? '#37474F' : '#E57373';
+      P.push(`<path d="M${cx} 22L${hx} ${hy}" stroke="#555" stroke-width="3.2" stroke-linecap="round"/><path d="M${hx} ${hy}q${dad ? 1 : -1} 9 ${dad ? -7 : 7} 9" fill="none" stroke="#555" stroke-width="3.2" stroke-linecap="round"/>`
+        + `<path d="M${cx - 44} 22Q${cx - 44} -18 ${cx} -18Q${cx + 44} -18 ${cx + 44} 22Q${cx + 33} 14 ${cx + 22} 22Q${cx + 11} 14 ${cx} 22Q${cx - 11} 14 ${cx - 22} 22Q${cx - 33} 14 ${cx - 44} 22Z" fill="${col}"/>`);
+    }
+    return `<svg class="kid-fig ${who}" viewBox="0 -20 160 320" role="img" aria-label="${L().clothes}">${P.join('')}</svg>`;
+  }
+
   // 여자아이 (공주 느낌): 긴 머리 + 티아라/리본, 드레스·튤 치마, 메리제인 구두, 분홍 우산(왼손). 날씨에 맞는 옷은 남자아이와 같은 기준
   function girlSVG(o) {
     const SK = '#FFD9B8', HAIR = '#9A5E34'; // 갈색 머리
@@ -1388,7 +1473,7 @@ body.theme-bento { background: #FFF8EF; }
       const tri = (up) => h('span', { html: `<svg viewBox="0 0 24 24"><path d="${up ? 'M12 4l9 15H3z' : 'M12 20L3 5h18z'}" fill="currentColor"/></svg>` });
       let kid = null;
       if (o) {
-        const figs = [girlSVG(o), kidSVG(o)].map((svg) => {
+        const figs = [adultSVG(o, 'mom'), girlSVG(o), kidSVG(o), adultSVG(o, 'dad')].map((svg) => {
           const fig = h('div', { html: svg }).firstChild;
           fig.addEventListener('click', () => { fig.classList.remove('wiggle'); void fig.getBBox(); fig.classList.add('wiggle'); setTimeout(() => fig.classList.remove('wiggle'), 700); });
           return fig;
@@ -2039,7 +2124,7 @@ body.theme-bento { background: #FFF8EF; }
   for (const type of ['gesturestart', 'gesturechange', 'gestureend']) document.addEventListener(type, (e) => e.preventDefault(), { passive: false });
   document.addEventListener('touchmove', (e) => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
   // 두 번 터치 확대는 CSS touch-action 으로 막음 (선물 상자 톡톡톡처럼 빠른 터치는 그대로 됨)
-  if (DEMO) { demoSetup(); S.ready = true; window.__kid = { kidSVG, girlSVG, dressFor, personIcon }; }
+  if (DEMO) { demoSetup(); S.ready = true; window.__kid = { kidSVG, girlSVG, adultSVG, dressFor, personIcon }; }
   render();
   // 글꼴이 늦게 오면 줄 높이가 바뀌므로 카드 칸 맞춤을 다시
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderGrid());
