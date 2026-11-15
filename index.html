@@ -83,6 +83,7 @@ img { display: block; }
 .w-umb b { font: 400 15px/1 var(--font-display); color: var(--deep); }
 .w-kid { margin-left: auto; align-self: flex-end; gap: 0; display: flex; align-items: center; gap: 10px; flex: none; position: relative; }
 .w-kid .kid-fig + .kid-fig { margin-left: -34px; animation-delay: -1.6s; }
+.w-kid .kid-fig.girl { height: 132px; }
 .kid-fig { height: 146px; width: auto; display: block; cursor: pointer; animation: bob 3.2s ease-in-out infinite; }
 .kid-fig.wiggle { animation: wiggle .6s ease-in-out; }
 .w-when { position: absolute; top: 4px; right: 0; font: 400 15px/1 var(--font-display); padding: 5px 10px; border-radius: 99px; background: #FFF1B8; color: #8A6A00; }
@@ -807,11 +808,11 @@ body.theme-bento { background: #FFF8EF; }
     // 손 (장갑이면 색)
     P.push(`<g fill="${o.gloves ? '#2F7FC1' : SK}"><circle cx="40" cy="168" r="8.5"/><circle cx="${hand[0]}" cy="${hand[1] + 2}" r="8.5"/></g>`);
     // 머리 · 머리카락 · 얼굴
-    // 머리카락 뒤쪽: 귀를 덮고 볼 옆까지 내려오는 긴 머리 (가족 그림 속 다빈이처럼)
-    if (o.head !== 'hood') P.push(`<path d="M46 84Q42 46 80 44Q118 46 114 84Q114 100 106 104Q104 92 100 88H60Q56 92 54 104Q46 100 46 84Z" fill="${HAIR}"/>`);
+    // 남자아이 머리: 귀 위까지 오는 짧은 바가지 머리 + 삐죽삐죽 앞머리 (모자를 쓰면 모자 안으로 쏙)
+    const hatOn = o.head === 'beanie' || o.head === 'hood';
+    if (!hatOn) P.push(`<path d="M49 84Q45 47 80 45Q115 47 111 84Q110 91 106 92Q104 84 100 82H60Q56 84 54 92Q50 91 49 84Z" fill="${HAIR}"/>`);
     P.push(`<circle cx="80" cy="80" r="30" fill="${SK}"/>`);
-    // 앞머리: 한쪽으로 쓸어 넘긴 덥수룩한 앞머리 + 정수리 삐침
-    P.push(`<path d="M48 88Q44 50 78 45Q114 44 112 88Q110 72 102 64Q98 72 88 72Q93 66 92 61Q80 72 64 72Q70 66 70 62Q58 70 54 74Q50 80 48 88Z" fill="${HAIR}"/><path d="M76 46q2-9 11-8q-4 3-3 8" fill="${HAIR}"/>`);
+    if (!hatOn) P.push(`<path d="M50 86Q46 50 80 46Q114 50 110 86L106 74L101 79L97 67L90 75L85 63L78 73L72 63L65 74L59 67L55 77Z" fill="${HAIR}"/><path d="M77 47q1-9 10-9q-3 4-2 9" fill="${HAIR}"/>`);
     P.push('<g fill="#2B2B2B"><ellipse cx="70" cy="84" rx="3.8" ry="4.6"/><ellipse cx="90" cy="84" rx="3.8" ry="4.6"/></g><g fill="#fff"><circle cx="71.3" cy="82.4" r="1.4"/><circle cx="91.3" cy="82.4" r="1.4"/></g>');
     P.push('<ellipse cx="62" cy="93" rx="6.5" ry="4.6" fill="#FF8F9A" fill-opacity=".6"/><ellipse cx="98" cy="93" rx="6.5" ry="4.6" fill="#FF8F9A" fill-opacity=".6"/>');
     P.push('<path d="M72 94Q80 107 88 94Z" fill="#E2553F"/><path d="M75.5 99.5Q80 103.5 84.5 99.5Q80 97.5 75.5 99.5Z" fill="#FF9E8A"/>');
