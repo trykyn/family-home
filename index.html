@@ -314,6 +314,7 @@ img { display: block; }
 .big-row .big { width: 74px; height: 74px; display: grid; place-items: center; font-size: 34px; border-radius: 50%; border: 3px dashed #E8D9A0; filter: grayscale(1); opacity: .45; }
 .big-row .big.full { border: 0; filter: none; opacity: 1; }
 .big-row .big.full svg { width: 100%; height: 100%; }
+.big-row .big.pop svg { animation: stk-pop 1s cubic-bezier(.2,1.6,.4,1); }
 .big-row .big-gift { font-size: 44px; opacity: .35; filter: grayscale(1); }
 .big-row .big-gift.ready { opacity: 1; filter: none; animation: swing 1.6s ease-in-out infinite; }
 .board-grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 10px; max-width: 640px; margin: 0 auto; }
@@ -360,22 +361,30 @@ img { display: block; }
 .ms-tile.done::after { content: '✓'; position: absolute; top: 6px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: #4CBE8C; color: #fff; font: 700 18px/28px var(--font-body); text-align: center; animation: pop .3s; }
 .ms-claim { margin-top: 12px; animation: bob 1.6s ease-in-out infinite; }
 .ms-got { margin-top: 10px; text-align: center; font: 400 18px var(--font-display); color: var(--ok); }
-.wk-mini { display: inline-flex; gap: 3px; margin-left: 8px; vertical-align: middle; font-size: 16px; }
-.wk-mini i { width: 22px; height: 22px; border-radius: 50%; border: 1.5px dashed color-mix(in srgb, var(--mc) 45%, white); display: inline-block; }
+.kline { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.wk-mini { display: inline-flex; gap: 3px; font-size: 16px; }
+.nm b.gold { font: 600 13px var(--font-body); color: #B07A00; white-space: nowrap; }
+.nm b.gold.ready { font-size: 18px; animation: swing 1.4s ease-in-out infinite; }
+.ms-badge { margin-left: auto; font: 600 13px var(--font-body); color: var(--muted); white-space: nowrap; }
+.ms-badge.ready { font-size: 20px; animation: swing 1.4s ease-in-out infinite; }
+.ms-badge.got { font-size: 16px; }
+.wk-mini i { width: 21px; height: 21px; border-radius: 50%; border: 1.5px dashed color-mix(in srgb, var(--mc) 45%, white); display: inline-block; }
 .wk-mini i svg { width: 100%; height: 100%; display: block; }
 .wk-mini i.got { border: 0; }
 .wk-mini i.today { border-style: solid; border-color: var(--mc); }
 .wk-mini i.missed { opacity: .35; }
+.wk-mini b.gold { margin-left: 6px; font: 600 13px var(--font-body); color: #B07A00; white-space: nowrap; }
+.wk-mini b.gold.ready { font-size: 18px; animation: swing 1.4s ease-in-out infinite; }
 .wk-h { display: flex; align-items: center; gap: 12px; margin: 4px 4px 10px; }
 .wk-h b { font: 400 22px var(--font-display); }
 .wk-h span { font: 400 22px var(--font-display); color: #8A6A00; }
 .wk-h .gift { margin-left: auto; font-size: 40px; opacity: .35; filter: grayscale(1); }
 .wk-h .gift.ready { opacity: 1; filter: none; animation: swing 1.4s ease-in-out infinite; }
-.wk-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.wk-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
 .wk-slot { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px 8px; border-radius: 24px; background: rgba(255,255,255,.7); border: 3px dashed #E2D7F0; }
 .wk-slot .pic { width: 100%; aspect-ratio: 1; display: grid; place-items: center; font-size: 30px; color: #CFC3E0; }
 .wk-slot .pic svg { width: 100%; height: 100%; }
-.wk-slot .day { font: 400 22px/1 var(--font-display); color: #8B7AA8; }
+.wk-slot .day { font: 400 20px/1 var(--font-display); color: #8B7AA8; }
 .wk-slot.got { background: #fff; border: 3px solid transparent; box-shadow: 0 6px 14px -10px rgba(0,0,0,.4); }
 .k-davin .wk-slot.today { border: 3px solid #FFC928; background: #FFF6D0; }
 .k-arin .wk-slot.today { border: 3px solid #FF8AB3; background: #FFEAF3; }
@@ -619,7 +628,7 @@ body.theme-bento { background: #FFF8EF; }
       todo: '챙길 할 일', noTodos: '급한 할 일이 없어요 🎉', more: (n) => `+ ${n}개 더`, doneMsg: '완료로 표시했어요', undo: '되돌리기',
       lunchTitle: '오늘 점심', dinnerTitle: '오늘 저녁', kidTag: '아이', noMeal: '아직 정하지 않았어요', eatSoon: '🧊 빨리 먹기',
       expToday: '오늘', expGone: '지남', expIn: (n) => `${n}일`,
-      kids: '칭찬 스티커', noReward: '보상 미정', giveBtn: '⭐ 칭찬 스티커 주기', giveWhy: '무엇을 잘했나요?', tapBox: '상자를 톡톡톡 눌러 봐!', giveStick: '⭐ 붙이기', back: '← 스티커판으로', doneAll: (n) => `🎉 큰 스티커 ${n}장 다 모았어요!`, newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주 스티커', weekRule: '월~금 미션을 다 하면 🎁 이번 주 선물!', weekDone: '🎉 이번 주 미션 다 했어요!', weekRest: '🎈 주말엔 쉬어요. 월요일에 새 판이 시작돼요.', msTitle: '🎯 오늘의 미션', msClaim: '🎁 미션 스티커 받기!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
+      kids: '주간 미션', noReward: '선물 미정', giveBtn: '⭐ 칭찬 스티커 주기', giveWhy: '무엇을 잘했나요?', tapBox: '상자를 톡톡톡 눌러 봐!', giveStick: '⭐ 붙이기', back: '← 스티커판으로', doneAll: (n) => `🎉 큰 스티커 ${n}장 다 모았어요!`, newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 미션 스티커 받기!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
       packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', wakeOff: '끄기', wakeAll: '하루 종일', wakeTime: '시간 정하기', wakeFrom: '시작 시간', wakeTo: '끝 시간', wakeFromTo: '부터', wakeUntil: '까지', wakeNowOn: '지금 화면을 켜 두고 있어요', wakeNowOff: '지금은 켜 두지 않아요 (패드 자동 잠금대로 꺼져요)', wakeNote: '정한 시간이 지나면 패드 설정의 ‘자동 잠금’ 시간이 지난 뒤 화면이 꺼져요. 그래서 패드 자동 잠금은 ‘안 함’ 말고 2~5분으로 해 두세요. 꺼진 화면은 웹 화면이 스스로 켤 수 없어서, 아침에는 화면을 한 번 눌러 깨워 주세요.', lang: 'DE',
       signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
@@ -636,7 +645,7 @@ body.theme-bento { background: #FFF8EF; }
       todo: 'Wichtige Aufgaben', noTodos: 'Nichts Dringendes 🎉', more: (n) => `+ ${n} weitere`, doneMsg: 'Als erledigt markiert', undo: 'Rückgängig',
       lunchTitle: 'Heute Mittag', dinnerTitle: 'Heute Abend', kidTag: 'Kinder', noMeal: 'Noch nichts geplant', eatSoon: '🧊 Bald essen',
       expToday: 'heute', expGone: 'abgelaufen', expIn: (n) => `${n} T.`,
-      kids: 'Sticker', noReward: 'Belohnung offen', giveBtn: '⭐ Sticker geben', giveWhy: 'Wofür?', tapBox: 'Tipp dreimal aufs Geschenk!', giveStick: '⭐ Aufkleben', back: '← Zurück zum Stickerbogen', doneAll: (n) => `🎉 Alle ${n} großen Sticker!`, newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Sticker der Woche', weekRule: 'Mo–Fr alle Missionen = 🎁 Wochen-Geschenk!', weekDone: '🎉 Diese Woche alles geschafft!', weekRest: '🎈 Am Wochenende ist Pause. Montag geht es neu los.', msTitle: '🎯 Tagesmission', msClaim: '🎁 Missions-Sticker holen!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
+      kids: 'Wochenmission', noReward: 'Geschenk offen', giveBtn: '⭐ Sticker geben', giveWhy: 'Wofür?', tapBox: 'Tipp dreimal aufs Geschenk!', giveStick: '⭐ Aufkleben', back: '← Zurück zum Stickerbogen', doneAll: (n) => `🎉 Alle ${n} großen Sticker!`, newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Missions-Sticker holen!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
       packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', wakeOff: 'Aus', wakeAll: 'Immer', wakeTime: 'Zeiten', wakeFrom: 'Von', wakeTo: 'Bis', wakeFromTo: 'bis', wakeUntil: '', wakeNowOn: 'Der Bildschirm bleibt gerade an', wakeNowOff: 'Gerade nicht (das iPad sperrt sich wie eingestellt)', wakeNote: 'Außerhalb der Zeit geht der Bildschirm nach der „Automatischen Sperre“ des iPads aus – stell sie dafür auf 2–5 Minuten statt „Nie“. Ein ausgeschalteter Bildschirm kann sich nicht selbst einschalten; morgens einmal antippen.', lang: '한',
       signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
@@ -1451,15 +1460,19 @@ body.theme-bento { background: #FFF8EF; }
   // 카드: 이번 주 월~금 작은 칸 (받은 날은 스티커)
   function weekMini(k) {
     if (!FS) return null;
-    const W = FS.weekState(kidOf(k), k, todayKey());
-    return h('span', { class: 'wk-mini' + (W.all ? ' all' : '') }, ...W.days.map((x) => h('i', { class: x.status, html: x.got ? stickerSVG(k, x.d) : '' })), W.all ? '🎁' : '');
+    const W = FS.weekState(kidOf(k), k, todayKey()), G = FS.goldState(kidOf(k), k);
+    return h('span', { class: 'wk-mini' }, ...W.days.map((x) => h('i', { class: x.status, html: x.got ? stickerSVG(k, x.d) : '' })));
+  }
+  function goldMini(k) {
+    if (!FS) return null;
+    const G = FS.goldState(kidOf(k), k);
+    return h('b', { class: 'gold' + (G.gift ? ' ready' : ''), text: G.gift ? '🎁' : `🏅 ${G.count}/${G.need}` });
   }
   function missionMini(k) {
     if (!FS) return null;
     const M = FS.missionState(kidOf(k), k, todayKey());
     if (!M.total) return null;
-    return h('div', { class: 'ms-mini' }, ...M.list.map((x) => h('span', { class: M.day[x.id] ? 'on' : '', text: FS.missionIcon(x) })),
-      h('b', { class: M.got ? 'got' : M.all ? 'ready' : '', text: M.got ? '✅' : M.all ? '🎁' : `${M.done}/${M.total}` }));
+    return h('b', { class: 'ms-badge' + (M.got ? ' got' : M.all ? ' ready' : ''), text: M.got ? '✅' : M.all ? '🎁' : `🎯 ${M.done}/${M.total}` });
   }
   function kidsCard() {
     const rows = ['davin', 'arin'].map((k) => {
@@ -1469,11 +1482,10 @@ body.theme-bento { background: #FFF8EF; }
       return h('li', { class: 'kid tap', style: `--mc:${WHO[k]}`, role: 'button', tabindex: '0', onclick: () => openStickers(k) },
         h('img', { src: avatarOf(k), alt: '' }),
         h('div', { style: 'min-width:0' },
-          h('div', { class: 'nm' }, L().who[k], weekMini(k),
-            money != null ? h('span', { class: 'money', text: `💶 ${fmtMoney(money)}` }) : null),
-          missionMini(k)));
+          h('div', { class: 'nm' }, L().who[k], goldMini(k), money != null ? h('span', { class: 'money', text: `💶 ${fmtMoney(money)}` }) : null),
+          h('div', { class: 'kline' }, weekMini(k), missionMini(k))));
     });
-    return card('kids', '⭐', 'var(--c-kids)', L().kids, null, null, h('ul', { class: 'fit' }, ...rows));
+    return card('kids', '🎯', 'var(--c-kids)', L().kids, null, null, h('ul', { class: 'fit' }, ...rows));
   }
 
   /* ───────── ⭐ 칭찬 스티커판 (우리가족 앱과 같은 자료: kids.{k}.stickers.{id} = { at, d, why, by }) ─────────
@@ -1575,11 +1587,20 @@ body.theme-bento { background: #FFF8EF; }
         M.got ? h('div', { class: 'ms-got', text: L().msGot })
           : M.all ? h('button', { type: 'button', class: 'stk-btn ms-claim', text: (unlocked() ? '' : '🔒 ') + L().msClaim,
             onclick: () => parentOnly(() => { stk.mode = 'give'; stk.why = 'mission'; stk.mission = true; stk.taps = 0; stk.d = Math.floor(Math.random() * 8); drawStickers(); }) }) : null) : null;
-      body = h('div', { class: 'stk-board' }, ms,
-        h('div', { class: 'wk-h' }, h('b', { text: L().weekTitle }), h('span', { text: `⭐ ${W.count} / 5` }), h('span', { class: 'gift' + (W.all ? ' ready' : ''), text: '🎁' })),
+      const G = FS.goldState(kidOf(k), k);
+      const golds = h('div', { class: 'big-row' });
+      for (let i = 0; i < G.need; i++) {
+        const g = G.golds[i];
+        if (g) { const el = h('button', { type: 'button', class: 'big full' + (g.week === stk.popGold ? ' pop' : ''), html: bigSVG(k, g.d || 0), onclick: () => { wig(el); SND.stick(); } }); golds.append(el); }
+        else golds.append(h('span', { class: 'big', text: '🏅' }));
+      }
+      golds.append(h('span', { class: 'big-gift' + (G.gift ? ' ready' : ''), text: '🎁' }));
+      body = h('div', { class: 'stk-board' }, ms, golds,
+        h('div', { class: 'wk-h' }, h('b', { text: L().weekTitle }), h('span', { text: `⭐ ${W.count} / 7` })),
         week,
-        W.all ? h('div', { class: 'done-banner' }, h('b', { text: L().weekDone }), reward ? h('div', { text: `🎁 ${reward}` }) : null)
-          : W.weekend ? h('p', { class: 'wk-note', text: L().weekRest }) : h('p', { class: 'wk-note', text: L().weekRule }));
+        G.gift ? h('div', { class: 'done-banner' }, h('b', { text: L().goldDone(G.need) }), reward ? h('div', { text: `🎁 ${reward}` }) : null,
+          h('button', { type: 'button', class: 'stk-btn', text: L().newBoard, onclick: () => parentOnly(() => kidsWrite([k, 'cfg'], { ...c, start: Date.now() })) }))
+          : h('p', { class: 'wk-note', text: W.all ? L().weekGold : L().weekRule }));
     }
     $('#stk-card').replaceChildren(head, body);
     $('#stk-card').className = `stk-card k-${k}`;
@@ -1603,6 +1624,14 @@ body.theme-bento { background: #FFF8EF; }
     const k = stk.k, id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     const st = { at: Date.now(), d: stk.d, why: stk.why ? `@${stk.why}` : '', by: (S.user && S.user.uid) || 'dashboard' };
     const fromMission = stk.mission, day = todayKey(); stk.mission = false;
+    let goldWeek = '';
+    if (fromMission && FS.weekCompletesToday(kidOf(k), k, day)) { // 일주일 다 채움 → 🏅 황금 스티커
+      goldWeek = FS.weekKeys(day)[0];
+      const g = { at: Date.now(), d: stk.d };
+      kidsWrite([k, 'golds', goldWeek], g);
+      if (!DEMO) { const kd = (famData().kids[k] = famData().kids[k] || {}); kd.golds = { ...(kd.golds || {}), [goldWeek]: g }; }
+      stk.popGold = goldWeek; setTimeout(() => SND.tada(), 500);
+    }
     if (fromMission) { kidsWrite([k, 'mdone', day, 'got'], id); setMdone(k, day, 'got', id); }
     SND.stick();
     stk.mode = 'board'; stk.pop = id;
@@ -1612,6 +1641,7 @@ body.theme-bento { background: #FFF8EF; }
     toast(L().stkGiven, () => {
       kidsWrite([k, 'stickers', id], null); if (!DEMO && famData().kids[k].stickers) delete famData().kids[k].stickers[id];
       if (fromMission) { kidsWrite([k, 'mdone', day, 'got'], null); setMdone(k, day, 'got', null); }
+      if (goldWeek) { kidsWrite([k, 'golds', goldWeek], null); if (!DEMO && famData().kids[k].golds) delete famData().kids[k].golds[goldWeek]; }
       drawStickers(); renderGrid();
     });
   }
@@ -1745,7 +1775,7 @@ body.theme-bento { background: #FFF8EF; }
       const kids = {};
       const mFrom = window.FamilyStickers ? window.FamilyStickers.weekKeys(todayKey())[0] : keyOf(addDays(new Date(), -6));
       for (const k of ['davin', 'arin']) if (d.kids && d.kids[k]) kids[k] = { cfg: d.kids[k].cfg || {}, stickers: d.kids[k].stickers || {}, money: d.kids[k].money || null,
-        missions: d.kids[k].missions || null, mdone: Object.fromEntries(Object.entries(d.kids[k].mdone || {}).filter(([day]) => day >= mFrom)) };
+        missions: d.kids[k].missions || null, golds: d.kids[k].golds || {}, mdone: Object.fromEntries(Object.entries(d.kids[k].mdone || {}).filter(([day]) => day >= mFrom)) };
       if (d.kids && d.kids.lock) kids.lock = d.kids.lock;
       fam = {
         todos: d.todos || {}, routine: d.routine || {}, routineBase: d.routineBase || {}, vacations: d.vacations || {}, meals, kids,
@@ -1833,7 +1863,7 @@ body.theme-bento { background: #FFF8EF; }
         [k(3)]: { dinner: [{ text: 'Kartoffelsuppe' }, { text: '빵' }] }, [k(5)]: { dinner: [{ text: '불고기' }, { text: '잡채' }] },
       },
       kids: {
-        davin: { cfg: { small: 10, big: 4, reward: '레고 시티 경찰서', start: 0 }, stickers: st(16), money: { m1: { amt: 10 }, m2: { amt: 2.5 }, m3: { amt: -4 } }, mdone: { [k(0)]: { brushAM: true, study: true }, [k(-6)]: { got: 's0' }, [k(-5)]: { got: 's1' }, [k(-4)]: { got: 's2' }, [k(-2)]: { got: 's3' } } },
+        davin: { cfg: { small: 10, big: 4, reward: '레고 시티 경찰서', start: 0 }, stickers: st(16), money: { m1: { amt: 10 }, m2: { amt: 2.5 }, m3: { amt: -4 } }, mdone: { [k(0)]: { brushAM: true, study: true }, [k(-6)]: { got: 's0' }, [k(-5)]: { got: 's1' }, [k(-4)]: { got: 's2' }, [k(-2)]: { got: 's3' } }, golds: { [k(-13)]: { at: now - 8 * 864e5, d: 3 } } },
         arin: { cfg: { small: 7, big: 4, reward: '공주 스티커북', start: 0 }, stickers: st(5), mdone: { [k(-6)]: { got: 's0' }, [k(-5)]: { got: 's1' }, [k(-4)]: { got: 's2' }, [k(-3)]: { got: 's3' }, [k(-2)]: { got: 's4' } } },
         lock: { on: true, pin: '12' },
       },
