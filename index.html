@@ -238,6 +238,37 @@ img { display: block; }
 .link-btn { color: var(--muted); text-decoration: underline; font-size: 14px; }
 
 /* 알림 */
+/* 🎒 준비물 팝업 (아침 7시, 또는 🎒 버튼) */
+.tool.pack { position: relative; }
+.tool.pack i { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #E85D75; color: #fff; font: 700 11px/18px var(--font-body); font-style: normal; }
+#pack { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; background: rgba(18, 50, 74, .45); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+#pack[hidden] { display: none; }
+.pk-card { width: min(92vw, 980px); max-height: 92vh; overflow: auto; background: #FFFDF6; border-radius: 32px; padding: 26px 30px 24px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.5); animation: pk-in .45s cubic-bezier(.2,1.4,.4,1); }
+@keyframes pk-in { from { transform: translateY(30px) scale(.92); opacity: 0; } to { transform: none; opacity: 1; } }
+.pk-top { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.pk-top .bag { font-size: 56px; line-height: 1; animation: swing 2.4s ease-in-out infinite; transform-origin: 50% 10%; }
+.pk-top h2 { margin: 0; font: 400 38px/1.1 var(--font-display); }
+.pk-top small { display: block; font: 500 16px var(--font-body); color: var(--muted); margin-top: 4px; }
+.pk-top .x { margin-left: auto; width: 48px; height: 48px; border-radius: 50%; background: var(--bg); font-size: 22px; color: var(--muted); }
+.pk-people { display: flex; flex-wrap: wrap; gap: 14px; }
+.pk-who { flex: 1 1 260px; min-width: 0; border-radius: 24px; padding: 14px; background: color-mix(in srgb, var(--mc) 12%, white); }
+.pk-who .hd { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.pk-who .hd img { width: 56px; height: 56px; border-radius: 50%; box-shadow: 0 0 0 3px var(--mc); background: #fff; }
+.pk-who .hd b { font: 400 26px/1 var(--font-display); color: var(--mc); }
+.pk-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+.pk-item { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 6px 10px; border-radius: 20px; background: #fff; border: 3px solid transparent; box-shadow: 0 6px 14px -10px rgba(0,0,0,.35); transition: transform .15s; }
+.pk-item:active { transform: scale(.95); }
+.pk-item .e { font-size: 50px; line-height: 1.05; }
+.pk-item .t { font: 400 18px/1.2 var(--font-display); text-align: center; overflow-wrap: anywhere; }
+.pk-item.done { border-color: #4CBE8C; background: #EAF8F0; }
+.pk-item.done .e { opacity: .45; }
+.pk-item.done::after { content: '✓'; position: absolute; top: 6px; right: 8px; width: 30px; height: 30px; border-radius: 50%; background: #4CBE8C; color: #fff; font: 700 19px/30px var(--font-body); text-align: center; animation: pop .3s; }
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+.pk-bottom { display: flex; justify-content: center; margin-top: 20px; }
+.pk-bottom button { padding: 16px 34px; border-radius: 22px; background: #4CBE8C; color: #fff; font: 400 24px/1 var(--font-display); box-shadow: 0 10px 22px -12px rgba(30,120,80,.8); }
+.pk-yay { position: fixed; inset: 0; z-index: 41; pointer-events: none; overflow: hidden; }
+.pk-yay i { position: absolute; top: -40px; font-size: 34px; font-style: normal; animation: yay 2.4s ease-in forwards; }
+@keyframes yay { to { transform: translateY(110vh) rotate(540deg); } }
 #toast {
   position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 30;
   background: #12324A; color: #fff; padding: 12px 18px; border-radius: 14px; display: flex; gap: 16px; align-items: center; box-shadow: 0 10px 30px -10px rgba(0,0,0,.5);
@@ -265,6 +296,7 @@ img { display: block; }
   <header id="top"></header>
   <main id="grid"></main>
 </div>
+<div id="pack" hidden></div>
 <div id="rotate"><div class="ic">📱</div><p>패드를 가로로 돌려 주세요</p><small>Bitte das iPad quer halten</small></div>
 
 <script src="firebase-config.js"></script>
@@ -319,7 +351,7 @@ img { display: block; }
       expToday: '오늘', expGone: '지남', expIn: (n) => `${n}일`,
       kids: '칭찬 스티커', noReward: '보상 미정', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
-      wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', lang: 'DE',
+      packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', lang: 'DE',
       signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
       signIn: '구글로 로그인', houseTitle: '가족 코드', houseText: '우리가족 앱 설정에 있는 가족 코드를 넣어 주세요.', houseCode: '가족 코드', join: '연결', houseBad: '가족 코드를 찾지 못했어요', signOut: '로그아웃', loadErr: '불러오지 못했어요. 인터넷 연결을 확인해 주세요.',
     },
@@ -336,7 +368,7 @@ img { display: block; }
       expToday: 'heute', expGone: 'abgelaufen', expIn: (n) => `${n} T.`,
       kids: 'Sticker', noReward: 'Belohnung offen', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
-      wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', lang: '한',
+      packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', lang: '한',
       signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
       signIn: 'Mit Google anmelden', houseTitle: 'Familiencode', houseText: 'Den Familiencode findest du in den Einstellungen der Familien-App.', houseCode: 'Familiencode', join: 'Verbinden', houseBad: 'Familiencode nicht gefunden', signOut: 'Abmelden', loadErr: 'Laden fehlgeschlagen. Bitte Internet prüfen.',
     },
@@ -753,6 +785,83 @@ img { display: block; }
     return el;
   }
 
+  /* ───────── 🎒 준비물 (우리가족 앱에서 넣은 것: pack.{id} = { text, who, date? | dow?, src?, tr?, by }) ─────────
+     아침 7시(~9시 반)에 그날 준비물이 크게 뜸. 아이들이 하나씩 눌러 ✓. 저녁 6시부터 🎒 버튼은 내일 것 */
+  const PACK_IC = [
+    [/체육|운동복|sport|turn/i, '👕'], [/운동화|turnschuh|sneaker/i, '👟'], [/수영|schwimm|bade/i, '🩱'], [/실내화|hausschuh/i, '🥿'],
+    [/도시락|brotzeit|pausenbrot/i, '🥪'], [/간식|snack|obst/i, '🍎'], [/물병|trinkflasche|wasser/i, '💧'], [/숙제|hausaufgabe/i, '📒'],
+    [/알림장|heft/i, '📓'], [/우산|schirm/i, '☂️'], [/우비|regenjacke/i, '🧥'], [/장화|gummistiefel/i, '👢'], [/책|buch|bücher/i, '📚'],
+    [/돈|geld|euro/i, '💶'], [/모자|mütze|hut/i, '🧢'], [/장갑|handschuh/i, '🧤'], [/피리|리코더|flöte|instrument|악기/i, '🎵'],
+    [/사진|foto/i, '📷'], [/편지|서류|안내문|brief|zettel|formular/i, '✉️'], [/선물|geschenk/i, '🎁'], [/열쇠|schlüssel/i, '🔑'],
+    [/약|medizin|medikament/i, '💊'], [/태권도|taekwondo/i, '🥋'], [/가방|tasche|rucksack/i, '🎒'],
+  ];
+  const packIcon = (t) => ((PACK_IC.find(([re]) => re.test(t)) || WORD_IC.find(([re]) => re.test(t)) || [0, '🎒'])[1]);
+  const PACK_WHO = ['davin', 'arin', 'mom', 'dad', ''];
+  function packItems(k) {
+    const dow = DOWK[fromKey(k).getDay()], me = S.user && S.user.uid;
+    const list = Object.entries(famData().pack || {}).filter(([, p]) => p && p.text && (p.date === k || (!p.date && p.dow === dow)))
+      .map(([id, p]) => ({ id, who: p.who || '', at: p.at || 0, text: p.src && p.src !== lang && p.tr && p.by !== me ? p.tr : p.text }))
+      .sort((a, b) => PACK_WHO.indexOf(a.who) - PACK_WHO.indexOf(b.who) || a.at - b.at);
+    // 비 오거나 눈이 많이 오는 날은 우산도 (오늘 것만 — 날씨칸 아이가 우산을 들고 있을 때)
+    const o = k === todayKey() && new Date().getHours() < 18 ? outfit() : null;
+    if (o && o.umbrella && !list.some((x) => /우산|schirm/i.test(x.text))) list.push({ id: 'auto-umb', who: '', at: 0, text: L().packUmb });
+    return list.map((x) => ({ ...x, ic: packIcon(x.text) }));
+  }
+  const packDay = () => (new Date().getHours() >= 18 ? keyOf(addDays(new Date(), 1)) : todayKey());
+  const PACK_DONE = 'family-home:pack-done', PACK_SHOWN = 'family-home:pack-shown';
+  const packDone = (k) => { const d = load(PACK_DONE, null); return d && d.date === k ? d.ids : []; };
+  function packButton() {
+    if (!canShow()) return null;
+    const k = packDay(), items = packItems(k), done = packDone(k);
+    if (!items.length) return null;
+    const left = items.filter((x) => !done.includes(x.id)).length;
+    return h('button', { type: 'button', class: 'tool pack', title: L().packOpen, onclick: () => openPack(k) }, '🎒', left ? h('i', { text: String(left) }) : null);
+  }
+  function openPack(k) {
+    const items = packItems(k);
+    const box = $('#pack');
+    if (!items.length) { box.hidden = true; return; }
+    const done = new Set(packDone(k));
+    const isToday = k === todayKey();
+    const groups = PACK_WHO.map((w) => [w, items.filter((x) => x.who === w)]).filter(([, xs]) => xs.length);
+    const save = () => { store(PACK_DONE, { date: k, ids: [...done] }); renderTop(); };
+    const close = () => { box.hidden = true; box.replaceChildren(); };
+    const yay = () => {
+      const fx = h('div', { class: 'pk-yay' }, ...Array.from({ length: 26 }, (_, i) => h('i', { text: ['🎉', '⭐', '🎈', '✨', '💛'][i % 5], style: `left:${(i * 37) % 100}%;animation-delay:${(i % 7) * 0.12}s` })));
+      document.body.append(fx); setTimeout(() => fx.remove(), 3000);
+    };
+    const tiles = [];
+    const card = h('div', { class: 'pk-card', role: 'dialog', 'aria-modal': 'true' },
+      h('div', { class: 'pk-top' }, h('span', { class: 'bag', text: '🎒' }),
+        h('div', {}, h('h2', { text: isToday ? L().packToday : L().packTomorrow }), h('small', { text: L().dateLong(fromKey(k)) })),
+        h('button', { type: 'button', class: 'x', 'aria-label': '✕', text: '✕', onclick: close })),
+      h('div', { class: 'pk-people' }, ...groups.map(([w, xs]) => h('div', { class: 'pk-who', style: `--mc:${WHO[w || 'family']}` },
+        h('div', { class: 'hd' }, h('img', { src: avatarOf(w || 'family'), alt: '' }), h('b', { text: w ? L().who[w] : L().packAll })),
+        h('div', { class: 'pk-items' }, ...xs.map((x) => {
+          const el = h('button', { type: 'button', class: 'pk-item' + (done.has(x.id) ? ' done' : ''), onclick: () => {
+            if (done.has(x.id)) done.delete(x.id); else done.add(x.id);
+            el.classList.toggle('done', done.has(x.id)); save();
+            if (items.every((y) => done.has(y.id))) { yay(); setTimeout(close, 1600); }
+          } }, h('span', { class: 'e', text: x.ic }), h('span', { class: 't', text: x.text }));
+          tiles.push(el); return el;
+        }))))),
+      h('div', { class: 'pk-bottom' }, h('button', { type: 'button', text: L().packDone, onclick: () => { items.forEach((y) => done.add(y.id)); save(); yay(); close(); } })));
+    box.replaceChildren(card);
+    box.hidden = false;
+    box.onclick = (e) => { if (e.target === box) close(); };
+  }
+  // 아침 7시 ~ 9시 반: 오늘 준비물이 있고 아직 안 띄웠으면 한 번 띄움 (화면이 켜져 있을 때)
+  function packMorning() {
+    if (!canShow() || !$('#pack').hidden) return;
+    const now = new Date(), min = now.getHours() * 60 + now.getMinutes(), k = todayKey();
+    if (min < 7 * 60 || min > 9 * 60 + 30 || load(PACK_SHOWN, '') === k) return;
+    const items = packItems(k);
+    if (!items.length || items.every((x) => packDone(k).includes(x.id))) return;
+    store(PACK_SHOWN, k);
+    openPack(k);
+    applyWake();
+  }
+
   /* ───────── 위: 시계 · 날씨 · 버튼 ───────── */
   function renderTop() {
     const now = new Date(), k = todayKey();
@@ -787,7 +896,8 @@ img { display: block; }
 
     const tools = h('div', { class: 'tools' },
       h('button', { type: 'button', class: 'tool lang', title: 'Sprache / 언어', text: L().lang, onclick: () => { lang = lang === 'ko' ? 'de' : 'ko'; store('family-home:lang', lang); render(); } }),
-      h('button', { type: 'button', class: 'tool' + (wakeOn ? ' on' : ''), title: wakeMsg || L().wake, 'aria-pressed': String(wakeOn), text: '💡', onclick: toggleWake }));
+      h('button', { type: 'button', class: 'tool' + (wakeOn ? ' on' : ''), title: wakeMsg || L().wake, 'aria-pressed': String(wakeOn), text: '💡', onclick: toggleWake }),
+      packButton());
     $('#top').replaceChildren(clock, weather, canShow() ? foodBox() : null, tools);
   }
 
@@ -1022,7 +1132,7 @@ img { display: block; }
       for (const k of ['davin', 'arin']) if (d.kids && d.kids[k]) kids[k] = { cfg: d.kids[k].cfg || {}, stickers: d.kids[k].stickers || {}, money: d.kids[k].money || null };
       fam = {
         todos: d.todos || {}, routine: d.routine || {}, routineBase: d.routineBase || {}, vacations: d.vacations || {}, meals, kids,
-        stock: d.stock || {},
+        stock: d.stock || {}, pack: d.pack || {},
       };
       store(FAM_KEY, fam);
       render();
@@ -1114,6 +1224,11 @@ img { display: block; }
         i4: { id: 'i4', store: 'super', name: '계란' }, i5: { id: 'i5', store: 'super', name: 'Klopapier' }, i6: { id: 'i6', store: 'asia', name: '두부' },
         i7: { id: 'i7', store: 'asia', name: '고추장' }, i8: { id: 'i8', store: 'asia', name: '김' }, i9: { id: 'i9', store: 'online', name: '아린 겨울 장갑' },
       },
+      pack: {
+        p1: { text: '체육복', who: 'davin', dow: DOWK[new Date().getDay()], at: 1 }, p2: { text: '수영 가방', who: 'davin', date: k(0), at: 2 },
+        p3: { text: '실내화', who: 'arin', date: k(0), at: 3 }, p4: { text: 'Brotzeit', who: 'arin', dow: DOWK[new Date().getDay()], at: 4 },
+        p5: { text: '안내문 사인', who: '', date: k(0), at: 5 },
+      },
       stock: {
         x1: { id: 'x1', name: '두부', expires: k(0), loc: null }, x2: { id: 'x2', name: '요거트', expires: k(1), loc: null },
         x3: { id: 'x3', name: 'Hackfleisch', expires: k(2), loc: null }, x4: { id: 'x4', name: '냉동 만두', expires: k(1), loc: 'freezer' },
@@ -1163,6 +1278,7 @@ img { display: block; }
       lastStamp = stamp; render();
       if (newDay) { loadEvents(); loadHolidays(); }
     }
+    packMorning();
   }, 10000);
   // 캘린더 10분마다, 날씨 30분마다 (화면이 켜져 있을 때만)
   setInterval(() => { if (document.visibilityState === 'visible') loadEvents(); }, 10 * 60e3);
