@@ -81,8 +81,9 @@ img { display: block; }
 .w-umb { display: flex; flex-direction: column; align-items: center; flex: none; }
 .w-umb .e { font-size: 44px; line-height: 1.05; transform-origin: 50% 90%; animation: swing 2.2s ease-in-out infinite; }
 .w-umb b { font: 400 15px/1 var(--font-display); color: var(--deep); }
-.w-kid { margin-left: auto; align-self: flex-end; display: flex; align-items: center; gap: 10px; flex: none; position: relative; }
-.kid-fig { height: 150px; width: auto; display: block; cursor: pointer; animation: bob 3.2s ease-in-out infinite; }
+.w-kid { margin-left: auto; align-self: flex-end; gap: 0; display: flex; align-items: center; gap: 10px; flex: none; position: relative; }
+.w-kid .kid-fig + .kid-fig { margin-left: -34px; animation-delay: -1.6s; }
+.kid-fig { height: 146px; width: auto; display: block; cursor: pointer; animation: bob 3.2s ease-in-out infinite; }
 .kid-fig.wiggle { animation: wiggle .6s ease-in-out; }
 .w-when { position: absolute; top: 4px; right: 0; font: 400 15px/1 var(--font-display); padding: 5px 10px; border-radius: 99px; background: #FFF1B8; color: #8A6A00; }
 .w-empty { color: var(--muted); }
@@ -358,9 +359,8 @@ body { overflow: hidden; }
 }
 .theme-glass .clock { color: #fff; text-shadow: 0 2px 18px rgba(20,60,100,.35); }
 .theme-glass .date-line { color: #fff; text-shadow: 0 1px 10px rgba(20,60,100,.4); }
-.theme-glass .weather { background: transparent; box-shadow: none; }
+.theme-glass .weather { background: rgba(255,255,255,.28); border: 1.5px solid rgba(255,255,255,.75); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); box-shadow: 0 18px 40px -26px rgba(20,60,100,.55); }
 .theme-glass .weather .scene .land, .theme-glass .weather .scene { background: transparent !important; }
-.theme-glass .weather .scene .land { display: none; }
 .theme-glass .w-panel { background: rgba(255,255,255,.55); }
 .theme-glass .pg .slot { background: color-mix(in srgb, var(--mc) 14%, rgba(255,255,255,.7)); }
 .theme-glass .ttb .per { background: rgba(255,246,214,.8); }
@@ -454,7 +454,7 @@ body.theme-bento { background: #FFF8EF; }
   const THEMES = ['basic', 'glass', 'fridge', 'bento'];
   let theme = new URLSearchParams(location.search).get('theme');
   try { if (THEMES.includes(theme)) localStorage.setItem('family-home:theme', JSON.stringify(theme)); else theme = JSON.parse(localStorage.getItem('family-home:theme')); } catch {}
-  if (!THEMES.includes(theme)) theme = 'basic';
+  if (!THEMES.includes(theme)) theme = 'glass'; // 기본 = 사계절 창문 (2026-11-15 가족이 고름)
   document.body.classList.add('theme-' + theme);
 
   /* ───────── 작은 도구들 ───────── */
@@ -822,6 +822,66 @@ body.theme-bento { background: #FFF8EF; }
     return `<svg class="kid-fig" viewBox="0 0 160 250" role="img" aria-label="${L().clothes}">${P.join('')}</svg>`;
   }
 
+  // 여자아이 (공주 느낌): 긴 머리 + 티아라/리본, 드레스·튤 치마, 메리제인 구두, 분홍 우산(왼손). 날씨에 맞는 옷은 남자아이와 같은 기준
+  function girlSVG(o) {
+    const SK = '#FFD9B8', HAIR = '#4A2E22';
+    const TOP = { tshirt: '#FF8AB3', long: '#C59BFF', hoodie: '#F7A8C8', jacket: '#B57EDC', puffer: '#FF6FA5', raincoat: '#FF9EC4' }[o.top];
+    const dress = o.top === 'tshirt' || o.top === 'long'; // 원피스 (위아래 같은 색)
+    const SKIRT = dress ? TOP : '#FFC4DD';
+    const warmLegs = o.bottom === 'shorts' || o.top === 'tshirt';
+    const LEG = warmLegs ? SK : '#F6D3E5'; // 추우면 분홍 스타킹
+    const P = [];
+    // 뒤: 후드 · 긴 머리
+    if (o.head === 'hood') P.push(`<circle cx="80" cy="80" r="37" fill="${TOP}"/>`);
+    else P.push(`<path d="M47 78Q41 122 52 138Q60 144 66 134H94Q100 144 108 138Q119 122 113 78Z" fill="${HAIR}"/>`);
+    // 다리 · 신발
+    P.push(`<path d="M70 176V220M90 176V220" stroke="${LEG}" stroke-width="14" stroke-linecap="round"/>`);
+    if (o.shoes === 'sneakers' || o.shoes === 'sandals') {
+      P.push('<g fill="#FF5FA2"><ellipse cx="68" cy="227" rx="12" ry="7"/><ellipse cx="92" cy="227" rx="12" ry="7"/></g><path d="M62 221h12M86 221h12" stroke="#FF5FA2" stroke-width="3" stroke-linecap="round"/><g fill="#fff"><circle cx="72" cy="226" r="2"/><circle cx="96" cy="226" r="2"/></g>');
+    } else {
+      const bc = o.shoes === 'rainboots' ? '#FF5FA2' : '#FFFFFF';
+      P.push(`<g fill="${bc}" stroke="${o.shoes === 'rainboots' ? '#E8458B' : '#E7C6D6'}" stroke-width="1.5"><path d="M60 204h20v30H56a4 4 0 0 1-4-4v-1a6 6 0 0 1 6-6h2z"/><path d="M80 204h20v20h2a6 6 0 0 1 6 6v1a4 4 0 0 1-4 4H80z"/></g>`);
+      if (o.shoes === 'rainboots') P.push('<g fill="#fff"><path d="M66 214c0-2 3-3 4-1 1-2 4-1 4 1 0 2-4 4-4 4s-4-2-4-4z"/><path d="M86 214c0-2 3-3 4-1 1-2 4-1 4 1 0 2-4 4-4 4s-4-2-4-4z"/></g>');
+      else P.push('<g fill="#FFE4EF"><rect x="55" y="199" width="27" height="10" rx="5"/><rect x="78" y="199" width="27" height="10" rx="5"/></g>');
+    }
+    // 치마 (튤): 물결 모양 끝단
+    P.push(`<path d="M56 150Q80 144 104 150L118 192Q110 198 102 193Q94 199 86 193Q80 198 74 193Q66 199 58 193Q50 198 42 192Z" fill="${SKIRT}"/>`);
+    P.push(`<path d="M50 178Q80 186 110 178" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.5"/>`);
+    // 팔
+    const hand = o.umbrella ? [40, 156] : [40, 166];
+    const sleeves = o.top !== 'tshirt';
+    P.push(`<path d="M60 120L${hand[0]} ${hand[1]}M100 120L120 166" stroke="${sleeves ? TOP : SK}" stroke-width="${o.top === 'puffer' ? 17 : 13}" stroke-linecap="round"/>`);
+    if (!sleeves) P.push(`<g fill="${TOP}"><circle cx="58" cy="119" r="10"/><circle cx="102" cy="119" r="10"/></g>`); // 퍼프 소매
+    // 몸통
+    if (o.top === 'puffer') P.push(`<rect x="50" y="106" width="60" height="64" rx="22" fill="${TOP}"/><path d="M54 128h52M53 150h54" stroke="#fff" stroke-opacity=".5" stroke-width="2.5"/><circle cx="80" cy="118" r="3" fill="#fff"/><circle cx="80" cy="134" r="3" fill="#fff"/>`);
+    else if (o.top === 'raincoat') P.push(`<path d="M60 108h40q8 0 10 9l8 57H42l8-57q2-9 10-9z" fill="${TOP}"/><g fill="#fff">${[[66, 124], [92, 130], [74, 146], [98, 156], [62, 162], [84, 166]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.2"/>`).join('')}</g>`);
+    else {
+      P.push(`<rect x="57" y="108" width="46" height="50" rx="14" fill="${TOP}"/>`);
+      if (o.top === 'jacket') P.push('<path d="M80 110v46" stroke="#fff" stroke-opacity=".8" stroke-width="2.5"/><path d="M68 108l12 10 12-10" fill="none" stroke="#8E58BE" stroke-width="4" stroke-linejoin="round"/>');
+      if (o.top === 'hoodie') P.push('<path d="M66 140h28" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/><path d="M80 126c0-3 4-4 5-1 1-3 5-2 5 1 0 3-5 6-5 6s-5-3-5-6z" fill="#fff"/>');
+      if (dress) P.push('<rect x="57" y="148" width="46" height="8" rx="4" fill="#fff"/><path d="M80 152l-9-6v12zM80 152l9-6v12z" fill="#fff"/><circle cx="80" cy="152" r="3" fill="#FFD54A"/>');
+    }
+    // 목도리 · 손
+    if (o.scarf) P.push('<rect x="57" y="102" width="46" height="14" rx="7" fill="#FF8AB3"/><rect x="60" y="108" width="12" height="30" rx="5" fill="#FF8AB3"/><path d="M62 132h8M76 104v10M90 104v10" stroke="#fff" stroke-width="2.5"/>');
+    P.push(`<g fill="${o.gloves ? '#FF8AB3' : SK}"><circle cx="${hand[0]}" cy="${hand[1] + 2}" r="8"/><circle cx="120" cy="168" r="8"/></g>`);
+    // 머리 · 앞머리 · 얼굴 (속눈썹)
+    P.push(`<circle cx="80" cy="80" r="30" fill="${SK}"/>`);
+    P.push(`<path d="M50 86Q47 48 80 47Q113 48 110 86Q108 70 101 63Q93 71 80 66Q67 71 59 63Q52 70 50 86Z" fill="${HAIR}"/>`);
+    P.push('<circle cx="70" cy="85" r="3.6" fill="#2B2B2B"/><circle cx="90" cy="85" r="3.6" fill="#2B2B2B"/><path d="M65 81l-3-2M67 79l-2-3M95 81l3-2M93 79l2-3" stroke="#2B2B2B" stroke-width="1.6" stroke-linecap="round"/>');
+    P.push('<circle cx="63" cy="94" r="5" fill="#FF7FA0" fill-opacity=".55"/><circle cx="97" cy="94" r="5" fill="#FF7FA0" fill-opacity=".55"/>');
+    P.push('<path d="M73 96Q80 102 87 96" fill="none" stroke="#C2456B" stroke-width="2.6" stroke-linecap="round"/>');
+    // 머리 위: 모자가 없으면 티아라 + 리본
+    if (o.head === 'beanie') P.push('<path d="M50 76Q48 44 80 44Q112 44 110 76Z" fill="#FF8AB3"/><rect x="46" y="68" width="68" height="14" rx="7" fill="#FFC4DD"/><path d="M98 52l-8-6v12zM98 52l8-6v12z" fill="#FF5FA2"/><circle cx="98" cy="52" r="3" fill="#fff"/>' + (o.umbrella ? '' : '<circle cx="80" cy="44" r="8.5" fill="#fff" stroke="#F3D1E0" stroke-width="1.5"/>'));
+    else if (o.head === 'sunhat') P.push('<path d="M57 62Q58 35 80 35Q102 35 103 62Z" fill="#FFE6A8"/><rect x="57" y="53" width="46" height="7" fill="#FF8AB3"/><ellipse cx="80" cy="62" rx="48" ry="9" fill="#FFE6A8"/><circle cx="62" cy="54" r="6" fill="#FF5FA2"/><circle cx="62" cy="54" r="2.4" fill="#FFD54A"/>');
+    else if (o.head === 'hood') P.push(`<path d="M44 86Q43 41 80 41Q117 41 116 86Q111 60 80 58Q49 60 44 86Z" fill="${TOP}"/><g fill="#fff"><circle cx="58" cy="52" r="3"/><circle cx="96" cy="48" r="3"/><circle cx="108" cy="66" r="3"/></g>`);
+    else P.push('<path d="M64 52l5-14 6 9 5-13 5 13 6-9 5 14z" fill="#FFD54A" stroke="#E0A800" stroke-width="1.5" stroke-linejoin="round"/><circle cx="80" cy="45" r="2.6" fill="#FF5FA2"/><circle cx="69" cy="47" r="1.8" fill="#7FD3FF"/><circle cx="91" cy="47" r="1.8" fill="#7FD3FF"/>'
+      + '<path d="M108 66l-10-8v16zM108 66l10-8v16z" fill="#FF5FA2"/><circle cx="108" cy="66" r="3.4" fill="#FFC4DD"/>');
+    if (o.glasses) P.push('<g fill="#C2185B"><path d="M62 80c0-4 6-6 8-1 2-5 8-3 8 1 0 5-8 9-8 9s-8-4-8-9z"/><path d="M82 80c0-4 6-6 8-1 2-5 8-3 8 1 0 5-8 9-8 9s-8-4-8-9z"/></g>');
+    // 분홍 우산 (왼손, 프릴)
+    if (o.umbrella) P.push(`<path d="M48 46L${hand[0]} ${hand[1]}" stroke="#7A5560" stroke-width="3.2" stroke-linecap="round"/><path d="M${hand[0]} ${hand[1]}q-1 9 7 9" fill="none" stroke="#7A5560" stroke-width="3.2" stroke-linecap="round"/><path d="M6 46Q6 5 48 5Q90 5 90 46Q79 38 69 46Q58 38 48 46Q37 38 27 46Q16 38 6 46Z" fill="#FF8AB3"/><path d="M8 44Q16 52 27 46Q37 52 48 46Q58 52 69 46Q79 52 88 44" fill="none" stroke="#fff" stroke-width="3"/><path d="M48 5Q36 22 27 46M48 5Q60 22 69 46" fill="none" stroke="#FFC4DD" stroke-width="2.5"/><circle cx="48" cy="4" r="3" fill="#FFD54A"/>`);
+    return `<svg class="kid-fig girl" viewBox="0 0 160 250" role="img" aria-label="${L().clothes}">${P.join('')}</svg>`;
+  }
+
   /* ── 날씨 칸 배경: 계절 풍경 + 지금 날씨 움직임 (비·눈·천둥·안개·구름·해·달) ── */
   function sceneOf() {
     const c = wx.cur, code = c.weather_code, m = new Date().getMonth();
@@ -1050,9 +1110,12 @@ body.theme-bento { background: #FFF8EF; }
       const tri = (up) => h('span', { html: `<svg viewBox="0 0 24 24"><path d="${up ? 'M12 4l9 15H3z' : 'M12 20L3 5h18z'}" fill="currentColor"/></svg>` });
       let kid = null;
       if (o) {
-        const fig = h('div', { html: kidSVG(o) }).firstChild;
-        fig.addEventListener('click', () => { fig.classList.remove('wiggle'); void fig.getBBox(); fig.classList.add('wiggle'); setTimeout(() => fig.classList.remove('wiggle'), 700); });
-        kid = h('div', { class: 'w-kid' }, fig, o.tomorrow ? h('span', { class: 'w-when', text: L().clothesTomorrow }) : null);
+        const figs = [girlSVG(o), kidSVG(o)].map((svg) => {
+          const fig = h('div', { html: svg }).firstChild;
+          fig.addEventListener('click', () => { fig.classList.remove('wiggle'); void fig.getBBox(); fig.classList.add('wiggle'); setTimeout(() => fig.classList.remove('wiggle'), 700); });
+          return fig;
+        });
+        kid = h('div', { class: 'w-kid' }, ...figs, o.tomorrow ? h('span', { class: 'w-when', text: L().clothesTomorrow }) : null);
       }
       weather = h('section', { class: 'weather', 'aria-label': wName(c.weather_code) }, sceneEl(), h('div', { class: 'w-panel' },
         h('div', { class: 'w-now' },
@@ -1458,7 +1521,7 @@ body.theme-bento { background: #FFF8EF; }
     app.style.transform = `scale(${z})`;
   }
   fitZoom();
-  if (DEMO) { demoSetup(); S.ready = true; window.__kid = { kidSVG, dressFor }; }
+  if (DEMO) { demoSetup(); S.ready = true; window.__kid = { kidSVG, girlSVG, dressFor }; }
   render();
   // 글꼴이 늦게 오면 줄 높이가 바뀌므로 카드 칸 맞춤을 다시
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderGrid());
