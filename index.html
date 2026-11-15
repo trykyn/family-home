@@ -552,8 +552,8 @@ body { overflow: hidden; }
 .kids4 .ms-row .ms-badge { font-size: 15px; }
 .kids4 .kid:nth-child(n+3) { border-top: 1px solid var(--line); }
 .ms-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
-.ms-row span { font-size: 24px; line-height: 1; filter: grayscale(1); opacity: .3; }
-.ms-row span.on { filter: none; opacity: 1; }
+.ms-row span { font-size: 24px; line-height: 1; filter: grayscale(.5) brightness(.92); opacity: .8; } /* 아직 안 한 미션: 멀리서도 무슨 미션인지 보이게 */
+.ms-row span.on { filter: drop-shadow(0 0 3px rgba(60,190,90,.85)); opacity: 1; }
 .ms-row .ms-badge { margin-left: auto; font-size: 17px; color: var(--muted); }
 .ms-row .ms-badge.ready { font-size: 28px; }
 .ms-row .ms-badge.got { font-size: 22px; }
