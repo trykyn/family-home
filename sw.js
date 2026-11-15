@@ -1,7 +1,7 @@
 // 오프라인 지원: 네트워크 우선, 실패하면 캐시.
 // 앱 파일은 매번 서버에 "바뀌었나요?"를 물어봄(cache: 'no-cache') — GitHub Pages 의 10분 저장 표시 때문에
 // 홈 화면 앱이 예전 화면을 계속 보여 주는 일을 막음.
-const CACHE = 'family-home-v18';
+const CACHE = 'family-home-v19';
 const SHARED = new URL('../our-family/stickers-shared.js', self.location).pathname; // 우리가족 앱과 같이 쓰는 스티커 파일
 const POKE = new URL('../our-family/poke', self.location).pathname; // 포켓몬 방(poke-room.js)과 포켓몬 그림(poke/)도 같이 씀
 const PING = new URL('../our-family/ping/', self.location).pathname; // 💖 아린 방 티니핑 그림
