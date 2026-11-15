@@ -63,26 +63,26 @@ img { display: block; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .chip { font-size: 14px; padding: 3px 10px; border-radius: 99px; background: var(--sky-soft); color: var(--deep); font-weight: 500; }
 .weather {
-  flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; isolation: isolate;
+  flex: 1.35 1 0; min-width: 0; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; isolation: isolate;
   background: #D2F0FF; border-radius: 22px; box-shadow: var(--shadow); padding: 6px 22px 6px 16px;
 }
 .weather > :not(.scene) { position: relative; z-index: 1; }
-.w-now, .w-hilo { background: rgba(255,255,255,.82); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-radius: 20px; padding: 8px 14px; }
+.w-panel { display: flex; align-items: center; gap: 16px; flex: none; padding: 8px 16px; border-radius: 20px; background: rgba(255,255,255,.5); border: 1.5px solid rgba(255,255,255,.75); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 .w-now { display: flex; flex-direction: column; align-items: center; flex: none; }
 .w-now .row { display: flex; align-items: center; gap: 6px; }
-.w-ic { font-size: 74px; line-height: 1; }
-.w-temp { font: 400 66px/1 var(--font-display); font-variant-numeric: tabular-nums; }
-.w-desc { font-size: 14px; color: var(--muted); margin-top: 2px; }
-.w-hilo { display: flex; flex-direction: column; gap: 10px; font: 400 34px/1 var(--font-display); flex: none; }
+.w-ic { font-size: 58px; line-height: 1; }
+.w-temp { font: 400 56px/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.w-desc { font-size: 13px; color: var(--ink); font-weight: 500; margin-top: 2px; }
+.w-hilo { display: flex; flex-direction: column; gap: 8px; font: 400 28px/1 var(--font-display); flex: none; }
 .w-hilo div { display: flex; align-items: center; gap: 8px; }
-.w-hilo svg { width: 26px; height: 26px; }
+.w-hilo svg { width: 20px; height: 20px; }
 .w-hilo .hi { color: #E2553F; }
 .w-hilo .lo { color: #2F7FC1; }
-.w-umb { display: flex; flex-direction: column; align-items: center; flex: none; padding: 8px 14px; border-radius: 20px; background: rgba(255,255,255,.82); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-.w-umb .e { font-size: 58px; line-height: 1.05; transform-origin: 50% 90%; animation: swing 2.2s ease-in-out infinite; }
-.w-umb b { font: 400 18px/1 var(--font-display); color: var(--deep); }
+.w-umb { display: flex; flex-direction: column; align-items: center; flex: none; }
+.w-umb .e { font-size: 44px; line-height: 1.05; transform-origin: 50% 90%; animation: swing 2.2s ease-in-out infinite; }
+.w-umb b { font: 400 15px/1 var(--font-display); color: var(--deep); }
 .w-kid { margin-left: auto; align-self: flex-end; display: flex; align-items: center; gap: 10px; flex: none; position: relative; }
-.kid-fig { height: 164px; width: auto; display: block; cursor: pointer; animation: bob 3.2s ease-in-out infinite; }
+.kid-fig { height: 150px; width: auto; display: block; cursor: pointer; animation: bob 3.2s ease-in-out infinite; }
 .kid-fig.wiggle { animation: wiggle .6s ease-in-out; }
 .w-when { position: absolute; top: 4px; right: 0; font: 400 15px/1 var(--font-display); padding: 5px 10px; border-radius: 99px; background: #FFF1B8; color: #8A6A00; }
 .w-empty { color: var(--muted); }
@@ -200,6 +200,18 @@ img { display: block; }
 .soon { margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--line); display: flex; flex-wrap: wrap; gap: 5px; align-items: center; flex: none; }
 .soon b { font-size: 13px; color: var(--late); margin-right: 2px; }
 .soon span { font-size: 14px; padding: 2px 9px; border-radius: 99px; background: #FFE7DF; }
+#top #card-food { flex: 1 1 0; padding: 10px 12px 10px; }
+#card-food .c-head { margin-bottom: 4px; gap: 8px; }
+#card-food .c-ic { width: 28px; height: 28px; font-size: 15px; border-radius: 9px; }
+#card-food .c-title { font-size: 18px; }
+#card-food .c-go { width: 28px; height: 28px; }
+#card-food .food-row { padding: 4px 8px; gap: 8px; }
+#card-food .food-row + .food-row { margin-top: 2px; }
+#card-food .food-row .ic { font-size: 24px; }
+#card-food .food-row .lb { font-size: 11px; }
+#card-food .food-row .mn { font-size: 17px; -webkit-line-clamp: 1; }
+#card-food .soon { padding-top: 6px; margin-top: 4px; gap: 4px; }
+#card-food .soon span { font-size: 13px; padding: 1px 8px; }
 .soon span i { font-style: normal; font-size: 11px; font-weight: 700; color: var(--late); margin-left: 4px; }
 
 /* 아이들 */
@@ -233,8 +245,8 @@ img { display: block; }
 /* 가로 화면 고정: 3×2 카드가 화면 하나에 딱 맞음. 세로로 들면 "가로로 돌려 주세요" */
 #app { height: 100vh; }
 #grid { flex: 1; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1.15fr) minmax(0, 1fr);
-  grid-template-areas: "plan cal todo" "food cal kids"; }
-#card-plan { grid-area: plan; } #card-cal { grid-area: cal; } #card-todo { grid-area: todo; } #card-food { grid-area: food; } #card-kids { grid-area: kids; }
+  grid-template-areas: "plan cal todo" "kids cal todo"; }
+#card-plan { grid-area: plan; } #card-cal { grid-area: cal; } #card-todo { grid-area: todo; } #card-kids { grid-area: kids; }
 #rotate { display: none; }
 @media (orientation: portrait) {
   #app { display: none; }
@@ -757,14 +769,14 @@ img { display: block; }
         fig.addEventListener('click', () => { fig.classList.remove('wiggle'); void fig.getBBox(); fig.classList.add('wiggle'); setTimeout(() => fig.classList.remove('wiggle'), 700); });
         kid = h('div', { class: 'w-kid' }, fig, o.tomorrow ? h('span', { class: 'w-when', text: L().clothesTomorrow }) : null);
       }
-      weather = h('section', { class: 'weather', 'aria-label': wName(c.weather_code) }, sceneEl(),
+      weather = h('section', { class: 'weather', 'aria-label': wName(c.weather_code) }, sceneEl(), h('div', { class: 'w-panel' },
         h('div', { class: 'w-now' },
           h('div', { class: 'row' }, h('span', { class: 'w-ic', text: wIcon(c.weather_code, c.is_day) }), h('span', { class: 'w-temp', text: `${Math.round(c.temperature_2m)}°` })),
           h('div', { class: 'w-desc', text: wName(c.weather_code) })),
         h('div', { class: 'w-hilo' },
           h('div', { class: 'hi', title: L().wHi }, tri(true), `${Math.round(d.temperature_2m_max[0])}°`),
           h('div', { class: 'lo', title: L().wLo }, tri(false), `${Math.round(d.temperature_2m_min[0])}°`)),
-        o && o.umbrella ? h('div', { class: 'w-umb' }, h('span', { class: 'e', text: '☂️' }), h('b', { text: L().umbrella })) : null,
+        o && o.umbrella ? h('div', { class: 'w-umb' }, h('span', { class: 'e', text: '☂️' }), h('b', { text: L().umbrella })) : null),
         kid);
     } else {
       weather = h('section', { class: 'weather' }, h('span', { class: 'w-empty', text: wx && wx.err ? L().wErr : '…' }));
@@ -773,7 +785,7 @@ img { display: block; }
     const tools = h('div', { class: 'tools' },
       h('button', { type: 'button', class: 'tool lang', title: 'Sprache / 언어', text: L().lang, onclick: () => { lang = lang === 'ko' ? 'de' : 'ko'; store('family-home:lang', lang); render(); } }),
       h('button', { type: 'button', class: 'tool' + (wakeOn ? ' on' : ''), title: wakeMsg || L().wake, 'aria-pressed': String(wakeOn), text: '💡', onclick: toggleWake }));
-    $('#top').replaceChildren(clock, weather, tools);
+    $('#top').replaceChildren(clock, weather, canShow() ? foodCard() : null, tools);
   }
 
   /* ───────── 카드 ───────── */
@@ -899,7 +911,7 @@ img { display: block; }
   function renderGrid() {
     const grid = $('#grid');
     if (!canShow()) { grid.replaceChildren(S.ready ? gateView() : h('div')); return; }
-    grid.replaceChildren(planCard(), calCard(), todoCard(), foodCard(), kidsCard());
+    grid.replaceChildren(planCard(), calCard(), todoCard(), kidsCard());
     requestAnimationFrame(fitCards);
   }
   function render() {
