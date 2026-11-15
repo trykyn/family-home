@@ -188,22 +188,19 @@ img { display: block; }
 .due.late { color: var(--late); font-weight: 600; }
 .due.today { color: var(--c-todo); font-weight: 600; }
 
-/* 식단 */
-.dinner-now { font: 400 22px/1.3 var(--font-display); padding: 2px 0 8px; }
-.kid-tag { display: inline-block; font: 600 12px/1 var(--font-body); padding: 3px 7px; border-radius: 99px; background: color-mix(in srgb, var(--c-meal) 25%, transparent); margin: 0 4px 0 2px; vertical-align: 4px; }
-.lunch { font-size: 14px; color: var(--muted); margin: -4px 0 8px; }
-.meal-row { display: grid; grid-template-columns: 74px 1fr; gap: 8px; padding: 5px 0; border-top: 1px solid var(--line); font-size: 15px; line-height: 1.3; }
-.meal-row .d { color: var(--muted); font-size: 14px; }
-
-/* 장보기 */
-.store { padding: 4px 0 6px; }
-.store + .store { border-top: 1px solid var(--line); padding-top: 7px; }
-.store-h { font-size: 14px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
-.store-h b { color: var(--c-shop); }
-.items { display: flex; flex-wrap: wrap; gap: 5px; }
-.item { font-size: 15px; padding: 2px 10px; border-radius: 99px; background: color-mix(in srgb, var(--c-shop) 14%, transparent); }
-.fridge { margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--line); font-size: 14px; flex: none; }
-.fridge b { color: var(--late); font-weight: 600; }
+/* 오늘 메뉴 (점심 · 저녁) + 빨리 먹기 */
+.kid-tag { display: inline-block; font: 600 12px/1 var(--font-body); padding: 3px 7px; border-radius: 99px; background: color-mix(in srgb, var(--c-meal) 25%, transparent); margin: 0 4px 0 2px; vertical-align: 3px; }
+.food-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 14px; }
+.food-row + .food-row { margin-top: 4px; }
+.food-row.now { background: color-mix(in srgb, var(--c-meal) 20%, white); }
+.food-row .ic { font-size: 28px; line-height: 1; flex: none; }
+.food-row .lb { font-size: 12px; font-weight: 700; color: var(--muted); }
+.food-row .mn { font: 400 19px/1.25 var(--font-display); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.food-row .mn.none { font: 500 14px/1.3 var(--font-body); color: var(--faint); }
+.soon { margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--line); display: flex; flex-wrap: wrap; gap: 5px; align-items: center; flex: none; }
+.soon b { font-size: 13px; color: var(--late); margin-right: 2px; }
+.soon span { font-size: 14px; padding: 2px 9px; border-radius: 99px; background: #FFE7DF; }
+.soon span i { font-style: normal; font-size: 11px; font-weight: 700; color: var(--late); margin-left: 4px; }
 
 /* 아이들 */
 .kid { display: grid; grid-template-columns: 52px 1fr; gap: 12px; align-items: center; padding: 6px 0; }
@@ -235,7 +232,9 @@ img { display: block; }
 
 /* 가로 화면 고정: 3×2 카드가 화면 하나에 딱 맞음. 세로로 들면 "가로로 돌려 주세요" */
 #app { height: 100vh; }
-#grid { flex: 1; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
+#grid { flex: 1; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-areas: "plan cal todo" "food cal kids"; }
+#card-plan { grid-area: plan; } #card-cal { grid-area: cal; } #card-todo { grid-area: todo; } #card-food { grid-area: food; } #card-kids { grid-area: kids; }
 #rotate { display: none; }
 @media (orientation: portrait) {
   #app { display: none; }
@@ -259,7 +258,7 @@ img { display: block; }
 (() => {
   'use strict';
   const WORKER = 'https://our-family-calendar.weekly-meals-reader.workers.dev';
-  const APPS = { family: '../our-family/', meals: '../weekly-meals/', shop: '../shopping-list/' };
+  const APPS = { family: '../our-family/', meals: '../weekly-meals/' };
   const PLACE = { lat: 48.137, lon: 11.575 }; // 뮌헨
   // localhost 에서 ?demo 로 열면 로그인 없이 예시 자료로 화면을 봄 (개발용)
   const DEMO = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).has('demo');
@@ -302,8 +301,7 @@ img { display: block; }
       planToday: '오늘 일정', planTomorrow: '내일 일정', am: '오전', pm: '오후', dayOff: '쉬는 날', atHome: '집',
       cal: '다가오는 일정', noEvents: '2주 안에 일정이 없어요', noCal: '우리가족 앱에서 구글 캘린더를 연결하면 보여요',
       todo: '할 일', noTodos: '할 일이 없어요 🎉', more: (n) => `+ ${n}개 더`, doneMsg: '완료로 표시했어요', undo: '되돌리기',
-      meals: '저녁', dinnerToday: '오늘 저녁', lunch: '점심', kidTag: '아이', noDinner: '아직 안 정했어요', noMeal: '–',
-      shop: '장보기', noShop: '살 것이 없어요', stores: { super: '슈퍼마켓', asia: '아시아 마켓', online: '인터넷' }, eatSoon: '🧊 빨리 먹기',
+      food: '오늘 메뉴', lunch: '점심', dinner: '저녁', kidTag: '아이', noMeal: '아직 안 정했어요', eatSoon: '🧊 빨리 먹기',
       expToday: '오늘', expGone: '지남', expIn: (n) => `${n}일`,
       kids: '칭찬 스티커', noReward: '보상 미정', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
@@ -320,8 +318,7 @@ img { display: block; }
       planToday: 'Heute', planTomorrow: 'Morgen', am: 'Vorm.', pm: 'Nachm.', dayOff: 'Frei', atHome: 'Zuhause',
       cal: 'Termine', noEvents: 'Keine Termine in den nächsten 2 Wochen', noCal: 'Google Kalender in der Familien-App verbinden',
       todo: 'Aufgaben', noTodos: 'Alles erledigt 🎉', more: (n) => `+ ${n} weitere`, doneMsg: 'Als erledigt markiert', undo: 'Rückgängig',
-      meals: 'Abendessen', dinnerToday: 'Heute Abend', lunch: 'Mittag', kidTag: 'Kinder', noDinner: 'Noch nicht geplant', noMeal: '–',
-      shop: 'Einkaufen', noShop: 'Nichts zu kaufen', stores: { super: 'Supermarkt', asia: 'Asia-Markt', online: 'Internet' }, eatSoon: '🧊 Bald essen',
+      food: 'Heute zu essen', lunch: 'Mittag', dinner: 'Abend', kidTag: 'Kinder', noMeal: 'Noch nicht geplant', eatSoon: '🧊 Bald essen',
       expToday: 'heute', expGone: 'abgelaufen', expIn: (n) => `${n} T.`,
       kids: 'Sticker', noReward: 'Belohnung offen', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
@@ -475,16 +472,7 @@ img { display: block; }
     render();
   }
 
-  /* 장보기 · 아이들 (같은 가족 문서) */
-  const storeName = (s) => (s.key && L().stores[s.key]) || s.name || '';
-  function shopping() {
-    const d = famData();
-    const stores = Object.values(d.stores || {});
-    const rank = (s) => (['super', 'asia', 'online'].indexOf(s.id) + 1) || 9;
-    const items = Object.values(d.items || {}).filter((i) => i && i.name);
-    return stores.sort((a, b) => rank(a) - rank(b) || String(a.id).localeCompare(String(b.id)))
-      .map((s) => ({ s, items: items.filter((i) => i.store === s.id) })).filter((x) => x.items.length);
-  }
+  /* 빨리 먹을 것 (장보기 앱의 냉장고 칸) · 아이들 (같은 가족 문서) */
   function eatSoon() {
     const lim = keyOf(addDays(new Date(), 3));
     return Object.values(famData().stock || {}).filter((x) => x && x.name && x.expires && x.expires <= lim && x.loc !== 'freezer')
@@ -855,34 +843,22 @@ img { display: block; }
     const grown = items.filter((x) => !x.kid).map((x) => x.text), kids = items.filter((x) => x.kid).map((x) => x.text);
     return [grown.join(' · '), kids.length ? [grown.length ? ' ' : '', h('span', { class: 'kid-tag', text: L().kidTag }), kids.join(' · ')] : null];
   }
-  function mealCard() {
-    const now = new Date(), k = todayKey();
-    const dinner = mealOn(k, 'dinner'), lunch = mealOn(k, 'lunch');
-    const rows = [];
-    for (let i = 1; i <= 6; i++) {
-      const d = addDays(now, i), items = mealOn(keyOf(d), 'dinner');
-      rows.push(h('li', { class: 'meal-row' }, h('span', { class: 'd', text: i === 1 ? L().tomorrow : L().dateShort(d) }),
-        h('span', {}, items.length ? mealLine(items) : h('span', { class: 'muted', text: L().noMeal }))));
-    }
-    return card('meal', '🍲', 'var(--c-meal)', L().dinnerToday, null, APPS.meals,
-      h('div', { class: 'dinner-now' }, dinner.length ? mealLine(dinner) : h('span', { class: 'muted', text: L().noDinner })),
-      lunch.length ? h('div', { class: 'lunch' }, `${L().lunch}: `, mealLine(lunch)) : null,
-      h('ul', { class: 'fit' }, ...rows), moreEl());
-  }
-
-  function shopCard() {
-    const groups = shopping(), soon = eatSoon(), k = todayKey();
-    const total = groups.reduce((n, g) => n + g.items.length, 0);
-    const list = h('ul', { class: 'fit' }, ...groups.map((g) => h('li', { class: 'store' },
-      h('div', { class: 'store-h' }, storeName(g.s), ' ', h('b', { text: String(g.items.length) })),
-      h('div', { class: 'items' }, ...g.items.slice(0, 14).map((i) => h('span', { class: 'item', text: i.name }))))));
-    const fridge = soon.length ? h('div', { class: 'fridge' }, h('b', { text: L().eatSoon }), ' ',
-      soon.slice(0, 5).map((x) => {
+  // 오늘 메뉴: 우리가족 앱처럼 그날 점심·저녁만. 1시 전에는 점심, 1시부터는 저녁을 밝게
+  function foodCard() {
+    const k = todayKey(), cur = new Date().getHours() < 13 ? 'lunch' : 'dinner';
+    const row = (meal, ic) => {
+      const items = mealOn(k, meal).filter((x) => x && x.text);
+      return h('div', { class: 'food-row' + (meal === cur ? ' now' : '') }, h('span', { class: 'ic', text: ic }),
+        h('div', { style: 'min-width:0' }, h('div', { class: 'lb', text: L()[meal] }),
+          h('div', { class: 'mn' + (items.length ? '' : ' none') }, items.length ? mealLine(items) : L().noMeal)));
+    };
+    const soon = eatSoon();
+    const soonEl = soon.length ? h('div', { class: 'soon' }, h('b', { text: L().eatSoon }),
+      ...soon.slice(0, 6).map((x) => {
         const n = Math.round((fromKey(x.expires) - fromKey(k)) / 864e5);
-        return `${x.name} (${n < 0 ? L().expGone : n === 0 ? L().expToday : L().expIn(n)})`;
-      }).join(' · ')) : null;
-    return card('shop', '🛒', 'var(--c-shop)', L().shop, total ? String(total) : null, APPS.shop,
-      total ? [list, moreEl()] : h('div', { class: 'empty', text: L().noShop }), fridge);
+        return h('span', {}, x.name, h('i', { text: n < 0 ? L().expGone : n === 0 ? L().expToday : L().expIn(n) }));
+      })) : null;
+    return card('food', '🍽️', 'var(--c-meal)', L().food, null, APPS.meals, row('lunch', '🍱'), row('dinner', '🍲'), soonEl);
   }
 
   function kidsCard() {
@@ -923,7 +899,7 @@ img { display: block; }
   function renderGrid() {
     const grid = $('#grid');
     if (!canShow()) { grid.replaceChildren(S.ready ? gateView() : h('div')); return; }
-    grid.replaceChildren(planCard(), calCard(), todoCard(), mealCard(), shopCard(), kidsCard());
+    grid.replaceChildren(planCard(), calCard(), todoCard(), foodCard(), kidsCard());
     requestAnimationFrame(fitCards);
   }
   function render() {
@@ -997,7 +973,7 @@ img { display: block; }
       for (const k of ['davin', 'arin']) if (d.kids && d.kids[k]) kids[k] = { cfg: d.kids[k].cfg || {}, stickers: d.kids[k].stickers || {}, money: d.kids[k].money || null };
       fam = {
         todos: d.todos || {}, routine: d.routine || {}, routineBase: d.routineBase || {}, vacations: d.vacations || {}, meals, kids,
-        stores: d.stores || {}, items: d.items || {}, stock: d.stock || {},
+        stock: d.stock || {},
       };
       store(FAM_KEY, fam);
       render();
@@ -1075,7 +1051,7 @@ img { display: block; }
       routine: { [k(0)]: { family: { am: '', pm: '할머니 영상통화' }, mom: { am: '@work', pm: '치과' }, dad: { am: '@work', pm: '@work' }, davin: { am: '@school', pm: '@tkd' }, arin: { am: '@kinder', pm: '@music' } } },
       routineBase: {}, vacations: {},
       meals: {
-        [k(0)]: { dinner: [{ text: '된장찌개' }, { text: '계란말이' }, { text: '어린이 김밥', kid: true }] },
+        [k(0)]: { lunch: [{ text: 'Brezen' }, { text: 'Weißwurst' }], dinner: [{ text: '된장찌개' }, { text: '계란말이' }, { text: '어린이 김밥', kid: true }] },
         [k(1)]: { dinner: [{ text: 'Spaghetti Bolognese' }] }, [k(2)]: { dinner: [{ text: '닭볶음탕' }] },
         [k(3)]: { dinner: [{ text: 'Kartoffelsuppe' }, { text: '빵' }] }, [k(5)]: { dinner: [{ text: '불고기' }, { text: '잡채' }] },
       },
