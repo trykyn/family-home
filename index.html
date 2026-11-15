@@ -574,6 +574,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
 .del-on .wk-slot.got::after, .del-on .slot.wk.full::after, .del-on .big.full::after { content: '✕'; position: absolute; top: -6px; right: -6px; width: 24px; height: 24px; border-radius: 50%; background: #E5484D; color: #fff; font: 700 14px/24px system-ui, sans-serif; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,.25); z-index: 2; }
 .stk-card.room { width: min(96vw, 1120px); }
 .stk-card.room .pr-room { aspect-ratio: auto; height: min(54vh, 560px); }
+.stk-card.room .pr-ms:not([hidden]) + .pr-room { height: min(30vh, 400px); }
 .stk-top .room-btn { height: 46px; padding: 0 18px; border-radius: 23px; background: #fff; color: #6B3E12; font: 700 18px/1 var(--font-body, inherit); flex: none; border: 3px solid transparent; }
 .stk-top .room-btn[aria-pressed="true"] { border-color: #FF8A3D; background: #FFF0D6; }
 .stk-top .del-btn { height: 46px; min-width: 46px; padding: 0 14px; border-radius: 23px; background: #fff; color: var(--muted); font-size: 20px; flex: none; }
@@ -1615,7 +1616,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   }
 
   /* ───────── ⭐ 칭찬 스티커판 (우리가족 앱과 같은 자료: kids.{k}.stickers.{id} = { at, d, why, by }) ─────────
-     그림은 우리가족 앱과 똑같이. 🥚 포켓몬 방(../our-family/poke-room.js): 다빈 · 아린은 🥚 버튼, 엄마는 탭을 누르면 바로 방 (엄마 미션도 방 안에). 잠금(kids.lock)이 켜져 있으면 엄마·아빠 비밀번호 */
+     그림은 우리가족 앱과 똑같이. 🥚 포켓몬 방(../our-family/poke-room.js): 다빈 · 아린은 🥚 버튼, 엄마 · 아빠는 탭을 누르면 바로 방 (미션도 방 안에). 잠금(kids.lock)이 켜져 있으면 엄마·아빠 비밀번호 */
   // 스티커 그림 · 칭찬 이유 · 소리 · 개수 규칙은 우리가족 앱과 함께 쓰는 공통 파일(../our-family/stickers-shared.js)에서 가져옴.
   // 그 파일을 고치면 두 앱에 한 번에 적용됨. 못 불러왔으면(처음 켤 때 인터넷이 없는 등) 스티커판만 쉬고 나머지는 그대로
   const FS = window.FamilyStickers || null;
@@ -1674,12 +1675,12 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     if (!stk) return;
     const k = stk.k, c = kidCfg(k);
     const reward = kidText(c.reward, c.rsrc, c.rtr);
-    const tabs = h('div', { class: 'stk-tabs' }, ...['davin', 'arin', 'mom'].map((x) => h('button', { type: 'button', 'aria-pressed': String(x === k), style: `--mc:${WHO[x]}`,
+    const tabs = h('div', { class: 'stk-tabs' }, ...['davin', 'arin', 'mom', 'dad'].map((x) => h('button', { type: 'button', 'aria-pressed': String(x === k), style: `--mc:${WHO[x]}`,
       onclick: () => { roomOff(); stk = { k: x, pop: null }; drawStickers(); } }, h('img', { src: avatarOf(x), alt: '' }), L().who[x])));
-    const showRoom = !!window.PokeRoom && (k === 'mom' || !!stk.room);
+    const grown = k === 'mom' || k === 'dad', showRoom = !!window.PokeRoom && (grown || !!stk.room);
     const head = h('div', { class: 'stk-top', style: `--mc:${WHO[k]}` }, tabs,
       h('div', { class: 'stk-rw' }, h('span', { text: showRoom ? '' : `🎁 ${reward || L().noReward}` })),
-      k !== 'mom' && window.PokeRoom ? h('button', { type: 'button', class: 'room-btn', 'aria-pressed': String(showRoom), text: showRoom ? L().roomBack : L().roomOpen,
+      !grown && window.PokeRoom ? h('button', { type: 'button', class: 'room-btn', 'aria-pressed': String(showRoom), text: showRoom ? L().roomBack : L().roomOpen,
         onclick: () => { stk.room = !stk.room; stk.del = false; if (!stk.room) roomOff(); SND.tap(2); drawStickers(); } }) : null,
       showRoom ? null : h('button', { type: 'button', class: 'del-btn' + (stk.del ? ' on' : ''), 'aria-label': L().delMode, text: stk.del ? L().delDone : '🗑',
         onclick: () => { if (stk.del) { stk.del = false; drawStickers(); } else parentOnly(() => { stk.del = true; drawStickers(); }); } }),
@@ -1723,7 +1724,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     }
     $('#stk-card').replaceChildren(head, body);
     $('#stk-card').className = `stk-card k-${k}` + (showRoom ? ' room' : '');
-    if (showRoom && !roomCtl) roomCtl = window.PokeRoom.mount(roomBox, { kid: k, lang: () => lang, data: () => kidOf(k), big: true, snd: SND, missions: k === 'mom',
+    if (showRoom && !roomCtl) roomCtl = window.PokeRoom.mount(roomBox, { kid: k, lang: () => lang, data: () => kidOf(k), big: true, snd: SND, missions: grown,
       write: (path, v) => { kidSet([k, ...path], v); clearTimeout(roomRedraw); roomRedraw = setTimeout(() => { if (stk) drawStickers(); renderGrid(); }, 0); } });
   }
   // 미션 ✓: 가족 문서 kids.{k}.mdone.{오늘}.{미션} (우리가족 앱과 같이 보임). 바로 보이게 이 기기에서도 먼저 바꿈
