@@ -84,7 +84,7 @@ img { display: block; }
 .w-umb { display: flex; flex-direction: column; align-items: center; flex: none; }
 .w-umb .e { font-size: 44px; line-height: 1.05; transform-origin: 50% 90%; animation: swing 2.2s ease-in-out infinite; }
 .w-umb b { font: 400 15px/1 var(--font-display); color: var(--deep); }
-.w-kid { margin-left: auto; align-self: flex-end; gap: 0; display: flex; align-items: center; gap: 10px; flex: none; position: relative; }
+.w-kid { margin-left: auto; align-self: flex-end; display: flex; align-items: flex-end; gap: 0; flex: none; position: relative; } /* 네 식구 발끝을 한 줄에 */
 .w-kid .kid-fig + .kid-fig { margin-left: -34px; }
 .w-kid { padding-right: 10px; }
 .kid-fig { overflow: visible; }
@@ -96,7 +96,7 @@ img { display: block; }
 .w-hilo svg { width: 16px; height: 16px; }
 .w-umb .e { font-size: 36px; }
 .w-umb b { font-size: 13px; }
-.w-kid .kid-fig:nth-child(2) { animation-delay: -.8s; } .w-kid .kid-fig:nth-child(3) { animation-delay: -1.6s; } .w-kid .kid-fig:nth-child(4) { animation-delay: -2.4s; }
+.w-kid .kid-fig { animation: none; }
 .w-kid .kid-fig.dad { height: 150px; }
 .w-kid .kid-fig.mom { height: 138px; }
 .w-kid .kid-fig { height: 116px; }
@@ -276,6 +276,9 @@ img { display: block; }
 .pk-top h2 { margin: 0; font: 400 38px/1.1 var(--font-display); }
 .pk-top small { display: block; font: 500 16px var(--font-body); color: var(--muted); margin-top: 4px; }
 .pk-top .x { margin-left: auto; width: 48px; height: 48px; border-radius: 50%; background: var(--bg); font-size: 22px; color: var(--muted); }
+.pk-empty { width: min(92vw, 560px); text-align: center; }
+.pk-none { font: 400 26px var(--font-display); margin: 10px 0 6px; }
+.pk-hint { color: var(--muted); font-size: 15px; margin: 0 0 6px; }
 .pk-people { display: flex; flex-wrap: wrap; gap: 14px; }
 .pk-who { flex: 1 1 260px; min-width: 0; border-radius: 24px; padding: 14px; background: color-mix(in srgb, var(--mc) 12%, white); }
 .pk-who .hd { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
@@ -711,7 +714,7 @@ body.theme-bento { background: #FFF8EF; }
       expToday: '오늘', expGone: '지남', expIn: (n) => `${n}일`,
       kids: '주간 미션', noReward: '선물 미정', giveBtn: '⭐ 칭찬 스티커 주기', giveWhy: '무엇을 잘했나요?', tapBox: '상자를 톡톡톡 눌러 봐!', giveStick: '⭐ 붙이기', back: '← 스티커판으로', doneAll: (n) => `🎉 큰 스티커 ${n}장 다 모았어요!`, newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 선물 상자 열기!', msGiftTitle: '🎉 오늘 미션 다 했어요!', stkYay: '와! 스티커가 나왔어요!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', bigs: '큰 스티커', allDone: '🎁 선물 받을 차례!',
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
-      packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', wakeOff: '끄기', wakeAll: '하루 종일', wakeTime: '시간 정하기', wakeFrom: '시작 시간', wakeTo: '끝 시간', wakeFromTo: '부터', wakeUntil: '까지', wakeNowOn: '지금 화면을 켜 두고 있어요', wakeNowOff: '지금은 켜 두지 않아요 (패드 자동 잠금대로 꺼져요)', wakeNote: '정한 시간이 지나면 패드 설정의 ‘자동 잠금’ 시간이 지난 뒤 화면이 꺼져요. 그래서 패드 자동 잠금은 ‘안 함’ 말고 2~5분으로 해 두세요. 꺼진 화면은 웹 화면이 스스로 켤 수 없어서, 아침에는 화면을 한 번 눌러 깨워 주세요.', lang: 'DE',
+      packNone: '챙길 준비물이 없어요 🙂', packHow: '우리가족 앱 → 오늘 일정 아래 🎒 준비물에서 넣을 수 있어요', packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', wakeOff: '끄기', wakeAll: '하루 종일', wakeTime: '시간 정하기', wakeFrom: '시작 시간', wakeTo: '끝 시간', wakeFromTo: '부터', wakeUntil: '까지', wakeNowOn: '지금 화면을 켜 두고 있어요', wakeNowOff: '지금은 켜 두지 않아요 (패드 자동 잠금대로 꺼져요)', wakeNote: '정한 시간이 지나면 패드 설정의 ‘자동 잠금’ 시간이 지난 뒤 화면이 꺼져요. 그래서 패드 자동 잠금은 ‘안 함’ 말고 2~5분으로 해 두세요. 꺼진 화면은 웹 화면이 스스로 켤 수 없어서, 아침에는 화면을 한 번 눌러 깨워 주세요.', lang: 'DE',
       signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
       signIn: '구글로 로그인', houseTitle: '가족 코드', houseText: '우리가족 앱 설정에 있는 가족 코드를 넣어 주세요.', houseCode: '가족 코드', join: '연결', houseBad: '가족 코드를 찾지 못했어요', signOut: '로그아웃', loadErr: '불러오지 못했어요. 인터넷 연결을 확인해 주세요.',
     },
@@ -728,7 +731,7 @@ body.theme-bento { background: #FFF8EF; }
       expToday: 'heute', expGone: 'abgelaufen', expIn: (n) => `${n} T.`,
       kids: 'Wochenmission', noReward: 'Geschenk offen', giveBtn: '⭐ Sticker geben', giveWhy: 'Wofür?', tapBox: 'Tipp dreimal aufs Geschenk!', giveStick: '⭐ Aufkleben', back: '← Zurück zum Stickerbogen', doneAll: (n) => `🎉 Alle ${n} großen Sticker!`, newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Geschenk öffnen!', msGiftTitle: '🎉 Heute alles geschafft!', stkYay: 'Juhu! Ein Sticker!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', bigs: 'große Sticker', allDone: '🎁 Zeit fürs Geschenk!',
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
-      packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', wakeOff: 'Aus', wakeAll: 'Immer', wakeTime: 'Zeiten', wakeFrom: 'Von', wakeTo: 'Bis', wakeFromTo: 'bis', wakeUntil: '', wakeNowOn: 'Der Bildschirm bleibt gerade an', wakeNowOff: 'Gerade nicht (das iPad sperrt sich wie eingestellt)', wakeNote: 'Außerhalb der Zeit geht der Bildschirm nach der „Automatischen Sperre“ des iPads aus – stell sie dafür auf 2–5 Minuten statt „Nie“. Ein ausgeschalteter Bildschirm kann sich nicht selbst einschalten; morgens einmal antippen.', lang: '한',
+      packNone: 'Nichts mitzunehmen 🙂', packHow: 'In der Familien-App unter „Heute“ → 🎒 Mitnehmen eintragen', packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', wakeOff: 'Aus', wakeAll: 'Immer', wakeTime: 'Zeiten', wakeFrom: 'Von', wakeTo: 'Bis', wakeFromTo: 'bis', wakeUntil: '', wakeNowOn: 'Der Bildschirm bleibt gerade an', wakeNowOff: 'Gerade nicht (das iPad sperrt sich wie eingestellt)', wakeNote: 'Außerhalb der Zeit geht der Bildschirm nach der „Automatischen Sperre“ des iPads aus – stell sie dafür auf 2–5 Minuten statt „Nie“. Ein ausgeschalteter Bildschirm kann sich nicht selbst einschalten; morgens einmal antippen.', lang: '한',
       signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
       signIn: 'Mit Google anmelden', houseTitle: 'Familiencode', houseText: 'Den Familiencode findest du in den Einstellungen der Familien-App.', houseCode: 'Familiencode', join: 'Verbinden', houseBad: 'Familiencode nicht gefunden', signOut: 'Abmelden', loadErr: 'Laden fehlgeschlagen. Bitte Internet prüfen.',
     },
@@ -1071,7 +1074,7 @@ body.theme-bento { background: #FFF8EF; }
     if (o.glasses) P.push('<g fill="#263238"><rect x="61" y="77" width="17" height="12" rx="4.5"/><rect x="82" y="77" width="17" height="12" rx="4.5"/></g><path d="M78 81h4" stroke="#263238" stroke-width="2.4"/>');
     // 우산
     if (o.umbrella) P.push(`<path d="M112 46L${hand[0]} ${hand[1]}" stroke="#555" stroke-width="3.2" stroke-linecap="round"/><path d="M${hand[0]} ${hand[1]}q1 9-7 9" fill="none" stroke="#555" stroke-width="3.2" stroke-linecap="round"/><path d="M70 46Q70 5 112 5Q154 5 154 46Q143 38 133 46Q122 38 112 46Q101 38 91 46Q80 38 70 46Z" fill="#2F7FC1"/><path d="M112 5Q100 22 91 46M112 5Q124 22 133 46" fill="none" stroke="#8CCFFF" stroke-width="2.5"/>`);
-    return `<svg class="kid-fig" viewBox="0 0 160 250" role="img" aria-label="${L().clothes}">${P.join('')}</svg>`;
+    return `<svg class="kid-fig" viewBox="0 0 160 240" role="img" aria-label="${L().clothes}">${P.join('')}</svg>`;
   }
 
   // 엄마·아빠 (어른, 가족 그림 얼굴처럼): 아빠 = 노란 머리(독일), 엄마 = 검은 긴 머리(한국). 날씨 옷은 아이들과 같은 기준
@@ -1142,7 +1145,7 @@ body.theme-bento { background: #FFF8EF; }
       P.push(`<path d="M${cx} 22L${hx} ${hy}" stroke="#555" stroke-width="3.2" stroke-linecap="round"/><path d="M${hx} ${hy}q${dad ? 1 : -1} 9 ${dad ? -7 : 7} 9" fill="none" stroke="#555" stroke-width="3.2" stroke-linecap="round"/>`
         + `<path d="M${cx - 44} 22Q${cx - 44} -18 ${cx} -18Q${cx + 44} -18 ${cx + 44} 22Q${cx + 33} 14 ${cx + 22} 22Q${cx + 11} 14 ${cx} 22Q${cx - 11} 14 ${cx - 22} 22Q${cx - 33} 14 ${cx - 44} 22Z" fill="${col}"/>`);
     }
-    return `<svg class="kid-fig ${who}" viewBox="0 -20 160 320" role="img" aria-label="${L().clothes}">${P.join('')}</svg>`;
+    return `<svg class="kid-fig ${who}" viewBox="0 -20 160 305" role="img" aria-label="${L().clothes}">${P.join('')}</svg>`; // 아래 끝 = 신발 바닥 (아이들 그림과 같게)
   }
 
   // 여자아이 (공주 느낌): 긴 머리 + 티아라/리본, 드레스·튤 치마, 메리제인 구두, 분홍 우산(왼손). 날씨에 맞는 옷은 남자아이와 같은 기준
@@ -1206,7 +1209,7 @@ body.theme-bento { background: #FFF8EF; }
     if (o.glasses) P.push('<g fill="#C2185B"><path d="M62 80c0-4 6-6 8-1 2-5 8-3 8 1 0 5-8 9-8 9s-8-4-8-9z"/><path d="M82 80c0-4 6-6 8-1 2-5 8-3 8 1 0 5-8 9-8 9s-8-4-8-9z"/></g>');
     // 분홍 우산 (왼손, 프릴)
     if (o.umbrella) P.push(`<path d="M48 46L${hand[0]} ${hand[1]}" stroke="#7A5560" stroke-width="3.2" stroke-linecap="round"/><path d="M${hand[0]} ${hand[1]}q-1 9 7 9" fill="none" stroke="#7A5560" stroke-width="3.2" stroke-linecap="round"/><path d="M6 46Q6 5 48 5Q90 5 90 46Q79 38 69 46Q58 38 48 46Q37 38 27 46Q16 38 6 46Z" fill="#FF8AB3"/><path d="M8 44Q16 52 27 46Q37 52 48 46Q58 52 69 46Q79 52 88 44" fill="none" stroke="#fff" stroke-width="3"/><path d="M48 5Q36 22 27 46M48 5Q60 22 69 46" fill="none" stroke="#FFC4DD" stroke-width="2.5"/><circle cx="48" cy="4" r="3" fill="#FFD54A"/>`);
-    return `<svg class="kid-fig girl" viewBox="0 0 160 250" role="img" aria-label="${L().clothes}">${P.join('')}</svg>`;
+    return `<svg class="kid-fig girl" viewBox="0 0 160 240" role="img" aria-label="${L().clothes}">${P.join('')}</svg>`;
   }
 
   /* ── 날씨 칸 배경: 계절 풍경 + 지금 날씨 움직임 (비·눈·천둥·안개·구름·해·달) ── */
@@ -1371,14 +1374,22 @@ body.theme-bento { background: #FFF8EF; }
   function packButton() {
     if (!canShow()) return null;
     const k = packDay(), items = packItems(k), done = packDone(k);
-    if (!items.length) return null;
     const left = items.filter((x) => !done.includes(x.id)).length;
     return h('button', { type: 'button', class: 'tool pack', title: L().packOpen, onclick: () => openPack(k) }, '🎒', left ? h('i', { text: String(left) }) : null);
   }
   function openPack(k) {
     const items = packItems(k);
     const box = $('#pack');
-    if (!items.length) { box.hidden = true; return; }
+    if (!items.length) { // 챙길 게 없는 날
+      const close = () => { box.hidden = true; box.replaceChildren(); };
+      box.replaceChildren(h('div', { class: 'pk-card pk-empty', role: 'dialog' },
+        h('div', { class: 'pk-top' }, h('span', { class: 'bag', text: '🎒' }),
+          h('div', {}, h('h2', { text: k === todayKey() ? L().packToday : L().packTomorrow }), h('small', { text: L().dateLong(fromKey(k)) })),
+          h('button', { type: 'button', class: 'x', 'aria-label': '✕', text: '✕', onclick: close })),
+        h('p', { class: 'pk-none', text: L().packNone }), h('p', { class: 'pk-hint', text: L().packHow })));
+      box.hidden = false; box.onclick = (e) => { if (e.target === box) close(); };
+      return;
+    }
     const done = new Set(packDone(k));
     const isToday = k === todayKey();
     const groups = PACK_WHO.map((w) => [w, items.filter((x) => x.who === w)]).filter(([, xs]) => xs.length);
