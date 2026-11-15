@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#F3F8FC">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -38,7 +38,10 @@
   --gap: 14px;
   color-scheme: light;
 }
-* { box-sizing: border-box; }
+/* 앱 고정: 두 번 터치·두 손가락으로 확대되지 않게, 길게 눌러도 글자 선택·메뉴가 안 뜨게, 화면이 튕기지 않게 */
+* { box-sizing: border-box; touch-action: pan-x pan-y; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+input, textarea { -webkit-user-select: text; user-select: text; }
+html, body { overscroll-behavior: none; }
 html, body { margin: 0; }
 body {
   background: var(--bg); color: var(--ink); font: 16px/1.45 var(--font-body);
@@ -1942,6 +1945,10 @@ body.theme-bento { background: #FFF8EF; }
     app.style.transform = `scale(${z})`;
   }
   fitZoom();
+  // 아이패드 사파리는 user-scalable=no 를 무시하기도 해서 두 손가락 확대를 따로 막음 (우리가족 앱과 같음)
+  for (const type of ['gesturestart', 'gesturechange', 'gestureend']) document.addEventListener(type, (e) => e.preventDefault(), { passive: false });
+  document.addEventListener('touchmove', (e) => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  // 두 번 터치 확대는 CSS touch-action 으로 막음 (선물 상자 톡톡톡처럼 빠른 터치는 그대로 됨)
   if (DEMO) { demoSetup(); S.ready = true; window.__kid = { kidSVG, girlSVG, dressFor, personIcon }; }
   render();
   // 글꼴이 늦게 오면 줄 높이가 바뀌므로 카드 칸 맞춤을 다시
