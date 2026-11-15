@@ -447,7 +447,7 @@ body { overflow: hidden; }
 .side .dinner-box { flex: 1; align-self: stretch; }
 .side .tools { flex-direction: row; justify-content: flex-end; gap: 8px; }
 .side .tool { width: 46px; height: 40px; }
-#grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 236px;
+#grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, .62fr) minmax(0, 1.12fr); grid-template-rows: minmax(0, 1fr) 342px;
   grid-template-areas: "plan cal todo" "plan cal kids"; }
 .card { padding: 16px 18px 14px; border-radius: 24px; }
 .c-head { margin-bottom: 12px; }
@@ -570,6 +570,52 @@ body.theme-bento { background: #FFF8EF; }
 .theme-bento .todo + .todo { border-top: 0; }
 .theme-bento .kid + .kid { border-top-color: rgba(0,0,0,.06); }
 .theme-bento .bar { background: #fff; }
+
+/* ═══ 오늘 일정 크게 · 이번 주 일정 좁게(스크롤) · 주간 미션 크게 ═══ */
+.pg { gap: 10px 10px; }
+.pg .who img { width: 56px; height: 56px; box-shadow: 0 0 0 3.5px var(--mc); }
+.pg .who b { font: 400 18px/1.1 var(--font-display); }
+.pg .half { font-size: 32px; }
+.pg .half small { font-size: 12px; }
+.pg .slot { padding: 9px 4px 7px; border-radius: 20px; }
+.pg .slot .e { font-size: 40px; }
+.pg .slot .e.two { font-size: 32px; }
+.pg .slot.home .e { font-size: 32px; }
+.pg .slot .t { font-size: 13px; font-weight: 600; margin-top: 4px; }
+.ttb .tt-who { width: 42px; }
+.ttb .tt-who img { width: 38px; height: 38px; }
+.ttb .per .e { font-size: 26px; }
+.ttb .per .t { font-size: 12px; }
+.ttb .per .n { font-size: 12px; }
+.ttb .end { font-size: 14px; }
+.ttb .end .e { font-size: 24px; }
+.pkr button { font-size: 15px; padding: 4px 11px 4px 4px; }
+.pkr button img { width: 24px; height: 24px; }
+.pkr button .e { font-size: 21px; }
+.pkr .pk-ic { font-size: 26px; }
+#card-cal .c-title { font-size: 19px; }
+#card-cal .c-body { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.cal-scroll { list-style: none; margin: 0; padding: 0 2px 6px 0; }
+.cal-scroll .ev { display: block; font-size: 15px; padding: 4px 0 4px 10px; }
+.cal-scroll .ev .tm { display: block; font-size: 13px; min-width: 0; }
+.cal-scroll .ev .tt { display: block; white-space: normal; overflow: visible; }
+.cal-scroll .ev-day { font-size: 13px; }
+.kid { grid-template-columns: 62px 1fr; gap: 12px; padding: 8px 0; }
+.kid img { width: 62px; height: 62px; box-shadow: 0 0 0 3.5px var(--mc); }
+.kid .nm { font-size: 24px; gap: 10px; }
+.nm b.gold { font-size: 17px; }
+.kid .money { font-size: 15px; }
+.kline { margin-top: 6px; }
+.wk-mini { gap: 4px; }
+.wk-mini i { width: 32px; height: 32px; display: grid; place-items: center; border-width: 2px; flex: none; }
+.wk-mini i em { font: 400 14px/1 var(--font-display); font-style: normal; color: color-mix(in srgb, var(--mc) 70%, #666); }
+.wk-mini i.missed em { opacity: .6; }
+.ms-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.ms-row span { font-size: 24px; line-height: 1; filter: grayscale(1); opacity: .3; }
+.ms-row span.on { filter: none; opacity: 1; }
+.ms-row .ms-badge { margin-left: auto; font-size: 17px; color: var(--muted); }
+.ms-row .ms-badge.ready { font-size: 28px; }
+.ms-row .ms-badge.got { font-size: 22px; }
 </style>
 </head>
 <body>
@@ -1426,7 +1472,7 @@ body.theme-bento { background: #FFF8EF; }
   function calCard() {
     const now = new Date(), k = keyOf(now), k1 = keyOf(addDays(now, 1));
     const evs = calEvents(k, keyOf(addDays(now, 6))).filter((e) => !e.endAt || e.endAt > now); // 오늘부터 일주일
-    const list = h('ul', { class: 'fit' });
+    const list = h('ul', { class: 'cal-scroll' });
     let last = '';
     for (const e of evs) {
       const dk = e.s < k ? k : e.s;
@@ -1434,7 +1480,7 @@ body.theme-bento { background: #FFF8EF; }
       list.append(h('li', { class: 'ev', style: `--ec:${e.color}` }, h('span', { class: 'tm', text: e.time || '◦' }), h('span', { class: 'tt', text: e.title })));
     }
     return card('cal', '📅', 'var(--c-cal)', L().cal, null, APPS.family + '#calendar',
-      evs.length ? [list, moreEl()] : h('div', { class: 'empty', text: cal.none ? L().noCal : L().noEvents }));
+      evs.length ? list : h('div', { class: 'empty', text: cal.none ? L().noCal : L().noEvents }));
   }
 
   function todoCard() {
@@ -1475,7 +1521,8 @@ body.theme-bento { background: #FFF8EF; }
   function weekMini(k) {
     if (!FS) return null;
     const W = FS.weekState(kidOf(k), k, todayKey()), G = FS.goldState(kidOf(k), k);
-    return h('span', { class: 'wk-mini' }, ...W.days.map((x) => h('i', { class: x.status, html: x.got ? stickerSVG(k, x.d) : '' })));
+    const labels = FS.WEEK_LABEL[lang] || FS.WEEK_LABEL.ko;
+    return h('span', { class: 'wk-mini' }, ...W.days.map((x) => h('i', { class: x.status, html: x.got ? stickerSVG(k, x.d) : `<em>${labels[x.i]}</em>` })));
   }
   function goldMini(k) {
     if (!FS) return null;
@@ -1486,7 +1533,8 @@ body.theme-bento { background: #FFF8EF; }
     if (!FS) return null;
     const M = FS.missionState(kidOf(k), k, todayKey());
     if (!M.total) return null;
-    return h('b', { class: 'ms-badge' + (M.got ? ' got' : M.all ? ' ready' : ''), text: M.got ? '✅' : M.all ? '🎁' : `🎯 ${M.done}/${M.total}` });
+    return h('div', { class: 'ms-row' }, ...M.list.map((x) => h('span', { class: M.day[x.id] ? 'on' : '', text: FS.missionIcon(x) })),
+      h('b', { class: 'ms-badge' + (M.got ? ' got' : M.all ? ' ready' : ''), text: M.got ? '✅' : M.all ? '🎁' : `${M.done}/${M.total}` }));
   }
   function kidsCard() {
     const rows = ['davin', 'arin'].map((k) => {
@@ -1497,7 +1545,7 @@ body.theme-bento { background: #FFF8EF; }
         h('img', { src: avatarOf(k), alt: '' }),
         h('div', { style: 'min-width:0' },
           h('div', { class: 'nm' }, L().who[k], goldMini(k), money != null ? h('span', { class: 'money', text: `💶 ${fmtMoney(money)}` }) : null),
-          h('div', { class: 'kline' }, weekMini(k), missionMini(k))));
+          h('div', { class: 'kline' }, weekMini(k)), missionMini(k)));
     });
     return card('kids', '🎯', 'var(--c-kids)', L().kids, null, null, h('ul', { class: 'fit' }, ...rows));
   }
