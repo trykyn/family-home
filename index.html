@@ -103,7 +103,7 @@ img { display: block; }
 .w-kid .kid-fig.girl { height: 104px; }
 .kid-fig { height: 146px; width: auto; display: block; cursor: pointer; animation: bob 3.2s ease-in-out infinite; }
 .kid-fig.wiggle { animation: wiggle .6s ease-in-out; }
-.w-when { position: absolute; right: 12px; bottom: -13px; white-space: nowrap; font: 400 14px/1 var(--font-display); padding: 5px 10px; border-radius: 99px; background: #FFF1B8; color: #8A6A00; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+.w-when { position: absolute; top: 8px; left: calc(50% - 5px); transform: translateX(-50%); z-index: 3; white-space: nowrap; font: 400 13px/1 var(--font-display); padding: 4px 9px; border-radius: 99px; background: #FFF1B8; color: #8A6A00; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
 .w-empty { color: var(--muted); }
 @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 @keyframes wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
@@ -1350,7 +1350,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
           fig.addEventListener('click', () => { fig.classList.remove('wiggle'); void fig.getBBox(); fig.classList.add('wiggle'); setTimeout(() => fig.classList.remove('wiggle'), 700); });
           return fig;
         });
-        kid = h('div', { class: 'w-kid' }, ...figs);
+        kid = h('div', { class: 'w-kid' }, ...figs, o.tomorrow ? h('span', { class: 'w-when', text: '👕 ' + L().clothesTomorrow }) : null); // 엄마 · 아빠 사이, 아이들 머리 위
       }
       weather = h('section', { class: 'weather', 'aria-label': wName(c.weather_code) }, sceneEl(), h('div', { class: 'w-panel' },
         h('div', { class: 'w-now' },
@@ -1359,8 +1359,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
         h('div', { class: 'w-hilo' },
           h('div', { class: 'hi', title: L().wHi }, tri(true), `${Math.round(d.temperature_2m_max[0])}°`),
           h('div', { class: 'lo', title: L().wLo }, tri(false), `${Math.round(d.temperature_2m_min[0])}°`)),
-        o && o.umbrella ? h('div', { class: 'w-umb' }, h('span', { class: 'e', text: '☂️' }), h('b', { text: L().umbrella })) : null,
-        o && o.tomorrow ? h('span', { class: 'w-when', text: '👕 ' + L().clothesTomorrow }) : null), // 날씨 칸 아래 모서리에 붙은 꼬리표 (식구들 옷 · 우산이 내일 것)
+        o && o.umbrella ? h('div', { class: 'w-umb' }, h('span', { class: 'e', text: '☂️' }), h('b', { text: L().umbrella })) : null),
         kid);
     } else {
       weather = h('section', { class: 'weather' }, h('span', { class: 'w-empty', text: wx && wx.err ? L().wErr : '…' }));
