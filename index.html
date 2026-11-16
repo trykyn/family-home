@@ -318,7 +318,7 @@ img { display: block; }
 .kid.tap:active { background: rgba(255,255,255,.6); }
 #stk { position: fixed; inset: 0; z-index: 43; display: grid; place-items: center; background: rgba(18,50,74,.45); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
 #stk[hidden] { display: none; }
-.stk-card { position: relative; width: min(92vw, 860px); max-height: 92vh; overflow: auto; background: #FFFDF6; border-radius: 32px; padding: 20px 26px 22px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.5); animation: pk-in .45s cubic-bezier(.2,1.4,.4,1); }
+.stk-card { position: relative; width: min(92vw, 860px); max-height: 92vh; overflow: auto; overflow-x: hidden; background: #FFFDF6; border-radius: 32px; padding: 20px 26px 22px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.5); animation: pk-in .45s cubic-bezier(.2,1.4,.4,1); }
 .stk-card.k-davin { background: linear-gradient(#FFF8D6, #FFFDF6 40%); }
 .stk-card.k-arin { background: linear-gradient(#FBE9FF, #FFFDF6 40%); }
 .stk-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
@@ -363,6 +363,9 @@ img { display: block; }
 .ms-tiles { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 10px; }
 .ms-tile { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 4px 10px; border-radius: 20px; background: #fff; border: 3px solid #EDE4D0; box-shadow: 0 6px 14px -10px rgba(0,0,0,.35); }
 .ms-tile .e { font-size: 44px; line-height: 1.05; }
+/* 미션 아이콘 (직접 그린 그림): 글자 크기만큼 */
+.mi { width: 1.15em; height: 1.15em; display: inline-block; vertical-align: middle; }
+.mi-e { line-height: 1; }
 .ms-tile .t { font: 400 16px/1.2 var(--font-display); text-align: center; }
 .ms-tile.done { border-color: #4CBE8C; background: #EAF8F0; }
 .ms-tile.done::after { content: '✓'; position: absolute; top: 6px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: #4CBE8C; color: #fff; font: 700 18px/28px var(--font-body); text-align: center; animation: pop .3s; }
@@ -552,7 +555,7 @@ body { overflow: hidden; }
 .kids4 .ms-row .ms-badge { font-size: 15px; }
 .kids4 .kid:nth-child(n+3) { border-top: 1px solid var(--line); }
 .ms-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
-.ms-row span { font-size: 24px; line-height: 1; filter: grayscale(.5) brightness(.92); opacity: .8; } /* 아직 안 한 미션: 멀리서도 무슨 미션인지 보이게 */
+.ms-row span { display: inline-flex; font-size: 24px; line-height: 1; filter: grayscale(.5) brightness(.92); opacity: .8; } /* 아직 안 한 미션: 멀리서도 무슨 미션인지 보이게 */
 .ms-row span.on { filter: drop-shadow(0 0 3px rgba(60,190,90,.85)); opacity: 1; }
 .ms-row .ms-badge { margin-left: auto; font-size: 17px; color: var(--muted); }
 .ms-row .ms-badge.ready { font-size: 28px; }
@@ -1577,7 +1580,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     if (!FS) return null;
     const M = FS.missionState(kidOf(k), k, todayKey());
     if (!M.total) return null;
-    return h('div', { class: 'ms-row' }, ...M.list.map((x) => h('span', { class: M.day[x.id] ? 'on' : '', text: FS.missionIcon(x) })),
+    return h('div', { class: 'ms-row' }, ...M.list.map((x) => h('span', { class: M.day[x.id] ? 'on' : '', html: FS.missionIconHTML(x) })),
       h('b', { class: 'ms-badge' + (M.got ? ' got' : M.all ? ' ready' : ''), text: M.got ? '✅' : M.all ? '🎁' : `${M.done}/${M.total}` }));
   }
   function kidsCard() {
@@ -1676,7 +1679,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       const ms = M.total ? h('div', { class: 'ms-box' },
         h('div', { class: 'ms-h' }, h('b', { text: L().msTitle }), h('span', { text: `${M.done} / ${M.total}` })),
         h('div', { class: 'ms-tiles', style: `--n:${M.total}` }, ...M.list.map((x) => h('button', { type: 'button', class: 'ms-tile' + (M.day[x.id] ? ' done' : ''),
-          onclick: () => toggleMission(k, x.id, !M.day[x.id]) }, h('span', { class: 'e', text: FS.missionIcon(x) }), h('span', { class: 't', text: FS.missionLabel(x, lang) })))),
+          onclick: () => toggleMission(k, x.id, !M.day[x.id]) }, h('span', { class: 'e', html: FS.missionIconHTML(x) }), h('span', { class: 't', text: FS.missionLabel(x, lang) })))),
         M.got ? h('div', { class: 'ms-got', text: L().msGot })
           : M.all ? h('button', { type: 'button', class: 'stk-btn ms-claim', text: (unlocked() || GROWN(k) ? '' : '🔒 ') + L().msClaim,
             onclick: () => askGift(k) }) : null) : null;
