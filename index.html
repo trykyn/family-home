@@ -330,82 +330,16 @@ img { display: block; }
 .stk-rw small { font: 500 14px var(--font-body); color: var(--muted); }
 .stk-rw span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .stk-top .x { width: 46px; height: 46px; border-radius: 50%; background: #fff; color: var(--muted); font-size: 20px; flex: none; }
-.big-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 4px 0 14px; }
-.big-row .big { width: 74px; height: 74px; display: grid; place-items: center; font-size: 34px; border-radius: 50%; border: 3px dashed #E8D9A0; filter: grayscale(1); opacity: .45; }
-.big-row .big.full { border: 0; filter: none; opacity: 1; }
-.big-row .big.full svg { width: 100%; height: 100%; }
-.big-row .big.pop svg { animation: stk-pop 1s cubic-bezier(.2,1.6,.4,1); }
-.big-row .big-gift { font-size: 44px; opacity: .35; filter: grayscale(1); }
-.big-row .big-rw { margin-left: -4px; max-width: 30%; font: 400 21px/1.2 var(--font-display); color: #8A5A00; overflow-wrap: anywhere; }
-.big-row .big-rw.none { font: 500 15px var(--font-body); color: var(--muted); }
-.big-row .big-gift.ready { opacity: 1; filter: none; animation: swing 1.6s ease-in-out infinite; }
-.board-grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 10px; max-width: 640px; margin: 0 auto; }
-.board-grid .slot { aspect-ratio: 1; border-radius: 22px; border: 3px dashed #E2D7F0; display: grid; place-items: center; font: 400 24px var(--font-display); color: #CFC3E0; background: rgba(255,255,255,.7); }
-.board-grid .slot.full { border: 0; background: #fff; box-shadow: 0 6px 14px -10px rgba(0,0,0,.4); padding: 6px; }
-.board-grid .slot.full svg { width: 100%; height: 100%; }
-.board-grid .slot.pop { animation: stk-pop .6s cubic-bezier(.2,1.6,.4,1); }
-@keyframes stk-pop { from { transform: scale(0) rotate(-30deg); } to { transform: none; } }
 .wig { animation: wiggle .6s ease-in-out; }
-.stk-board .cnt { text-align: center; font: 400 22px var(--font-display); color: #8A6A00; margin: 12px 0 4px; }
-.stk-btn { display: block; margin: 10px auto 0; padding: 16px 34px; border-radius: 22px; background: #FFC928; color: #5A4300; font: 400 24px/1 var(--font-display); box-shadow: 0 10px 22px -12px rgba(160,110,0,.8); }
-.k-arin .stk-btn { background: #FF8AB3; color: #fff; }
-.done-banner { text-align: center; padding: 18px; border-radius: 24px; background: #FFF1B8; font: 400 22px/1.4 var(--font-display); }
-.ms-mini { display: flex; align-items: center; gap: 3px; margin-top: 2px; }
-.ms-mini span { font-size: 18px; line-height: 1; filter: grayscale(1); opacity: .35; }
-.ms-mini span.on { filter: none; opacity: 1; }
-.ms-mini b { margin-left: 6px; font: 600 13px var(--font-body); color: var(--muted); }
-.ms-mini b.ready { font-size: 18px; animation: swing 1.4s ease-in-out infinite; }
-.ms-mini b.got { font-size: 15px; }
-.ms-box { background: rgba(255,255,255,.75); border-radius: 24px; padding: 12px 14px 14px; margin-bottom: 14px; }
-.ms-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
-.ms-h b { font: 400 22px var(--font-display); }
-.ms-h span { font: 400 20px var(--font-display); color: #8A6A00; }
-.ms-tiles { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 10px; }
-.ms-tile { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 4px 10px; border-radius: 20px; background: #fff; border: 3px solid #EDE4D0; box-shadow: 0 6px 14px -10px rgba(0,0,0,.35); }
-.ms-tile .e { font-size: 44px; line-height: 1.05; }
 /* 미션 아이콘 (직접 그린 그림): 글자 크기만큼 */
 .mi { width: 1.15em; height: 1.15em; display: inline-block; vertical-align: middle; }
 .mi-e { line-height: 1; }
-.ms-tile .t { font: 400 16px/1.2 var(--font-display); text-align: center; }
-.ms-tile.done { border-color: #4CBE8C; background: #EAF8F0; }
-.ms-tile.done::after { content: '✓'; position: absolute; top: 6px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: #4CBE8C; color: #fff; font: 700 18px/28px var(--font-body); text-align: center; animation: pop .3s; }
-.ms-claim { margin-top: 12px; animation: bob 1.6s ease-in-out infinite; }
-.ms-got { margin-top: 10px; text-align: center; font: 400 18px var(--font-display); color: var(--ok); }
 .nm b.gold { font: 600 13px var(--font-body); color: #B07A00; white-space: nowrap; }
 .nm b.gold.ready { font-size: 18px; animation: swing 1.4s ease-in-out infinite; }
 .ms-badge { margin-left: auto; font: 600 13px var(--font-body); color: var(--muted); white-space: nowrap; }
 .ms-badge.ready { font-size: 20px; animation: swing 1.4s ease-in-out infinite; }
 .ms-badge.got { font-size: 16px; }
-.wk-h { display: flex; align-items: center; gap: 12px; margin: 4px 4px 10px; }
-.wk-h b { font: 400 22px var(--font-display); }
-.wk-h span { font: 400 22px var(--font-display); color: #8A6A00; }
-.wk-h .gift { margin-left: auto; font-size: 40px; opacity: .35; filter: grayscale(1); }
-.wk-h .gift.ready { opacity: 1; filter: none; animation: swing 1.4s ease-in-out infinite; }
-.wk-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
-.wk-slot { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px 8px; border-radius: 24px; background: rgba(255,255,255,.7); border: 3px dashed #E2D7F0; }
-.wk-slot .pic { width: 100%; aspect-ratio: 1; display: grid; place-items: center; font-size: 30px; color: #CFC3E0; }
-.wk-slot .pic svg { width: 100%; height: 100%; }
-.wk-slot .day { font: 400 20px/1 var(--font-display); color: #8B7AA8; }
-.wk-slot.got { background: #fff; border: 3px solid transparent; box-shadow: 0 6px 14px -10px rgba(0,0,0,.4); }
-.k-davin .wk-slot.today { border: 3px solid #FFC928; background: #FFF6D0; }
-.k-arin .wk-slot.today { border: 3px solid #FF8AB3; background: #FFEAF3; }
-.wk-slot.today .pic { color: #FFC928; animation: bob 1.6s ease-in-out infinite; }
-.wk-slot.missed { opacity: .45; }
-.wk-slot.off { opacity: 1; border: 3px solid #9CCBEA; background: #E8F4FD; }
-.wk-off-hint { text-align: center; margin: 4px 0 0; font-size: 13px; color: var(--muted); }
-.wk-slot.pop .pic { animation: stk-pop .6s cubic-bezier(.2,1.6,.4,1); }
 .wk-note { text-align: center; margin: 14px 0 0; font: 400 18px var(--font-display); color: var(--muted); }
-#stk-gift { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; background: rgba(18,50,74,.35); }
-#stk-gift[hidden] { display: none; }
-.gift-pop { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px 40px 22px; border-radius: 32px; background: #FFFDF6; box-shadow: 0 30px 70px -20px rgba(0,0,0,.5); animation: pk-in .45s cubic-bezier(.2,1.4,.4,1); }
-.gift-pop b { font: 400 28px var(--font-display); }
-.gift-pop .gift { width: 200px; height: 200px; animation: bob 1.6s ease-in-out infinite; }
-.gift-pop .gift svg, .gift-pop .reveal svg { width: 100%; height: 100%; }
-.gift-pop .reveal { width: 210px; height: 210px; animation: stk-pop .7s cubic-bezier(.2,1.6,.4,1); }
-.gift-pop .taps { display: flex; gap: 10px; }
-.gift-pop .taps i { width: 16px; height: 16px; border-radius: 50%; background: #E2D7F0; }
-.gift-pop .taps i.on { background: #FFC928; }
-.gift-pop .hint { font: 400 20px var(--font-display); color: var(--muted); }
 #stk-pin { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(18,50,74,.35); }
 #stk-pin[hidden] { display: none; }
 .pin-card { background: #fff; border-radius: 28px; padding: 22px 26px; text-align: center; box-shadow: 0 30px 60px -20px rgba(0,0,0,.5); }
@@ -562,21 +496,19 @@ body { overflow: hidden; }
 .ms-row .ms-badge.got { font-size: 22px; }
 
 /* 쉬는 시간: 움직임 멈춤 + 유리 흐림 끄기 (패드 열·배터리) */
-body.calm #bg *, body.calm .scene, body.calm .scene *, body.calm .kid-fig, body.calm .w-umb .e, body.calm .big-gift, body.calm .wk-h .gift, body.calm .ms-badge.ready { animation-play-state: paused !important; }
+body.calm #bg *, body.calm .scene, body.calm .scene *, body.calm .kid-fig, body.calm .w-umb .e, body.calm .ms-badge.ready { animation-play-state: paused !important; }
 body.calm #bg .sun { transition: none; }
 body.calm .card, body.calm .dinner-box, body.calm .tool, body.calm .w-panel, body.calm .weather { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgba(255,255,255,.86); }
-
-/* 🗑 스티커 지우기 모드: 붙은 스티커에 빨간 ✕ */
-.del-on .wk-slot.got, .del-on .slot.wk.full, .del-on .big.full { position: relative; }
-.del-on .wk-slot.got::after, .del-on .slot.wk.full::after, .del-on .big.full::after { content: '✕'; position: absolute; top: -6px; right: -6px; width: 24px; height: 24px; border-radius: 50%; background: #E5484D; color: #fff; font: 700 14px/24px system-ui, sans-serif; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,.25); z-index: 2; }
 .stk-card.room { width: min(96vw, 1120px); }
+/* 🎯 주간 미션판(../our-family/mission-board.js) 색 = 사람 색 (--mc) */
+.stk-boardbox .mb { --mb-kc: var(--mc); --mb-k1: color-mix(in srgb, var(--mc) 22%, #fff); --mb-k2: color-mix(in srgb, var(--mc) 42%, #fff); --mb-soft: rgba(255,255,255,.75); --mb-surface: #fff; --mb-font: var(--font-display); }
+.mb-gift-card { --mb-font: var(--font-display); }
 .stk-card.room .pr-room { aspect-ratio: auto; height: min(54vh, 560px); }
 .stk-top .room-btn { height: 46px; padding: 0 18px; border-radius: 23px; background: #fff; color: #6B3E12; font: 700 18px/1 var(--font-body, inherit); flex: none; border: 3px solid transparent; }
 .stk-top .room-btn[aria-pressed="true"] { border-color: #FF8A3D; background: #FFF0D6; }
 .stk-top .del-btn { height: 46px; min-width: 46px; padding: 0 14px; border-radius: 23px; background: #fff; color: var(--muted); font-size: 20px; flex: none; }
 .stk-top .del-btn.on { background: #E5484D; color: #fff; font-size: 17px; font-weight: 700; }
-.del-hint { margin: 0 0 12px; padding: 12px 14px; border-radius: 16px; background: #FDECEC; color: #C2363B; font-weight: 700; text-align: center; font-size: 17px; }
 </style>
 </head>
 <body>
@@ -587,12 +519,13 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
 <div id="bg" aria-hidden="true"></div>
 <div id="pack" hidden></div>
 <div id="wake" hidden></div>
-<div id="stk" hidden><div class="stk-card" id="stk-card"></div><div id="stk-pin" hidden></div><div id="stk-gift" hidden></div></div>
+<div id="stk" hidden><div class="stk-card" id="stk-card"></div><div id="stk-pin" hidden></div></div>
 <div id="rotate"><div class="ic">📱</div><p>패드를 가로로 돌려 주세요</p><small>Bitte das iPad quer halten</small></div>
 
 <script src="firebase-config.js"></script>
 <script src="../our-family/stickers-shared.js"></script>
 <script src="../our-family/poke-room.js"></script>
+<script src="../our-family/mission-board.js"></script>
 <script>
 (() => {
   'use strict';
@@ -1596,9 +1529,6 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   // 스티커 그림 · 칭찬 이유 · 소리 · 개수 규칙은 우리가족 앱과 함께 쓰는 공통 파일(../our-family/stickers-shared.js)에서 가져옴.
   // 그 파일을 고치면 두 앱에 한 번에 적용됨. 못 불러왔으면(처음 켤 때 인터넷이 없는 등) 스티커판만 쉬고 나머지는 그대로
   const FS = window.FamilyStickers || null;
-  const stickerSVG = (k, d) => (FS ? FS.stickerSVG(k, d) : '');
-  const giftSVG = (k) => (FS ? FS.giftSVG(k) : '');
-  const bigSVG = (k, d) => (FS ? FS.bigSVG(k, d) : '');
   const SND = FS ? FS.SND : { tap() {}, tada() {}, boing() {}, stick() {} };
   const kidsData = () => famData().kids || {};
   function kidsWrite(path, value) {
@@ -1644,15 +1574,19 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   let roomCtl = null, roomRedraw = 0;
   const roomBox = h('div', { class: 'stk-roombox' });
   function roomOff() { if (roomCtl) { roomCtl.destroy(); roomCtl = null; } }
-  function openStickers(k) { if (!FS) { toast(L().stkOffline); return; } stk = { k, pop: null }; drawStickers(); $('#stk').hidden = false; }
-  function closeStickers() { roomOff(); stk = null; $('#stk').hidden = true; $('#stk-gift').hidden = true; $('#stk-card').replaceChildren(); }
+  // 🎯 주간 미션판 (../our-family/mission-board.js — 우리가족 앱 · 친구 앱과 같이 씀)
+  let mbCtl = null, mbRedraw = 0;
+  const boardBox = h('div', { class: 'stk-boardbox' });
+  function boardOff() { if (mbCtl) { mbCtl.destroy(); mbCtl = null; } }
+  function openStickers(k) { if (!FS) { toast(L().stkOffline); return; } stk = { k }; drawStickers(); $('#stk').hidden = false; }
+  function closeStickers() { roomOff(); boardOff(); stk = null; $('#stk').hidden = true; $('#stk-card').replaceChildren(); }
   const wig = (el) => { el.classList.remove('wig'); void el.offsetWidth; el.classList.add('wig'); };
   function drawStickers() {
     if (!stk) return;
     const k = stk.k, c = kidCfg(k);
     const reward = kidText(c.reward, c.rsrc, c.rtr);
     const tabs = h('div', { class: 'stk-tabs' }, ...['davin', 'arin', 'mom', 'dad'].map((x) => h('button', { type: 'button', 'aria-pressed': String(x === k), style: `--mc:${WHO[x]}`,
-      onclick: () => { roomOff(); stk = { k: x, pop: null, room: stk.room }; drawStickers(); } }, h('img', { src: avatarOf(x), alt: '' }), L().who[x])));
+      onclick: () => { roomOff(); boardOff(); stk = { k: x, room: stk.room }; drawStickers(); } }, h('img', { src: avatarOf(x), alt: '' }), L().who[x])));
     const showRoom = !!window.PokeRoom && !!stk.room; // 네 명 모두 같은 창: 🎯 주간 미션판 ⇄ 🥚 포켓몬 방
     const head = h('div', { class: 'stk-top', style: `--mc:${WHO[k]}` }, tabs,
       h('div', { class: 'stk-rw' }), // 빈 칸 (선물 이름은 황금 스티커 줄 🎁 옆으로 — 이름 탭 옆은 좁아서 잘림)
@@ -1665,41 +1599,23 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     if (showRoom) {
       body = roomBox;
       if (roomCtl) roomCtl.update();
-    } else { // 주간 미션판
-      const today = todayKey(), W = FS.weekState(kidOf(k), k, today);
-      const labels = FS.WEEK_LABEL[lang] || FS.WEEK_LABEL.ko;
-      const week = h('div', { class: 'wk-board' }, ...W.days.map((x) => {
-        const el = h('button', { type: 'button', class: `wk-slot ${x.status}` + (x.id && x.id === stk.pop ? ' pop' : ''),
-          onclick: () => { if (x.got) { if (stk.del) return delDay(k, x); wig(el); SND.boing(); } else parentOnly(() => toggleOff(k, x)); } },
-          x.got ? h('span', { class: 'pic', html: stickerSVG(k, x.d) }) : h('span', { class: 'pic', text: x.sick ? '🤒' : x.off ? '🏖️' : x.status === 'missed' ? '·' : x.status === 'today' ? '⭐' : '' }),
-          h('span', { class: 'day', text: labels[x.i] }));
-        return el;
-      }));
-      const M = FS.missionState(kidOf(k), k, today);
-      const ms = M.total ? h('div', { class: 'ms-box' },
-        h('div', { class: 'ms-h' }, h('b', { text: L().msTitle }), h('span', { text: `${M.done} / ${M.total}` })),
-        h('div', { class: 'ms-tiles', style: `--n:${M.total}` }, ...M.list.map((x) => h('button', { type: 'button', class: 'ms-tile' + (M.day[x.id] ? ' done' : ''),
-          onclick: () => toggleMission(k, x.id, !M.day[x.id]) }, h('span', { class: 'e', html: FS.missionIconHTML(x) }), h('span', { class: 't', text: FS.missionLabel(x, lang) })))),
-        M.got ? h('div', { class: 'ms-got', text: L().msGot })
-          : M.all ? h('button', { type: 'button', class: 'stk-btn ms-claim', text: (unlocked() || GROWN(k) ? '' : '🔒 ') + L().msClaim,
-            onclick: () => askGift(k) }) : null) : null;
-      const G = FS.goldState(kidOf(k), k);
-      const golds = h('div', { class: 'big-row' });
-      for (let i = 0; i < G.need; i++) {
-        const g = G.golds[i];
-        if (g) { const el = h('button', { type: 'button', class: 'big full' + (g.week === stk.popGold ? ' pop' : ''), html: bigSVG(k, g.d || 0), onclick: () => { if (stk.del) return delGold(k, g); wig(el); SND.stick(); } }); golds.append(el); }
-        else golds.append(h('span', { class: 'big', text: '🏅' }));
-      }
-      golds.append(h('span', { class: 'big-gift' + (G.gift ? ' ready' : ''), text: '🎁' }), h('span', { class: 'big-rw' + (reward ? '' : ' none'), text: reward || L().noReward }));
-      body = h('div', { class: 'stk-board' + (stk.del ? ' del-on' : '') }, stk.del ? h('p', { class: 'del-hint', text: L().delHint }) : ms, golds,
-        h('div', { class: 'wk-h' }, h('b', { text: L().weekTitle }), h('span', { text: `⭐ ${W.count} / 7` })),
-        week,
-        G.gift ? h('div', { class: 'done-banner' }, h('b', { text: L().goldDone(G.need) }), reward ? h('div', { text: `🎁 ${reward}` }) : null,
-          h('button', { type: 'button', class: 'stk-btn', text: L().newBoard, onclick: () => parentOnly(() => kidsWrite([k, 'cfg'], { ...c, start: Date.now() })) }))
-          : h('div', {}, h('p', { class: 'wk-note', text: W.all ? L().weekGold : L().weekRule }), W.all ? null : h('p', { class: 'wk-off-hint', text: L().offHint })));
+    } else { // 🎯 주간 미션판: 오늘 미션 · 선물 상자 · 7칸 · 황금 스티커 (공통 파일)
+      body = boardBox;
+      boardBox.style.setProperty('--mc', WHO[k]);
+      if (mbCtl && mbCtl.k !== k) boardOff();
+      if (mbCtl) { if (mbCtl.deleting !== !!stk.del) mbCtl.setDelete(!!stk.del); else mbCtl.update(); }
     }
+    if (showRoom) boardOff();
     $('#stk-card').replaceChildren(head, body);
     $('#stk-card').className = `stk-card k-${k}` + (showRoom ? ' room' : '');
+    if (!showRoom && !mbCtl && window.MissionBoard) {
+      mbCtl = window.MissionBoard.mount(boardBox, { kid: k, lang: () => lang, data: () => kidOf(k), big: true, snd: SND, guard: parentOnly, toast, askNewBoard: false,
+        giftGuard: (fn) => (GROWN(k) ? fn() : parentOnly(fn)), by: () => (S.user && S.user.uid) || 'dashboard',
+        reward: () => { const c = kidCfg(k); return kidText(c.reward, c.rsrc, c.rtr); },
+        onDeleteEnd: () => { if (stk && stk.del) { stk.del = false; drawStickers(); } },
+        write: (path, v) => { kidSet([k, ...path], v); clearTimeout(mbRedraw); mbRedraw = setTimeout(renderGrid, 0); } });
+      if (stk.del) mbCtl.setDelete(true);
+    }
     if (showRoom && !roomCtl) roomCtl = window.PokeRoom.mount(roomBox, { kid: k, lang: () => lang, data: () => kidOf(k), big: true, snd: SND,
       write: (path, v) => { kidSet([k, ...path], v); clearTimeout(roomRedraw); roomRedraw = setTimeout(() => { if (stk) drawStickers(); renderGrid(); }, 0); } });
   }
@@ -1712,96 +1628,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     for (const p of path.slice(0, -1)) o = o[p] = { ...(o[p] || {}) };
     if (v == null) delete o[path[path.length - 1]]; else o[path[path.length - 1]] = v;
   }
-  // 🗑 지우기: 그날 스티커 (그 주 황금 스티커도 — 이제 주가 안 찼으니) / 황금 스티커. 되돌리기 가능
-  function delDay(k, x) {
-    const kd = kidOf(k), s = (kd.stickers || {})[x.id], wk = FS.weekKeys(x.key)[0], g = (kd.golds || {})[wk], it = ((kd[FS.ROOM] || {}).items || {})[x.id], ic = ((kd[FS.ROOM] || {}).items || {})[x.id + 'c'];
-    const redraw = () => { drawStickers(); renderGrid(); };
-    kidSet([k, 'mdone', x.key, 'got'], null); kidSet([k, 'stickers', x.id], null); if (g) kidSet([k, 'golds', wk], null); if (it) kidSet([k, FS.ROOM, 'items', x.id], null); if (ic) kidSet([k, FS.ROOM, 'items', x.id + 'c'], null);
-    redraw();
-    toast(L().delToast, () => { kidSet([k, 'mdone', x.key, 'got'], x.id); if (s) kidSet([k, 'stickers', x.id], s); if (g) kidSet([k, 'golds', wk], g); if (it) kidSet([k, FS.ROOM, 'items', x.id], it); if (ic) kidSet([k, FS.ROOM, 'items', x.id + 'c'], ic); redraw(); });
-  }
-  function delGold(k, g) {
-    const { week, ...v } = g;
-    kidSet([k, 'golds', week], null); drawStickers(); renderGrid();
-    toast(L().delToast, () => { kidSet([k, 'golds', week], v); drawStickers(); renderGrid(); });
-  }
-  function setMdone(k, day, key, v) {
-    if (DEMO) return; // 예시 화면은 kidsWrite 가 바로 바꿈
-    const kd = ((famData().kids = famData().kids || {})[k] = famData().kids[k] || {});
-    const md = (kd.mdone = kd.mdone || {}), d = (md[day] = { ...(md[day] || {}) });
-    if (v == null) delete d[key]; else d[key] = v;
-  }
-  // 쉬는 날 표시/해제 (아프거나 여행 간 날) — 표시해서 이번 주가 다 차면 황금 스티커도
-  function toggleOff(k, x) {
-    const today = todayKey();
-    if (x.off) { kidsWrite([k, 'mdone', x.key, 'off'], null); setMdone(k, x.key, 'off', null); if (x.sick) { kidsWrite([k, 'mdone', x.key, 'sick'], null); setMdone(k, x.key, 'sick', null); } drawStickers(); renderGrid(); toast(L().offUndone); return; }
-    if (FS.weekCompletesWithOff(kidOf(k), k, today, x.key)) {
-      const wk = FS.weekKeys(today)[0], g = { at: Date.now(), d: FS.newRewardD() };
-      kidsWrite([k, 'golds', wk], g);
-      if (!DEMO) { const kd = (famData().kids[k] = famData().kids[k] || {}); kd.golds = { ...(kd.golds || {}), [wk]: g }; }
-      stk.popGold = wk; setTimeout(() => SND.tada(), 300);
-    }
-    kidsWrite([k, 'mdone', x.key, 'off'], true); setMdone(k, x.key, 'off', true);
-    drawStickers(); renderGrid();
-    toast(L().offDone, () => { kidsWrite([k, 'mdone', x.key, 'off'], null); setMdone(k, x.key, 'off', null); drawStickers(); renderGrid(); });
-  }
-  function toggleMission(k, id, on) {
-    const day = todayKey();
-    kidsWrite([k, 'mdone', day, id], on ? true : null);
-    setMdone(k, day, id, on ? true : null);
-    const M = FS.missionState(kidOf(k), k, day);
-    SND.tap(on ? 3 : 1);
-    drawStickers(); renderGrid();
-    if (on && M.all && !M.got) setTimeout(() => askGift(k), 350); // 마지막 미션 → (아이면 엄마·아빠 확인) → 선물 상자
-  }
-  const GROWN = (k) => k === 'mom' || k === 'dad';
-  const askGift = (k) => (GROWN(k) ? missionGift(k) : parentOnly(() => missionGift(k))); // 선물 상자 비밀번호는 아이들만
-  // 🎁 미션 선물 상자: 같은 창 위에 떠서 톡톡톡 3번 → 스티커가 펑 → 저절로 그 요일 칸에 붙음
-  function missionGift(k) {
-    const box = $('#stk-gift'), d = FS.newRewardD();
-    let taps = 0;
-    const dots = h('div', { class: 'taps' }, ...[0, 1, 2].map(() => h('i')));
-    const hint = h('span', { class: 'hint', text: L().tapBox });
-    const gift = h('button', { type: 'button', class: 'gift', html: giftSVG(k), 'aria-label': L().tapBox, onclick: () => {
-      if (taps >= 3) return;
-      taps++; SND.tap(taps);
-      [...dots.children].forEach((x, i) => x.classList.toggle('on', i < taps));
-      if (taps < 3) { wig(gift); return; }
-      SND.tada();
-      gift.replaceWith(h('div', { class: 'reveal', html: stickerSVG(k, d) }));
-      dots.remove(); hint.textContent = L().rewardGot(FS.rewardText(d, lang));
-      const fx = h('div', { class: 'pk-yay' }, ...Array.from({ length: 22 }, (_, i) => h('i', { text: ['⭐', '🎉', '✨', '💛'][i % 4], style: `left:${(i * 41) % 100}%;animation-delay:${(i % 6) * 0.1}s` })));
-      document.body.append(fx); setTimeout(() => fx.remove(), 2600);
-      setTimeout(() => { box.hidden = true; giveSticker(k, d); }, 1500);
-    } });
-    box.replaceChildren(h('div', { class: 'gift-pop k-' + k }, h('b', { text: L().msGiftTitle }), gift, dots, hint));
-    box.hidden = false;
-  }
-  // 오늘 미션 스티커 붙이기 (+ 이번 주가 다 차면 🏅 황금 스티커). 되돌리기 가능
-  function giveSticker(k, d) {
-    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6), day = todayKey();
-    const st = { at: Date.now(), d, why: '@mission', by: (S.user && S.user.uid) || 'dashboard' };
-    let goldWeek = '';
-    if (FS.weekCompletesToday(kidOf(k), k, day)) {
-      goldWeek = FS.weekKeys(day)[0];
-      kidSet([k, 'golds', goldWeek], { at: Date.now(), d });
-      if (stk) stk.popGold = goldWeek;
-      setTimeout(() => SND.tada(), 500);
-    }
-    kidSet([k, 'mdone', day, 'got'], id);
-    kidSet([k, 'stickers', id], st);
-    const it = FS.rewardItem(d); // 🥚 포켓몬 방 가방에 열매/코인
-    if (it) { kidSet([k, FS.ROOM, 'items', id], it); kidSet([k, FS.ROOM, 'items', id + 'c'], 'coin'); } // 열매 + 🪙 1개
-    SND.stick();
-    if (stk) stk.pop = id;
-    const redraw = () => { drawStickers(); renderGrid(); };
-    redraw();
-    toast(L().stkGiven, () => {
-      kidSet([k, 'stickers', id], null); kidSet([k, 'mdone', day, 'got'], null); if (it) { kidSet([k, FS.ROOM, 'items', id], null); kidSet([k, FS.ROOM, 'items', id + 'c'], null); }
-      if (goldWeek) kidSet([k, 'golds', goldWeek], null);
-      redraw();
-    });
-  }
+  const GROWN = (k) => k === 'mom' || k === 'dad'; // 선물 상자 비밀번호는 아이들만
 
   // 카드 칸에 다 안 들어가는 줄은 뒤에서부터 접고 "+N개 더"로 (캘린더는 날짜 머리만 남지 않게)
   function fitCards() {
