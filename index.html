@@ -1538,7 +1538,31 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       if (value == null) delete o[path[path.length - 1]]; else o[path[path.length - 1]] = value;
       render(); if (stk) drawStickers(); return;
     }
-    whenOnline(() => { const F = fb.F; F.updateDoc(F.doc(fb.db, 'households', S.house), new F.FieldPath('kids', ...path), value == null ? F.deleteField() : value).catch((e) => console.warn('kids', e)); });
+    // 같은 순간에 쓴 것(예: 방에서 코인 20개 쓰기)은 모아서 한 번에 저장
+    const key = path.join('\u0001');
+    if (!kq) { kq = new Map(); queueMicrotask(flushKids); }
+    for (const k of kq.keys()) if (k.startsWith(key + '\u0001')) kq.delete(k); // 위 칸을 새로 쓰면 그 안의 칸 쓰기는 필요 없음
+    kq.delete(key); kq.set(key, [path, value]); // 나중에 쓴 순서대로
+  }
+  let kq = null;
+  function kidsBatches(q) { // 위 칸 · 안의 칸을 한 번에 쓰면 Firestore가 거절 → 그럴 땐 하나씩
+    const keys = q.map(([p]) => p.join('\u0001'));
+    const clash = keys.some((a, i) => keys.some((b, j) => i !== j && b.startsWith(a + '\u0001')));
+    return clash ? q.map((x) => [x]) : [q];
+  }
+  function flushKids() {
+    const q = [...kq.values()]; kq = null;
+    whenOnline(() => {
+      const F = fb.F, ref = F.doc(fb.db, 'households', S.house);
+      const send = (list) => F.updateDoc(ref, ...list.flatMap(([p, v]) => [new F.FieldPath('kids', ...p), v == null ? F.deleteField() : v]));
+      for (const list of kidsBatches(q)) {
+        Promise.resolve().then(() => send(list)).catch((e) => { // 묶음이 안 되면 예전처럼 하나씩
+          if (list.length < 2) return console.warn('kids', e);
+          console.warn('kids batch', e);
+          list.forEach((x) => send([x]).catch((e2) => console.warn('kids', e2)));
+        });
+      }
+    });
   }
   // 엄마·아빠 비밀번호 (우리가족 앱의 아이 화면 잠금과 같은 번호). 한 번 맞히면 3분 동안 열림
   let unlockedUntil = 0;
