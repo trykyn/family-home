@@ -13,7 +13,7 @@
 <title>우리집 한눈에</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Jua&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Jua&display=swap" media="print" onload="this.media='all'"><!-- 글꼴이 늦어도 화면부터 -->
 <style>
 /* 우리집 한눈에 — 집에 세워 둔 패드(가로 고정)용 가족 대시보드 (구글 홈 화면처럼 한 화면에 다 보이게).
    위: 시계·날짜·날씨 / 아래 카드: 가족 일정 · 캘린더 · 할 일 · 식단 · 장보기 · 아이들 스티커.
@@ -1538,9 +1538,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       if (value == null) delete o[path[path.length - 1]]; else o[path[path.length - 1]] = value;
       render(); if (stk) drawStickers(); return;
     }
-    if (!fb || !S.house) return;
-    const F = fb.F;
-    F.updateDoc(F.doc(fb.db, 'households', S.house), new F.FieldPath('kids', ...path), value == null ? F.deleteField() : value).catch((e) => console.warn('kids', e));
+    whenOnline(() => { const F = fb.F; F.updateDoc(F.doc(fb.db, 'households', S.house), new F.FieldPath('kids', ...path), value == null ? F.deleteField() : value).catch((e) => console.warn('kids', e)); });
   }
   // 엄마·아빠 비밀번호 (우리가족 앱의 아이 화면 잠금과 같은 번호). 한 번 맞히면 3분 동안 열림
   let unlockedUntil = 0;
@@ -1685,9 +1683,9 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   /* 할 일 완료 (우리가족 할일목록과 같은 칸) */
   async function setTodoDone(t, done) {
     if (DEMO) { t.done = done; t.doneAt = done ? Date.now() : null; render(); }
-    else if (fb && S.house) {
-      await fb.F.updateDoc(fb.F.doc(fb.db, 'households', S.house), { [`todos.${t.id}.done`]: done, [`todos.${t.id}.doneAt`]: done ? Date.now() : null })
-        .catch((e) => console.warn('todo', e));
+    else if (S.house) {
+      if (fb && !S.early) await fb.F.updateDoc(fb.F.doc(fb.db, 'households', S.house), { [`todos.${t.id}.done`]: done, [`todos.${t.id}.doneAt`]: done ? Date.now() : null }).catch((e) => console.warn('todo', e));
+      else { t.done = done; t.doneAt = done ? Date.now() : null; render(); whenOnline(() => fb.F.updateDoc(fb.F.doc(fb.db, 'households', S.house), { [`todos.${t.id}.done`]: done, [`todos.${t.id}.doneAt`]: done ? Date.now() : null }).catch((e) => console.warn('todo', e))); }
     }
     if (done) toast(L().doneMsg, () => setTodoDone(t, false));
   }
@@ -1782,6 +1780,16 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       if (stk) drawStickers(); // 우리가족 앱에서 붙인 스티커도 바로 보이게
     }, (e) => console.warn('family', e));
   }
+  // ⚡ 빠른 시작: 이 기기에 저장해 둔 가족 자료로 화면부터 바로 (로그인 확인 · 인터넷을 기다리지 않음).
+  // 그동안 누른 것은 모아 뒀다가 가족 계정과 연결되면 저장. 다른 사람으로 로그인됐거나 로그아웃이면 버림
+  let early = [];
+  function whenOnline(fn) { if (fb && S.house && !S.early) fn(); else if (S.house) early.push(fn); }
+  function earlyStart() {
+    const c = load(HOUSE_KEY, null);
+    if (DEMO || !c || !c.uid || !c.house || !fam) return;
+    S.user = { uid: c.uid }; S.house = c.house; S.early = true; S.ready = true;
+  }
+  earlyStart();
   async function startFirebase() {
     const cfg = window.FIREBASE_CONFIG;
     if (!cfg) { S.ready = true; render(); return; }
@@ -1794,22 +1802,27 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       catch (e) { console.warn('cache', e); db = F.getFirestore(app); }
       fb = { A, F, auth: A.getAuth(app), db };
       A.onAuthStateChanged(fb.auth, async (user) => {
-        S.user = user; S.house = null; S.err = '';
-        if (user) {
+        const c = load(HOUSE_KEY, null), known = !!(user && c && c.uid === user.uid && c.house);
+        S.user = user; S.house = known ? c.house : null; S.err = ''; S.early = false;
+        if (user && known) { // 이 기기에서 쓰던 가족: 바로 연결하고, 가족 번호가 바뀌었는지는 뒤에서 확인
+          F.getDoc(F.doc(fb.db, 'users', user.uid)).then((u) => {
+            const h = (u.exists() && u.data().house) || null;
+            if (h === S.house) return;
+            S.house = h; store(HOUSE_KEY, { uid: user.uid, house: h }); listenFamily(); render(); if (h) loadEvents();
+          }).catch((e) => console.warn('house', e));
+        } else if (user) {
           try {
             const u = await F.getDoc(F.doc(fb.db, 'users', user.uid));
             S.house = (u.exists() && u.data().house) || null;
             store(HOUSE_KEY, { uid: user.uid, house: S.house });
-          } catch (e) {
-            console.warn('house', e);
-            const c = load(HOUSE_KEY, null);
-            if (c && c.uid === user.uid) S.house = c.house;
-          }
+          } catch (e) { console.warn('house', e); }
         } else {
           // 로그아웃: 이 기기에 저장한 가족 자료 지우기
           fam = null; store(FAM_KEY, null); cal = { events: [], calendars: [], at: 0 }; store(EV_KEY, null); store(HOUSE_KEY, null);
         }
         S.ready = true;
+        const queued = early; early = [];
+        if (user && known && S.house) queued.forEach((fn) => { try { fn(); } catch (e) { console.warn('early', e); } }); // 바로 보여 준 화면에서 누른 것 저장
         listenFamily();
         render();
         if (S.house) loadEvents();
@@ -1919,6 +1932,8 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   applyWake();
   // 시계: 10초마다 / 날짜가 바뀌거나 정시마다 전체 새로 (일정 카드가 오늘→내일로 넘어가는 등)
   let lastStamp = `${todayKey()} ${new Date().getHours()}`;
+  let swNew = false, lastTouch = Date.now(); // 새 버전 받음 · 마지막으로 만진 때
+  document.addEventListener('pointerdown', () => { lastTouch = Date.now(); }, { passive: true });
   setInterval(() => {
     const now = new Date();
     const c = $('#clock'); if (c) c.textContent = hhmm(now);
@@ -1928,6 +1943,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       lastStamp = stamp; render();
       if (newDay) { loadEvents(); loadHolidays(); }
     }
+    if (swNew && $('#stk').hidden && !document.querySelector('.sheet-wrap:not([hidden]), #pack:not([hidden])') && Date.now() - lastTouch > 60e3) location.reload(); // 새 버전
     safely('pack', packMorning);
     safely('calm', applyCalm);
     safely('bg', renderBg);
@@ -1944,7 +1960,10 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   });
   let rz = null;
   window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { fitZoom(); renderGrid(); }, 150); });
-  if ('serviceWorker' in navigator && !DEMO) navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});
+  if ('serviceWorker' in navigator && !DEMO) {
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});
+    navigator.serviceWorker.addEventListener('message', (e) => { if (e.data === 'family-home-updated') swNew = true; });
+  }
 })();
 </script>
 </body>
