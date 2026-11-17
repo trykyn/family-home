@@ -1,14 +1,23 @@
 // 오프라인 · 빠른 시작: 저장해 둔 것을 바로 보여 주고(기다리지 않음), 뒤에서 서버에 새 것이 있는지 받아 둠.
 // 앱 화면(html · js)이 바뀌었으면 화면에 알려서, 아무도 안 만질 때 조용히 새로 고침 (GitHub Pages 10분 저장 표시 때문에 cache: 'no-cache').
-const CACHE = 'family-home-v28';
+const CACHE = 'family-home-v29';
 const OF = (p) => new URL('../our-family/' + p, self.location).pathname;
 const SHARED = [OF('stickers-shared.js'), OF('poke-room.js'), OF('mission-board.js')]; // 우리가족 앱과 같이 쓰는 파일
 const POKE = OF('poke/'), PING = OF('ping/'); // 포켓몬 · 티니핑 그림
 const OK_ORIGINS = ['https://www.gstatic.com', 'https://fonts.googleapis.com', 'https://fonts.gstatic.com'];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['./', 'index.html', 'manifest.webmanifest', 'favicon.png', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'firebase-config.js',
-    'avatar-family.png', 'avatar-mom.png', 'avatar-dad.png', 'avatar-davin.png', 'avatar-arin.png', ...SHARED].map((u) => new Request(u, { cache: 'reload' })))));
+  e.waitUntil((async () => {
+    const c = await caches.open(CACHE);
+    await c.addAll(['./', 'index.html', 'manifest.webmanifest', 'favicon.png', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'firebase-config.js',
+      'avatar-family.png', 'avatar-mom.png', 'avatar-dad.png', 'avatar-davin.png', 'avatar-arin.png', ...SHARED].map((u) => new Request(u, { cache: 'reload' })));
+    // 예전 저장소의 나머지(파이어베이스 · 글꼴 · 포켓몬/티니핑 그림)는 옮겨 옴 → 새 버전이 깔린 직후 인터넷 없이 켜도 로그인 · 그림이 됨
+    for (const k of await caches.keys()) {
+      if (!k.startsWith('family-home-v') || k === CACHE) continue;
+      const old = await caches.open(k);
+      for (const req of await old.keys()) if (!(await c.match(req))) { const r = await old.match(req); if (r) await c.put(req, r).catch(() => {}); }
+    }
+  })());
   self.skipWaiting();
 });
 self.addEventListener('activate', (e) => e.waitUntil((async () => {

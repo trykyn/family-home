@@ -370,6 +370,7 @@ body { overflow: hidden; }
   #rotate .ic { font-size: 72px; animation: turn 2.4s ease-in-out infinite; }
   #rotate p { margin: 0; font: 400 26px/1.4 var(--font-display); }
   #rotate small { color: var(--muted); font-size: 16px; }
+  #rotate p, #rotate small { background: rgba(255,255,255,.88); padding: 6px 18px; border-radius: 99px; } /* 밤 하늘(어두운 배경)에서도 읽히게 */
 }
 @keyframes turn { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
 
@@ -496,7 +497,12 @@ body { overflow: hidden; }
 .ms-row .ms-badge.got { font-size: 22px; }
 
 /* 쉬는 시간: 움직임 멈춤 + 유리 흐림 끄기 (패드 열·배터리) */
-body.calm #bg *, body.calm .scene, body.calm .scene *, body.calm .kid-fig, body.calm .w-umb .e, body.calm .ms-badge.ready, body.calm .mb-gift-ic.ready, body.calm .mb-claim { animation-play-state: paused !important; }
+body.calm #bg *, body.calm .scene, body.calm .scene *, body.calm .kid-fig { animation-play-state: paused !important; }
+/* 흔들리는 것들은 멈추면 기운 채로 굳으니 아예 끔 */
+body.calm .w-umb .e, body.calm .ms-badge.ready, body.calm .mb-gift-ic.ready, body.calm .mb-claim { animation: none !important; }
+/* 선물 상자 열기 줄: 창 너비만큼 길어서 기울면 미션 칸을 덮음 → 기울이지 않고 살짝 커졌다 작아지기 */
+#stk .mb-claim { animation: fh-claim 1.6s ease-in-out infinite; }
+@keyframes fh-claim { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
 body.calm #bg .sun { transition: none; }
 body.calm .card, body.calm .dinner-box, body.calm .tool, body.calm .w-panel, body.calm .weather { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgba(255,255,255,.86); }
@@ -581,7 +587,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       todo: '챙길 할 일', noTodos: '급한 할 일이 없어요 🎉', more: (n) => `+ ${n}개 더`, doneMsg: '완료로 표시했어요', undo: '되돌리기',
       lunchTitle: '오늘 점심', dinnerTitle: '오늘 저녁', kidTag: '아이', noMeal: '아직 정하지 않았어요', eatSoon: '🧊 빨리 먹기',
       
-      kids: '주간 미션', roomOpen: '🥚 포켓몬', roomOpenPing: '💖 티니핑', roomBack: '🎯 미션판', rewardGot: (x) => `${x} 받았어요! 방 가방에 넣어 뒀어요`, noReward: '선물 미정', delMode: '스티커 지우기', delHint: '🗑 지울 스티커를 누르세요 (실수하면 되돌리기)', delDone: '완료', delToast: '스티커를 지웠어요', offHint: '빈 칸을 누르면 엄마·아빠가 🏖️ 쉬는 날(아프거나 여행 간 날)로 표시해요', offDone: '🏖️ 쉬는 날로 표시했어요', offUndone: '쉬는 날 표시를 지웠어요', tapBox: '상자를 톡톡톡 눌러 봐!', newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 선물 상자 열기!', msGiftTitle: '🎉 오늘 미션 다 했어요!', stkYay: '와! 스티커가 나왔어요!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', 
+      kids: '주간 미션', roomOpen: '🥚 포켓몬', roomOpenPing: '💖 티니핑', roomBack: '🎯 미션판', rewardGot: (x) => `${x} 받았어요! 방 가방에 넣어 뒀어요`, noReward: '선물 미정', delMode: '스티커 지우기', delHint: '🗑 지울 스티커를 누르세요 (실수하면 되돌리기)', delDone: '완료', delToast: '스티커를 지웠어요', offHint: '빈 칸을 누르면 엄마·아빠가 🏖️ 쉬는 날(아프거나 여행 간 날)로 표시해요', offDone: '🏖️ 쉬는 날로 표시했어요', offUndone: '쉬는 날 표시를 지웠어요', tapBox: '상자를 톡톡톡 눌러 봐!', newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 선물 상자 열기!', msGiftTitle: '🎉 오늘 미션 다 했어요!', stkYay: '와! 스티커가 나왔어요!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', stkWait: '가족 계정에 연결하는 중이에요. 잠깐 뒤에 다시 눌러 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', 
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
       packNone: '챙길 준비물이 없어요 🙂', packHow: '우리가족 앱 → 오늘 일정 아래 🎒 준비물에서 넣을 수 있어요', packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', wakeOff: '끄기', wakeAll: '하루 종일', wakeTime: '시간 정하기', wakeFrom: '시작 시간', wakeTo: '끝 시간', wakeFromTo: '부터', wakeUntil: '까지', wakeNowOn: '지금 화면을 켜 두고 있어요', wakeNowOff: '지금은 켜 두지 않아요 (패드 자동 잠금대로 꺼져요)', wakeNote: '정한 시간이 지나면 패드 설정의 ‘자동 잠금’ 시간이 지난 뒤 화면이 꺼져요. 그래서 패드 자동 잠금은 ‘안 함’ 말고 2~5분으로 해 두세요. 꺼진 화면은 웹 화면이 스스로 켤 수 없어서, 아침에는 화면을 한 번 눌러 깨워 주세요.', lang: 'DE',
       signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
@@ -598,7 +604,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       todo: 'Wichtige Aufgaben', noTodos: 'Nichts Dringendes 🎉', more: (n) => `+ ${n} weitere`, doneMsg: 'Als erledigt markiert', undo: 'Rückgängig',
       lunchTitle: 'Heute Mittag', dinnerTitle: 'Heute Abend', kidTag: 'Kinder', noMeal: 'Noch nichts geplant', eatSoon: '🧊 Bald essen',
       
-      kids: 'Wochenmission', roomOpen: '🥚 Pokémon', roomOpenPing: '💖 Teenieping', roomBack: '🎯 Missionen', rewardGot: (x) => `${x} bekommen! Liegt im Zimmer`, noReward: 'Geschenk offen', delMode: 'Sticker löschen', delHint: '🗑 Tippe auf einen Sticker zum Löschen (Rückgängig möglich)', delDone: 'Fertig', delToast: 'Sticker gelöscht', offHint: 'Leeres Feld antippen: Eltern tragen einen 🏖️ Pausentag ein (krank, Urlaub)', offDone: '🏖️ Als Pausentag eingetragen', offUndone: 'Pausentag entfernt', tapBox: 'Tipp dreimal aufs Geschenk!', newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Geschenk öffnen!', msGiftTitle: '🎉 Heute alles geschafft!', stkYay: 'Juhu! Ein Sticker!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', 
+      kids: 'Wochenmission', roomOpen: '🥚 Pokémon', roomOpenPing: '💖 Teenieping', roomBack: '🎯 Missionen', rewardGot: (x) => `${x} bekommen! Liegt im Zimmer`, noReward: 'Geschenk offen', delMode: 'Sticker löschen', delHint: '🗑 Tippe auf einen Sticker zum Löschen (Rückgängig möglich)', delDone: 'Fertig', delToast: 'Sticker gelöscht', offHint: 'Leeres Feld antippen: Eltern tragen einen 🏖️ Pausentag ein (krank, Urlaub)', offDone: '🏖️ Als Pausentag eingetragen', offUndone: 'Pausentag entfernt', tapBox: 'Tipp dreimal aufs Geschenk!', newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Geschenk öffnen!', msGiftTitle: '🎉 Heute alles geschafft!', stkYay: 'Juhu! Ein Sticker!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', stkWait: 'Verbinde mit dem Familienkonto … bitte gleich noch mal tippen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', 
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
       packNone: 'Nichts mitzunehmen 🙂', packHow: 'In der Familien-App unter „Heute“ → 🎒 Mitnehmen eintragen', packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', wakeOff: 'Aus', wakeAll: 'Immer', wakeTime: 'Zeiten', wakeFrom: 'Von', wakeTo: 'Bis', wakeFromTo: 'bis', wakeUntil: '', wakeNowOn: 'Der Bildschirm bleibt gerade an', wakeNowOff: 'Gerade nicht (das iPad sperrt sich wie eingestellt)', wakeNote: 'Außerhalb der Zeit geht der Bildschirm nach der „Automatischen Sperre“ des iPads aus – stell sie dafür auf 2–5 Minuten statt „Nie“. Ein ausgeschalteter Bildschirm kann sich nicht selbst einschalten; morgens einmal antippen.', lang: '한',
       signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
@@ -809,8 +815,10 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   const wmo = (code) => WMO.find((x) => x[0].includes(code)) || WMO[3];
   const wIcon = (code, day) => wmo(code)[day ? 1 : 2];
   const wName = (code) => wmo(code)[lang === 'de' ? 4 : 3];
-  async function loadWeather() {
-    if (wx && Date.now() - wx.at < 25 * 60e3) return;
+  // 날씨 자료 중 오늘 칸 (자정 뒤 아직 새로 못 받았으면 어제 받은 자료의 둘째 칸이 오늘)
+  function wxDay() { const t = wx && wx.daily && wx.daily.time; const i = t ? t.indexOf(todayKey()) : -1; return i < 0 ? 0 : i; }
+  async function loadWeather(force) {
+    if (!force && wx && Date.now() - wx.at < 25 * 60e3) return;
     const q = `latitude=${PLACE.lat}&longitude=${PLACE.lon}&current=temperature_2m,apparent_temperature,weather_code,is_day,precipitation`
       + '&hourly=temperature_2m,apparent_temperature,weather_code,precipitation_probability,is_day,rain,showers,snowfall'
       + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset&timezone=Europe%2FBerlin&forecast_days=3';
@@ -1082,7 +1090,8 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   function sunPhase() {
     const now = nowForSky(), t = now.getTime(), D = 45 * 60e3;
     const at = (str, hh) => { if (str) return new Date(str).getTime(); const d = new Date(now); d.setHours(hh, 0, 0, 0); return d.getTime(); };
-    const sr = at(wx && wx.daily && wx.daily.sunrise && wx.daily.sunrise[0], 7), ss = at(wx && wx.daily && wx.daily.sunset && wx.daily.sunset[0], 17);
+    const i = wxDay();
+    const sr = at(wx && wx.daily && wx.daily.sunrise && wx.daily.sunrise[i], 7), ss = at(wx && wx.daily && wx.daily.sunset && wx.daily.sunset[i], 17);
     const phase = t < sr - D || t > ss + D ? 'night' : t < sr + D ? 'dawn' : t > ss - D ? 'dusk' : 'day';
     // 하늘을 가로지르는 위치 0→1 (해: 해 뜰 때 ~ 질 때, 달: 해 진 뒤 ~ 다음 날 해 뜰 때)
     const sun = Math.min(1, Math.max(0, (t - sr) / (ss - sr)));
@@ -1357,8 +1366,8 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
           h('div', { class: 'row' }, h('span', { class: 'w-ic', text: wIcon(c.weather_code, c.is_day) }), h('span', { class: 'w-temp', text: `${Math.round(c.temperature_2m)}°` })),
           h('div', { class: 'w-desc', text: wName(c.weather_code) })),
         h('div', { class: 'w-hilo' },
-          h('div', { class: 'hi', title: L().wHi }, tri(true), `${Math.round(d.temperature_2m_max[0])}°`),
-          h('div', { class: 'lo', title: L().wLo }, tri(false), `${Math.round(d.temperature_2m_min[0])}°`)),
+          h('div', { class: 'hi', title: L().wHi }, tri(true), `${Math.round(d.temperature_2m_max[wxDay()])}°`),
+          h('div', { class: 'lo', title: L().wLo }, tri(false), `${Math.round(d.temperature_2m_min[wxDay()])}°`)),
         o && o.umbrella ? h('div', { class: 'w-umb' }, h('span', { class: 'e', text: '☂️' }), h('b', { text: L().umbrella })) : null),
         kid);
     } else {
@@ -1600,7 +1609,10 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   let mbCtl = null, mbRedraw = 0;
   const boardBox = h('div', { class: 'stk-boardbox' });
   function boardOff() { if (mbCtl) { mbCtl.destroy(); mbCtl = null; } }
-  function openStickers(k) { if (!FS) { toast(L().stkOffline); return; } stk = { k }; drawStickers(); $('#stk').hidden = false; }
+  function openStickers(k) {
+    if (!FS) { toast(L().stkOffline); return; }
+    if (S.early) { toast(L().stkWait); return; } // 저장해 둔 (오래됐을 수 있는) 자료로 방 · 미션을 쓰면 다른 앱에서 바꾼 것을 덮을 수 있음 → 연결된 뒤에
+    stk = { k }; drawStickers(); $('#stk').hidden = false; }
   function closeStickers() { roomOff(); boardOff(); stk = null; $('#stk').hidden = true; $('#stk-card').replaceChildren(); }
   const wig = (el) => { el.classList.remove('wig'); void el.offsetWidth; el.classList.add('wig'); };
   function drawStickers() {
@@ -1709,7 +1721,8 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   async function setTodoDone(t, done) {
     if (DEMO) { t.done = done; t.doneAt = done ? Date.now() : null; render(); }
     else if (S.house) {
-      if (fb && !S.early) await fb.F.updateDoc(fb.F.doc(fb.db, 'households', S.house), { [`todos.${t.id}.done`]: done, [`todos.${t.id}.doneAt`]: done ? Date.now() : null }).catch((e) => console.warn('todo', e));
+      // 서버 확인을 기다리지 않음 (인터넷이 느리면 '완료' 알림이 한참 뒤에 뜨던 것) — 화면은 Firestore가 바로 반영
+      if (fb && !S.early) fb.F.updateDoc(fb.F.doc(fb.db, 'households', S.house), { [`todos.${t.id}.done`]: done, [`todos.${t.id}.doneAt`]: done ? Date.now() : null }).catch((e) => console.warn('todo', e));
       else { t.done = done; t.doneAt = done ? Date.now() : null; render(); whenOnline(() => fb.F.updateDoc(fb.F.doc(fb.db, 'households', S.house), { [`todos.${t.id}.done`]: done, [`todos.${t.id}.doneAt`]: done ? Date.now() : null }).catch((e) => console.warn('todo', e))); }
     }
     if (done) toast(L().doneMsg, () => setTodoDone(t, false));
@@ -1817,11 +1830,12 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   earlyStart();
   async function startFirebase() {
     const cfg = window.FIREBASE_CONFIG;
-    if (!cfg) { S.ready = true; render(); return; }
+    if (!cfg) { S.ready = true; S.early = false; early = []; render(); return; }
     try {
       const V = 'https://www.gstatic.com/firebasejs/10.12.2/';
-      const [{ initializeApp }, A, F] = await Promise.all([import(V + 'firebase-app.js'), import(V + 'firebase-auth.js'), import(V + 'firebase-firestore.js')]);
-      const app = initializeApp(cfg);
+      const [{ initializeApp, getApps }, A, F] = await Promise.all([import(V + 'firebase-app.js'), import(V + 'firebase-auth.js'), import(V + 'firebase-firestore.js')]);
+      if (fb) return; // 다시 시도하는 사이 이미 연결됨
+      const app = getApps()[0] || initializeApp(cfg);
       let db;
       try { db = F.initializeFirestore(app, { localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() }) }); }
       catch (e) { console.warn('cache', e); db = F.getFirestore(app); }
@@ -1855,8 +1869,14 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     } catch (e) {
       console.warn('firebase', e);
       S.ready = true; S.err = L().loadErr; render();
+      // 인터넷 없이 켜졌을 때 등: 저장해 둔 화면은 그대로 두고, 인터넷이 돌아오면 / 30초 뒤에 다시 연결 (그동안 누른 것도 그때 저장)
+      if (!fb && !fbRetry) {
+        const again = () => { clearTimeout(fbRetry); window.removeEventListener('online', again); fbRetry = 0; startFirebase(); };
+        fbRetry = setTimeout(again, 30e3); window.addEventListener('online', again);
+      }
     }
   }
+  let fbRetry = 0;
   async function signIn() {
     S.err = '';
     try { await fb.A.signInWithPopup(fb.auth, new fb.A.GoogleAuthProvider()); }
@@ -1950,7 +1970,9 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   if (DEMO) { demoSetup(); S.ready = true; window.__kid = { kidSVG, girlSVG, adultSVG, dressFor, personIcon }; }
   render();
   // 글꼴이 늦게 오면 줄 높이가 바뀌므로 카드 칸 맞춤을 다시
+  // (글꼴 파일은 화면을 막지 않게 나중에 받으므로 fonts.ready 가 너무 일찍 끝날 수 있음 → 글꼴이 실제로 온 때마다 다시)
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderGrid());
+  if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => renderGrid());
   if (!DEMO) startFirebase();
   loadHolidays();
   loadWeather();
@@ -1966,14 +1988,25 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     if (stamp !== lastStamp) {
       const newDay = stamp.slice(0, 10) !== lastStamp.slice(0, 10);
       lastStamp = stamp; render();
-      if (newDay) { loadEvents(); loadHolidays(); }
+      if (newDay) { loadEvents(); loadHolidays(); loadWeather(true); }
     }
     if (swNew && $('#stk').hidden && !document.querySelector('.sheet-wrap:not([hidden]), #pack:not([hidden])') && Date.now() - lastTouch > 60e3) location.reload(); // 새 버전
     safely('pack', packMorning);
     safely('calm', applyCalm);
     safely('bg', renderBg);
-    if (wakeCfg.mode === 'time' && !!wakeLock !== wakeWanted()) applyWake().then(renderTop);
+    if (wakeCfg.mode === 'time') { // 켜 두기를 못 쓰는 패드에서도 10초마다 윗줄을 다시 그리지 않게: 시간 안/밖이 바뀔 때만
+      const w = wakeWanted();
+      if (!!wakeLock !== w) applyWake();
+      if (w !== wakeWas) { wakeWas = w; renderTop(); }
+    }
+    // 오래 켜 둔 패드도 새 버전을 알게: 30분마다 앱 파일이 바뀌었는지 확인 (바뀌었으면 아무도 안 만질 때 새로 고침)
+    if (!DEMO && 'serviceWorker' in navigator && Date.now() - swCheck > 30 * 60e3) {
+      swCheck = Date.now();
+      navigator.serviceWorker.getRegistration().then((r) => r && r.update()).catch(() => {});
+      for (const u of ['./', '../our-family/mission-board.js', '../our-family/poke-room.js', '../our-family/stickers-shared.js']) fetch(u).catch(() => {});
+    }
   }, 10000);
+  let wakeWas = wakeWanted(), swCheck = Date.now();
   // 캘린더 10분마다, 날씨 30분마다 (화면이 켜져 있을 때만)
   setInterval(() => { if (document.visibilityState === 'visible') loadEvents(); }, 10 * 60e3);
   setInterval(() => { if (document.visibilityState === 'visible') loadWeather(); }, 30 * 60e3);
@@ -1988,6 +2021,8 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   if ('serviceWorker' in navigator && !DEMO) {
     navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});
     navigator.serviceWorker.addEventListener('message', (e) => { if (e.data === 'family-home-updated') swNew = true; });
+    const hadSw = !!navigator.serviceWorker.controller; // 새 sw 가 자리 잡으면(처음 설치 말고) 새 버전
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadSw) swNew = true; });
   }
 })();
 </script>
