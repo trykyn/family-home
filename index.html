@@ -485,6 +485,8 @@ body { overflow: hidden; }
 .kids4 .kid { grid-template-columns: 48px minmax(0, 1fr); gap: 4px 10px; padding: 8px 4px 8px 6px; }
 .kids4 .kid img { width: 48px; height: 48px; box-shadow: 0 0 0 3px var(--mc); }
 .kids4 .kid .nm { font-size: 22px; }
+.pig-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px 2px 5px; border-radius: 999px; background: #FFE3EE; color: #C93A72; font: 400 17px/1.2 var(--font-display); white-space: nowrap; } /* 🐷 다빈 저금통 */
+.pig-chip svg { width: 30px; height: 22px; display: block; }
 .kids4 .ms-row { grid-column: 1 / -1; margin-top: 2px; gap: 3px; }
 .kids4 .ms-row span { font-size: 20px; }
 .kids4 .ms-row .ms-badge { font-size: 15px; }
@@ -1525,11 +1527,25 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     return h('div', { class: 'ms-row' }, ...M.list.map((x) => h('span', { class: M.day[x.id] ? 'on' : '', html: FS.missionIconHTML(x) })),
       h('b', { class: 'ms-badge' + (M.got ? ' got' : M.all ? ' ready' : ''), text: M.got ? '✅' : M.all ? '🎁' : `${M.done}/${M.total}` }));
   }
+  // 🐷 다빈 저금통: 우리가족 앱의 kids.davin.money 합계 (금액 맞추기 · 합친 기록 포함 = 저금통 화면과 같은 금액). 이름 옆에 작게
+  const PIG_MINI = '<svg viewBox="14 22 200 130" aria-hidden="true"><path d="M30 86c-18-2-22-18-12-22" fill="none" stroke="#F27BA6" stroke-width="7" stroke-linecap="round"/>' +
+    '<rect x="52" y="118" width="24" height="30" rx="9" fill="#F48AB2"/><rect x="136" y="118" width="24" height="30" rx="9" fill="#F48AB2"/>' +
+    '<ellipse cx="106" cy="90" rx="78" ry="56" fill="#FFA9CB"/><path d="M144 48c3-14 17-23 34-20 4 2 5 6 3 10-4 10-14 18-26 20-6 1-10-3-11-10z" fill="#FF97BE"/>' +
+    '<rect x="80" y="36" width="44" height="10" rx="5" fill="#9B3D63"/><ellipse cx="182" cy="92" rx="22" ry="18" fill="#FF8DB8"/>' +
+    '<ellipse cx="176" cy="92" rx="4" ry="6" fill="#B2456F"/><ellipse cx="189" cy="92" rx="4" ry="6" fill="#B2456F"/><circle cx="158" cy="72" r="7" fill="#3B1B2B"/></svg>';
+  function pigChip(k) {
+    const ms = Object.values(kidOf(k).money || {});
+    if (k !== 'davin' || !ms.length) return null;
+    const sum = Math.round(ms.reduce((a, m) => a + (Number(m && m.amt) || 0), 0) * 100) / 100;
+    const chip = h('span', { class: 'pig-chip', html: PIG_MINI });
+    chip.append(h('b', { text: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(sum) }));
+    return chip;
+  }
   function kidsCard() {
     if (!FS) return card('kids', '🎯', 'var(--c-kids)', L().kids, null, null, h('div', { class: 'empty', text: L().stkOffline }));
     const rows = ['davin', 'arin', 'mom', 'dad'].map((k) => h('li', { class: 'kid tap', style: `--mc:${WHO[k]}`, role: 'button', tabindex: '0', onclick: () => openStickers(k) },
       h('img', { src: avatarOf(k), alt: '' }),
-      h('div', { class: 'nm', text: L().who[k] }), missionMini(k)));
+      h('div', { class: 'nm' }, L().who[k], pigChip(k)), missionMini(k)));
     return card('kids', '🎯', 'var(--c-kids)', L().kids, null, null, h('ul', { class: 'kids4' }, ...rows));
   }
 
