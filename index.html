@@ -1533,15 +1533,10 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       h('b', { class: 'ms-badge' + (M.got ? ' got' : M.all ? ' ready' : ''), text: M.got ? '✅' : M.all ? '🎁' : `${M.done}/${M.total}` }));
   }
   // 🐷 다빈 저금통: 우리가족 앱의 kids.davin.money 합계 (금액 맞추기 · 합친 기록 포함 = 저금통 화면과 같은 금액). 이름 옆에 작게
-  const PIG_MINI = '<svg viewBox="14 22 200 130" aria-hidden="true"><path d="M30 86c-18-2-22-18-12-22" fill="none" stroke="#F27BA6" stroke-width="7" stroke-linecap="round"/>' +
-    '<rect x="52" y="118" width="24" height="30" rx="9" fill="#F48AB2"/><rect x="136" y="118" width="24" height="30" rx="9" fill="#F48AB2"/>' +
-    '<ellipse cx="106" cy="90" rx="78" ry="56" fill="#FFA9CB"/><path d="M144 48c3-14 17-23 34-20 4 2 5 6 3 10-4 10-14 18-26 20-6 1-10-3-11-10z" fill="#FF97BE"/>' +
-    '<rect x="80" y="36" width="44" height="10" rx="5" fill="#9B3D63"/><ellipse cx="182" cy="92" rx="22" ry="18" fill="#FF8DB8"/>' +
-    '<ellipse cx="176" cy="92" rx="4" ry="6" fill="#B2456F"/><ellipse cx="189" cy="92" rx="4" ry="6" fill="#B2456F"/><circle cx="158" cy="72" r="7" fill="#3B1B2B"/></svg>';
   function pigChip(k) {
     const PB = window.PiggyBank, d = kidOf(k);
     if (k !== 'davin' || !PB || !Object.keys(d.money || {}).length) return null;
-    const chip = h('span', { class: 'pig-chip', html: PIG_MINI });
+    const chip = h('span', { class: 'pig-chip', html: PB.bankSVG ? PB.bankSVG(d) : '' }); // 예전 piggy-bank.js 가 남아 있어도 안 멈춤 // 고른 저금통 모양 (piggy-bank.js)
     chip.append(h('b', { text: PB.fmt(Math.round(PB.sumOf(d) * 100) / 100) }));
     return chip;
   }
