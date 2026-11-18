@@ -1539,11 +1539,10 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     '<rect x="80" y="36" width="44" height="10" rx="5" fill="#9B3D63"/><ellipse cx="182" cy="92" rx="22" ry="18" fill="#FF8DB8"/>' +
     '<ellipse cx="176" cy="92" rx="4" ry="6" fill="#B2456F"/><ellipse cx="189" cy="92" rx="4" ry="6" fill="#B2456F"/><circle cx="158" cy="72" r="7" fill="#3B1B2B"/></svg>';
   function pigChip(k) {
-    const ms = Object.values(kidOf(k).money || {});
-    if (k !== 'davin' || !ms.length) return null;
-    const sum = Math.round(ms.reduce((a, m) => a + (Number(m && m.amt) || 0), 0) * 100) / 100;
+    const PB = window.PiggyBank, d = kidOf(k);
+    if (k !== 'davin' || !PB || !Object.keys(d.money || {}).length) return null;
     const chip = h('span', { class: 'pig-chip', html: PIG_MINI });
-    chip.append(h('b', { text: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(sum) }));
+    chip.append(h('b', { text: PB.fmt(Math.round(PB.sumOf(d) * 100) / 100) }));
     return chip;
   }
   function kidsCard() {
