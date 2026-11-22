@@ -1735,7 +1735,8 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       const mFrom = window.FamilyStickers ? window.FamilyStickers.weekKeys(todayKey())[0] : keyOf(addDays(new Date(), -6));
       // 네 명 모두 (엄마·아빠도 주간 미션 · 🥚 포켓몬 방). room = 키우기 방 자료 (빠지면 알을 골라도 다시 '알 고르기'가 됨), poke = 예전 방 (요일 칸 그림만)
       for (const k of BOARD_ORDER) if (d.kids && d.kids[k]) kids[k] = { cfg: d.kids[k].cfg || {}, stickers: d.kids[k].stickers || {}, money: d.kids[k].money || null,
-        missions: d.kids[k].missions || null, golds: d.kids[k].golds || {}, timetable: d.kids[k].timetable || null, poke: d.kids[k].poke || null, room: d.kids[k].room || null, mdone: Object.fromEntries(Object.entries(d.kids[k].mdone || {}).filter(([day]) => day >= mFrom)) };
+        missions: d.kids[k].missions || null, golds: d.kids[k].golds || {}, timetable: d.kids[k].timetable || null, poke: d.kids[k].poke || null, room: d.kids[k].room || null,
+        pbTheme: d.kids[k].pbTheme || null, allow: d.kids[k].allow || null, mdone: Object.fromEntries(Object.entries(d.kids[k].mdone || {}).filter(([day]) => day >= mFrom)) };
       if (d.kids && d.kids.lock) kids.lock = d.kids.lock;
       fam = {
         todos: d.todos || {}, routine: d.routine || {}, routineBase: d.routineBase || {}, vacations: d.vacations || {}, meals, kids,
