@@ -635,9 +635,11 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   };
   const holidaysOn = (key) => (hol ? hol.list.filter((x) => x.s <= key && key <= x.e).sort((a, b) => (a.type === b.type ? 0 : a.type === 'pub' ? -1 : 1)) : []);
   const holName = (x) => lang === 'de' ? x.de : (HOL_KO[x.de] || x.de);
-  const vacationsOn = (key) => Object.values(famData().vacations || {}).filter((v) => v && v.s <= key && key <= v.e);
+  // 휴가 (우리가족 앱과 같은 규칙): who 가 있으면 그 사람들만, 없으면 가족 모두. p 를 주면 그 사람이 쉬는 휴가만 ('family' = 가족 모두 휴가만)
+  const vacationsOn = (key, p) => Object.values(famData().vacations || {}).filter((v) => v && v.s <= key && key <= v.e && (!p || !Array.isArray(v.who) || v.who.includes(p)));
   const vacName = (v) => !v.name ? (lang === 'de' ? 'Urlaub' : '가족 휴가') : (v.src && v.src !== lang && v.tr) ? v.tr : v.name;
-  const dayChips = (k) => [...vacationsOn(k).map((v) => `✈️ ${vacName(v)}`), ...holidaysOn(k).map((x) => `${x.type === 'pub' ? '🎉' : '🏖️'} ${holName(x)}`)]; // 휴가 · 공휴일 · 방학
+  const vacWho = (v) => (Array.isArray(v.who) ? ' · ' + v.who.map((p) => L().who[p] || p).join('·') : ''); // ' · 다빈·아린'
+  const dayChips = (k) => [...vacationsOn(k).map((v) => `✈️ ${vacName(v)}${vacWho(v)}`), ...holidaysOn(k).map((x) => `${x.type === 'pub' ? '🎉' : '🏖️'} ${holName(x)}`)]; // 휴가 · 공휴일 · 방학
   async function loadHolidays() {
     if (hol && Date.now() - hol.at < 7 * 864e5) return;
     const q = `countryIsoCode=DE&subdivisionCode=DE-BY&languageIsoCode=DE&validFrom=${keyOf(addDays(new Date(), -30))}&validTo=${keyOf(addDays(new Date(), 400))}`;
@@ -661,7 +663,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     const dow = DOWK[fromKey(key).getDay()];
     let e = (d.routineBase && d.routineBase[m] && d.routineBase[m][dow]) || ROUTINE_DEFAULT[m][dow] || { am: '', pm: '' };
     const hs = holidaysOn(key);
-    if (hs.some((x) => x.type === 'pub') || vacationsOn(key).length) return { am: '', pm: '' };
+    if (hs.some((x) => x.type === 'pub') || vacationsOn(key, m).length) return { am: '', pm: '' }; // 이 사람이 쉬는 휴가만
     if (hs.length) {
       const off = (v) => v === '@school' || v === '@schoolSport';
       if (off(e.am) || off(e.pm)) e = { ...e, am: off(e.am) ? '' : e.am, pm: off(e.pm) ? '' : e.pm };
@@ -1135,9 +1137,17 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
   ];
   const packIcon = (t) => ((PACK_IC.find(([re]) => re.test(t)) || WORD_IC.find(([re]) => re.test(t)) || [0, '🎒'])[1]);
   const PACK_WHO = ['davin', 'arin', 'mom', 'dad', ''];
+  // 매주 준비물은 쉬는 날엔 안 보임 (우리가족 앱과 같은 규칙): '이번만 빼기' 한 날, 그 사람 휴가(사람 없는 것 = 가족 모두 휴가),
+  // 공휴일, 아이 것은 학교 방학. 그날만 넣은 준비물은 언제나 보임
+  function weeklyOff(p, key) {
+    if (Array.isArray(p.skip) && p.skip.includes(key)) return true;
+    if (p.who ? vacationsOn(key, p.who).length : vacationsOn(key).some((v) => !Array.isArray(v.who))) return true;
+    const hs = holidaysOn(key);
+    return hs.some((x) => x.type === 'pub') || (hs.length > 0 && (p.who === 'davin' || p.who === 'arin'));
+  }
   function packItems(k) {
     const dow = DOWK[fromKey(k).getDay()], me = S.user && S.user.uid;
-    const list = Object.entries(famData().pack || {}).filter(([, p]) => p && p.text && (p.date === k || (!p.date && p.dow === dow)))
+    const list = Object.entries(famData().pack || {}).filter(([, p]) => p && p.text && (p.date === k || (!p.date && p.dow === dow && !weeklyOff(p, k))))
       .map(([id, p]) => ({ id, who: p.who || '', at: p.at || 0, text: p.src && p.src !== lang && p.tr && p.by !== me ? p.tr : p.text }))
       .sort((a, b) => PACK_WHO.indexOf(a.who) - PACK_WHO.indexOf(b.who) || a.at - b.at);
     // 비 오거나 눈이 많이 오는 날은 우산도 (오늘 것만 — 날씨칸 아이가 우산을 들고 있을 때)
