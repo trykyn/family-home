@@ -1,6 +1,6 @@
 // 오프라인 · 빠른 시작: 저장해 둔 것을 바로 보여 주고(기다리지 않음), 뒤에서 서버에 새 것이 있는지 받아 둠.
 // 앱 화면(html · js)이 바뀌었으면 화면에 알려서, 아무도 안 만질 때 조용히 새로 고침 (GitHub Pages 10분 저장 표시 때문에 cache: 'no-cache').
-const CACHE = 'family-home-v41';
+const CACHE = 'family-home-v42';
 const OF = (p) => new URL('../our-family/' + p, self.location).pathname;
 const SHARED = [OF('stickers-shared.js'), OF('poke-room.js'), OF('mission-board.js'), OF('piggy-bank.js')]; // 우리가족 앱과 같이 쓰는 파일
 const POKE = OF('poke/'), PING = OF('ping/'); // 포켓몬 · 티니핑 그림
