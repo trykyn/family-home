@@ -310,6 +310,7 @@ img { display: block; }
 .pin-err { color: var(--late); font-size: 14px; margin: 0 0 6px; }
 .pin-pad { display: grid; grid-template-columns: repeat(3, 64px); gap: 10px; justify-content: center; margin-top: 8px; }
 .pin-pad button { height: 56px; border-radius: 16px; background: var(--bg); font: 600 22px var(--font-body); }
+#sync { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(14px, env(safe-area-inset-bottom)); z-index: 61; padding: 7px 14px; border-radius: 99px; background: #FFF1B8; color: #8A6A00; font: 600 14px var(--font-body); box-shadow: 0 6px 18px -8px rgba(0,0,0,.35); pointer-events: none; } /* 📮 저장 기다리는 중 */
 #toast {
   position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 60;
   background: #12324A; color: #fff; padding: 12px 18px; border-radius: 14px; display: flex; gap: 16px; align-items: center; box-shadow: 0 10px 30px -10px rgba(0,0,0,.5);
@@ -494,7 +495,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       todo: '챙길 할 일', noTodos: '급한 할 일이 없어요 🎉', more: (n) => `+ ${n}개 더`, doneMsg: '완료로 표시했어요', undo: '되돌리기',
       lunchTitle: '오늘 점심', dinnerTitle: '오늘 저녁', kidTag: '아이', noMeal: '아직 정하지 않았어요', eatSoon: '🧊 빨리 먹기',
       
-      kids: '주간 미션', roomOpen: '🥚 포켓몬', roomOpenPing: '💖 티니핑', roomBack: '🎯 미션판', pigOpen: '🐷 저금통', rewardGot: (x) => `${x} 받았어요! 방 가방에 넣어 뒀어요`, noReward: '선물 미정', delMode: '스티커 지우기', delHint: '🗑 지울 스티커를 누르세요 (실수하면 되돌리기)', delDone: '완료', delToast: '스티커를 지웠어요', offHint: '빈 칸을 누르면 엄마·아빠가 🏖️ 쉬는 날(아프거나 여행 간 날)로 표시해요', offDone: '🏖️ 쉬는 날로 표시했어요', offUndone: '쉬는 날 표시를 지웠어요', tapBox: '상자를 톡톡톡 눌러 봐!', newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 선물 상자 열기!', msGiftTitle: '🎉 오늘 미션 다 했어요!', stkYay: '와! 스티커가 나왔어요!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', stkWait: '가족 계정에 연결하는 중이에요. 잠깐 뒤에 다시 눌러 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', 
+      kids: '주간 미션', roomOpen: '🥚 포켓몬', roomOpenPing: '💖 티니핑', roomBack: '🎯 미션판', pigOpen: '🐷 저금통', rewardGot: (x) => `${x} 받았어요! 방 가방에 넣어 뒀어요`, noReward: '선물 미정', delMode: '스티커 지우기', delHint: '🗑 지울 스티커를 누르세요 (실수하면 되돌리기)', delDone: '완료', delToast: '스티커를 지웠어요', offHint: '빈 칸을 누르면 엄마·아빠가 🏖️ 쉬는 날(아프거나 여행 간 날)로 표시해요', offDone: '🏖️ 쉬는 날로 표시했어요', offUndone: '쉬는 날 표시를 지웠어요', tapBox: '상자를 톡톡톡 눌러 봐!', newBoard: '새 판 시작', stkGiven: '⭐ 스티커를 붙였어요', weekTitle: '이번 주', weekRule: '일주일 다 채우면 🏅 황금 스티커! 황금 스티커를 다 모으면 🎁 선물', weekGold: '🏅 이번 주 완성! 황금 스티커를 받았어요', goldDone: (n) => `🎉 황금 스티커 ${n}개 다 모았어요!`, msTitle: '🎯 오늘의 미션', msClaim: '🎁 선물 상자 열기!', msGiftTitle: '🎉 오늘 미션 다 했어요!', stkYay: '와! 스티커가 나왔어요!', msGot: '✅ 오늘 미션 스티커를 받았어요!', stkOffline: '스티커판을 불러오지 못했어요. 인터넷을 확인해 주세요.', stkWait: '가족 계정에 연결하는 중이에요. 잠깐 뒤에 다시 눌러 주세요.', saving: '⏳ 저장 중…', saveOffline: '📴 인터넷을 기다리는 중 · 연결되면 저장해요', saveErr: '⚠️ 저장하지 못했어요. 다시 해 주세요.', pinAsk: '🔒 엄마·아빠 비밀번호', pinWrong: '비밀번호가 달라요', 
       wHi: '최고', wLo: '최저', wErr: '날씨를 못 불러왔어요', umbrella: '우산!', clothesTomorrow: '내일 옷', clothes: '오늘 입을 옷',
       packNone: '챙길 준비물이 없어요 🙂', packHow: '우리가족 앱 → 오늘 일정 아래 🎒 준비물에서 넣을 수 있어요', packToday: '오늘 챙길 것!', packTomorrow: '내일 챙길 것', packAll: '모두', packDone: '다 챙겼어요! 👍', packUmb: '우산', packOpen: '준비물', wake: '화면 켜 두기', wakeNo: '이 기기는 화면 켜 두기를 지원하지 않아요', wakeOff: '끄기', wakeAll: '하루 종일', wakeTime: '시간 정하기', wakeFrom: '시작 시간', wakeTo: '끝 시간', wakeFromTo: '부터', wakeUntil: '까지', wakeNowOn: '지금 화면을 켜 두고 있어요', wakeNowOff: '지금은 켜 두지 않아요 (패드 자동 잠금대로 꺼져요)', wakeNote: '정한 시간이 지나면 패드 설정의 ‘자동 잠금’ 시간이 지난 뒤 화면이 꺼져요. 그래서 패드 자동 잠금은 ‘안 함’ 말고 2~5분으로 해 두세요. 꺼진 화면은 웹 화면이 스스로 켤 수 없어서, 아침에는 화면을 한 번 눌러 깨워 주세요.', lang: 'DE',
       signInText: '우리가족 앱과 같은 구글 계정으로 로그인하면 가족 일정·할 일·식단·장보기가 한 화면에 보여요.',
@@ -511,7 +512,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       todo: 'Wichtige Aufgaben', noTodos: 'Nichts Dringendes 🎉', more: (n) => `+ ${n} weitere`, doneMsg: 'Als erledigt markiert', undo: 'Rückgängig',
       lunchTitle: 'Heute Mittag', dinnerTitle: 'Heute Abend', kidTag: 'Kinder', noMeal: 'Noch nichts geplant', eatSoon: '🧊 Bald essen',
       
-      kids: 'Wochenmission', roomOpen: '🥚 Pokémon', roomOpenPing: '💖 Teenieping', roomBack: '🎯 Missionen', pigOpen: '🐷 Sparschwein', rewardGot: (x) => `${x} bekommen! Liegt im Zimmer`, noReward: 'Geschenk offen', delMode: 'Sticker löschen', delHint: '🗑 Tippe auf einen Sticker zum Löschen (Rückgängig möglich)', delDone: 'Fertig', delToast: 'Sticker gelöscht', offHint: 'Leeres Feld antippen: Eltern tragen einen 🏖️ Pausentag ein (krank, Urlaub)', offDone: '🏖️ Als Pausentag eingetragen', offUndone: 'Pausentag entfernt', tapBox: 'Tipp dreimal aufs Geschenk!', newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Geschenk öffnen!', msGiftTitle: '🎉 Heute alles geschafft!', stkYay: 'Juhu! Ein Sticker!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', stkWait: 'Verbinde mit dem Familienkonto … bitte gleich noch mal tippen.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', 
+      kids: 'Wochenmission', roomOpen: '🥚 Pokémon', roomOpenPing: '💖 Teenieping', roomBack: '🎯 Missionen', pigOpen: '🐷 Sparschwein', rewardGot: (x) => `${x} bekommen! Liegt im Zimmer`, noReward: 'Geschenk offen', delMode: 'Sticker löschen', delHint: '🗑 Tippe auf einen Sticker zum Löschen (Rückgängig möglich)', delDone: 'Fertig', delToast: 'Sticker gelöscht', offHint: 'Leeres Feld antippen: Eltern tragen einen 🏖️ Pausentag ein (krank, Urlaub)', offDone: '🏖️ Als Pausentag eingetragen', offUndone: 'Pausentag entfernt', tapBox: 'Tipp dreimal aufs Geschenk!', newBoard: 'Neue Runde starten', stkGiven: '⭐ Sticker aufgeklebt', weekTitle: 'Diese Woche', weekRule: 'Ganze Woche voll = 🏅 Goldsticker! Alle Goldsticker = 🎁 Geschenk', weekGold: '🏅 Woche geschafft! Goldsticker bekommen', goldDone: (n) => `🎉 Alle ${n} Goldsticker gesammelt!`, msTitle: '🎯 Tagesmission', msClaim: '🎁 Geschenk öffnen!', msGiftTitle: '🎉 Heute alles geschafft!', stkYay: 'Juhu! Ein Sticker!', msGot: '✅ Heute schon einen Missions-Sticker bekommen!', stkOffline: 'Stickerbogen nicht geladen – bitte Internet prüfen.', stkWait: 'Verbinde mit dem Familienkonto … bitte gleich noch mal tippen.', saving: '⏳ Speichere …', saveOffline: '📴 Warte auf Internet · wird dann gespeichert', saveErr: '⚠️ Nicht gespeichert – bitte noch mal.', pinAsk: '🔒 Eltern-Code', pinWrong: 'Falscher Code', 
       wHi: 'max', wLo: 'min', wErr: 'Wetter nicht geladen', umbrella: 'Schirm!', clothesTomorrow: 'Morgen', clothes: 'Anziehen heute',
       packNone: 'Nichts mitzunehmen 🙂', packHow: 'In der Familien-App unter „Heute“ → 🎒 Mitnehmen eintragen', packToday: 'Heute mitnehmen!', packTomorrow: 'Morgen mitnehmen', packAll: 'Alle', packDone: 'Alles dabei! 👍', packUmb: 'Regenschirm', packOpen: 'Mitnehmen', wake: 'Bildschirm anlassen', wakeNo: 'Dieses Gerät kann den Bildschirm nicht anlassen', wakeOff: 'Aus', wakeAll: 'Immer', wakeTime: 'Zeiten', wakeFrom: 'Von', wakeTo: 'Bis', wakeFromTo: 'bis', wakeUntil: '', wakeNowOn: 'Der Bildschirm bleibt gerade an', wakeNowOff: 'Gerade nicht (das iPad sperrt sich wie eingestellt)', wakeNote: 'Außerhalb der Zeit geht der Bildschirm nach der „Automatischen Sperre“ des iPads aus – stell sie dafür auf 2–5 Minuten statt „Nie“. Ein ausgeschalteter Bildschirm kann sich nicht selbst einschalten; morgens einmal antippen.', lang: '한',
       signInText: 'Mit dem Google-Konto der Familien-App anmelden – dann siehst du Termine, Aufgaben, Essen und Einkauf auf einen Blick.',
@@ -1485,18 +1486,68 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     return clash ? q.map((x) => [x]) : [q];
   }
   function flushKids() {
-    const q = [...kq.values()]; kq = null;
-    whenOnline(() => {
-      const F = fb.F, ref = houseRef();
-      const send = (list) => F.updateDoc(ref, ...list.flatMap(([p, v]) => [new F.FieldPath('kids', ...p), v == null ? F.deleteField() : v]));
-      for (const list of kidsBatches(q)) {
-        Promise.resolve().then(() => send(list)).catch((e) => { // 묶음이 안 되면 예전처럼 하나씩
-          if (list.length < 2) return console.warn('kids', e);
-          console.warn('kids batch', e);
-          list.forEach((x) => send([x]).catch((e2) => console.warn('kids', e2)));
-        });
-      }
-    });
+    const q = [...kq.values()].map(([p, v]) => [p, v, outAdd(p, v)]); kq = null;
+    whenOnline(() => sendKids(q));
+  }
+  function sendKids(q) { // q = [[path, value, 보낼 것 번호], …]
+    const F = fb.F, ref = houseRef();
+    const send = (list) => {
+      list.forEach((x) => inflight.add(x[2]));
+      return F.updateDoc(ref, ...list.flatMap(([p, v]) => [new F.FieldPath('kids', ...p), v == null ? F.deleteField() : clean(v)]))
+        .then(() => outDone(list.map((x) => x[2])))
+        .finally(() => list.forEach((x) => inflight.delete(x[2])));
+    };
+    const fail = (list, e) => { console.warn('kids', e); outDone(list.map((x) => x[2])); toast(L().saveErr); }; // 서버가 거절한 것은 다시 보내도 안 됨
+    for (const list of kidsBatches(q)) {
+      Promise.resolve().then(() => send(list)).catch((e) => { // 묶음이 안 되면 예전처럼 하나씩
+        if (list.length < 2) return fail(list, e);
+        console.warn('kids batch', e);
+        list.forEach((x) => Promise.resolve().then(() => send([x])).catch((e2) => fail([x], e2)));
+      });
+    }
+  }
+  // Firestore는 값 안에 undefined 가 있으면 통째로 거절 → 빼고 보냄 (배열 안은 null)
+  const clean = (v) => (Array.isArray(v) ? v.map((x) => (x === undefined ? null : clean(x)))
+    : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).filter(([, x]) => x !== undefined).map(([k, x]) => [k, clean(x)])) : v);
+
+  /* 📮 아직 서버가 "받았어요" 하지 않은 아이 칸 쓰기는 이 기기에도 적어 둠 (family-home:outbox).
+     새로 고침 · 패드가 앱을 껐다 켜도, 패드 저장소가 고장 나 Firestore가 잃어버려도 연결되면 다시 보냄
+     (2026-11-25 아린 방에서 산 딸기 · 먹이 · 로미 진화가 서버에 안 가고 사라졌던 일) */
+  const OUT_KEY = 'family-home:outbox';
+  let outbox = load(OUT_KEY, []);
+  if (!Array.isArray(outbox)) outbox = [];
+  const inflight = new Set();
+  function outAdd(path, v) {
+    const key = path.join('\u0001');
+    outbox = outbox.filter((x) => { const k = x.path.join('\u0001'); return k !== key && !k.startsWith(key + '\u0001'); }); // 같은 칸 · 그 안의 칸은 새것만
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    outbox.push({ id, uid: S.user && S.user.uid, house: S.house, path, v: v == null ? null : clean(v), at: Date.now() });
+    store(OUT_KEY, outbox); syncMark(); setTimeout(syncMark, 6000);
+    return id;
+  }
+  function outDone(ids) {
+    const n = outbox.length;
+    outbox = outbox.filter((x) => !ids.includes(x.id));
+    if (outbox.length !== n) { store(OUT_KEY, outbox); syncMark(); }
+  }
+  // 연결되면: 지난번에 못 보낸 것 다시 보내기 (같은 사람 · 같은 가족, 하루 안의 것만 — 오래된 걸 다시 쓰면 그 뒤에 폰에서 바꾼 걸 덮을 수 있어서). 화면에도 바로
+  function resendOutbox() {
+    const me = S.user && S.user.uid, old = Date.now() - 864e5;
+    const mine = outbox.filter((x) => x.house === S.house && x.uid === me && x.at > old);
+    if (mine.length !== outbox.length) { outbox = mine; store(OUT_KEY, outbox); syncMark(); }
+    const todo = mine.filter((x) => !inflight.has(x.id));
+    if (!todo.length) return;
+    console.info('[우리집] 못 보낸 것 다시 보냄', todo.length);
+    todo.forEach((x) => setKidLocal(x.path, x.v));
+    sendKids(todo.map((x) => [x.path, x.v, x.id]));
+  }
+  // 저장을 5초 넘게 기다리는 것이 있으면 오른쪽 아래에 작게 표시 (인터넷이 끊겼는지 알 수 있게)
+  function syncMark() {
+    const waiting = !DEMO && outbox.some((x) => Date.now() - x.at > 5000);
+    let el = $('#sync');
+    if (!waiting) { if (el) el.remove(); return; }
+    if (!el) { el = h('div', { id: 'sync', role: 'status' }); document.body.append(el); }
+    el.textContent = !navigator.onLine || !fb || S.early ? L().saveOffline : L().saving;
   }
   // 엄마·아빠 비밀번호 (우리가족 앱의 아이 화면 잠금과 같은 번호). 한 번 맞히면 3분 동안 열림
   let unlockedUntil = 0;
@@ -1802,6 +1853,8 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
         S.ready = true;
         const queued = early; early = [];
         if (user && known && S.house) queued.forEach((fn) => { try { fn(); } catch (e) { console.warn('early', e); } }); // 바로 보여 준 화면에서 누른 것 저장
+        if (!user) { outbox = []; store(OUT_KEY, null); syncMark(); }
+        else if (S.house) safely('outbox', resendOutbox); // 지난번에 못 보낸 것
         listenFamily();
         render();
         if (S.house) loadEvents();
@@ -1930,7 +1983,13 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
       lastStamp = stamp; render();
       if (newDay) { loadEvents(); loadHolidays(); loadWeather(true); }
     }
-    if (swNew && $('#stk').hidden && !document.querySelector('.sheet-wrap:not([hidden]), #pack:not([hidden])') && Date.now() - lastTouch > 60e3) location.reload(); // 새 버전
+    // 새 버전이면 아무도 안 만질 때 새로 고침. 저장을 기다리는 게 2분 넘게 안 가면(패드 저장소가 고장 난 때 등) 10분에 한 번까지 새로 고쳐서 다시 연결 → 📮 다시 보냄
+    const stuck = navigator.onLine && fb && !S.early && outbox.some((x) => Date.now() - x.at > 120e3) && Date.now() - load('family-home:stuck-reload', 0) > 10 * 60e3;
+    if ((swNew || stuck) && !early.length && !kq && $('#stk').hidden && !document.querySelector('.sheet-wrap:not([hidden]), #pack:not([hidden])') && Date.now() - lastTouch > 60e3) {
+      if (stuck) { store('family-home:stuck-reload', Date.now()); console.warn('[우리집] 저장이 안 가서 새로 고침'); }
+      location.reload();
+    }
+    syncMark();
     safely('pack', packMorning);
     safely('calm', applyCalm);
     safely('bg', renderBg);
@@ -1957,6 +2016,7 @@ body.calm.theme-glass .card, body.calm.theme-glass .dinner-box { background: rgb
     loadWeather();
   });
   let rz = null;
+  for (const ev of ['online', 'offline']) window.addEventListener(ev, () => syncMark());
   window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { fitZoom(); renderGrid(); }, 150); });
   if ('serviceWorker' in navigator && !DEMO) {
     navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});
